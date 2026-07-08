@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IM.PORTFOLIO — Programación II</title>
+  <meta name="description" content="Portafolio académico de Irvin Martínez — Programación II, UTP Panamá, Ciberseguridad 2026." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- LIGHTBOX -->
+  <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Imagen ampliada" aria-hidden="true">
+    <div class="lb-bg" id="lbBg"></div>
+    <div class="lb-box">
+      <button class="lb-close" id="lbClose" aria-label="Cerrar">&#x2715;</button>
+      <img class="lb-img" id="lbImg" src="" alt="" />
+    </div>
+  </div>
+
+  <!-- CUSTOM CURSOR -->
+  <div class="cur-dot"  id="curDot"  aria-hidden="true"></div>
+  <div class="cur-ring" id="curRing" aria-hidden="true"></div>
+
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="h-in">
+      <a href="#inicio" class="logo">IM<span>.</span>PORTFOLIO</a>
+      <nav class="nav" aria-label="Navegación principal">
+        <a href="#inicio"        class="nl">Inicio</a>
+        <a href="#sobre-mi"     class="nl">Sobre mí</a>
+        <a href="#actividades"  class="nl">Actividades</a>
+        <a href="#certificados" class="nl">Certificados</a>
+        <a href="#evidencias"   class="nl">Evidencias</a>
+        <a href="#habilidades"  class="nl">Habilidades</a>
+        <a href="#contacto"     class="nl">Contacto</a>
+      </nav>
+      <a href="#actividades" class="h-cta">Ver portafolio <span aria-hidden="true">&#x2192;</span></a>
+      <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE NAV -->
+  <div class="mnav" id="mnav" aria-hidden="true">
+    <a href="#inicio"        class="mnl">Inicio</a>
+    <a href="#sobre-mi"     class="mnl">Sobre mí</a>
+    <a href="#actividades"  class="mnl">Actividades</a>
+    <a href="#certificados" class="mnl">Certificados</a>
+    <a href="#evidencias"   class="mnl">Evidencias</a>
+    <a href="#habilidades"  class="mnl">Habilidades</a>
+    <a href="#contacto"     class="mnl">Contacto</a>
+  </div>
+
+  <!-- 1. HERO -->
+  <section class="hero" id="inicio">
+    <canvas class="hero-canvas" id="lavaCanvas"></canvas>
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="hero-poster">
+      <div class="hero-left">
+        <div class="h-tags">
+          <span class="htag">UTP</span>
+          <span class="htag">Programación II</span>
+          <span class="htag">2026</span>
+          <span class="htag">Ciberseguridad</span>
+          <span class="htag">GitHub Pages</span>
+        </div>
+        <h1 class="hero-title">
+          <span class="ht l1">PORTA</span>
+          <span class="ht l2">FOLIO</span>
+        </h1>
+        <div class="h-subrow">
+          <span class="h-subline" aria-hidden="true"></span>
+          <span class="h-sublbl">PROGRAMACIÓN II — UTP PANAMÁ</span>
+        </div>
+        <p class="h-name">Irvin Martínez</p>
+        <p class="h-desc">
+          Evidencias académicas, proyectos y actividades
+          desarrolladas durante el semestre.
+        </p>
+        <div class="h-btns">
+          <a href="#actividades" class="btn-p">Ver actividades</a>
+          <a href="#contacto"    class="btn-o">Contacto</a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="photo-roman" aria-hidden="true">II</div>
+        <div class="photo-frame" id="pFrame">
+          <img src="assets/img/profile/placeholder.jpg" alt="Foto de perfil" />
+        </div>
+        <div class="flabel fl-utp"   aria-hidden="true">UTP</div>
+        <div class="flabel fl-prog"  aria-hidden="true">Prog. II</div>
+        <div class="flabel fl-cyber" aria-hidden="true">Ciberseguridad</div>
+        <div class="flabel fl-year"  aria-hidden="true">2026</div>
+        <div class="namecard" aria-hidden="true">
+          <div class="nc-av">IM</div>
+          <div class="nc-info">
+            <span class="nc-name">Irvin Martínez</span>
+            <span class="nc-role">Portafolio académico</span>
+          </div>
+          <div class="nc-live"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mq-bar" aria-hidden="true">
+      <div class="mq-track">
+        <span>PROGRAMACIÓN II</span><b class="ms">&#x25C6;</b>
+        <span>UTP PANAMÁ</span><b class="ms">&#x25C6;</b>
+        <span>CIBERSEGURIDAD</span><b class="ms">&#x25C6;</b>
+        <span>GITHUB PAGES</span><b class="ms">&#x25C6;</b>
+        <span>PORTAFOLIO DIGITAL</span><b class="ms">&#x25C6;</b>
+        <span>IRVIN MARTÍNEZ</span><b class="ms">&#x25C6;</b>
+        <span>FACULTAD DE SISTEMAS</span><b class="ms">&#x25C6;</b>
+        <span>PROGRAMACIÓN II</span><b class="ms">&#x25C6;</b>
+        <span>UTP PANAMÁ</span><b class="ms">&#x25C6;</b>
+        <span>CIBERSEGURIDAD</span><b class="ms">&#x25C6;</b>
+        <span>GITHUB PAGES</span><b class="ms">&#x25C6;</b>
+        <span>PORTAFOLIO DIGITAL</span><b class="ms">&#x25C6;</b>
+        <span>IRVIN MARTÍNEZ</span><b class="ms">&#x25C6;</b>
+        <span>FACULTAD DE SISTEMAS</span><b class="ms">&#x25C6;</b>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. SOBRE MÍ -->
+  <section class="about" id="sobre-mi">
+    <div class="about-wrap">
+      <div class="about-l">
+        <div class="slbl reveal">/ 001 — SOBRE MÍ</div>
+        <h2 class="stitle reveal">QUIÉN<br/><em>SOY</em><br/>YO.</h2>
+        <div class="sec-stripe reveal"></div>
+      </div>
+      <div class="about-r">
+        <p class="about-text reveal">
+          Soy Irvin Martínez, estudiante de la Universidad Tecnológica de Panamá
+          en la carrera de Licenciatura en Ciberseguridad. Este portafolio reúne
+          las actividades realizadas en Programación II, mostrando mi avance en
+          análisis, desarrollo, organización de evidencias y aplicación práctica
+          de los contenidos trabajados durante el semestre.
+        </p>
+        <div class="ic-grid">
+          <div class="ic reveal" style="--di:.00s">
+            <span class="ic-icon">&#127891;</span>
+            <span class="ic-lbl">Universidad</span>
+            <span class="ic-val">UTP Panamá</span>
+          </div>
+          <div class="ic reveal" style="--di:.08s">
+            <span class="ic-icon">&#128187;</span>
+            <span class="ic-lbl">Asignatura</span>
+            <span class="ic-val">Programación II</span>
+          </div>
+          <div class="ic reveal" style="--di:.16s">
+            <span class="ic-icon">&#128104;&#8205;&#127979;</span>
+            <span class="ic-lbl">Profesor</span>
+            <span class="ic-val">Napoleón Ibarra</span>
+          </div>
+          <div class="ic reveal" style="--di:.24s">
+            <span class="ic-icon">&#128737;</span>
+            <span class="ic-lbl">Carrera</span>
+            <span class="ic-val">Ciberseguridad</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. ACTIVIDADES -->
+  <section class="acts" id="actividades">
+    <div class="acts-head">
+      <div class="slbl reveal">/ 002 — ACTIVIDADES</div>
+      <h2 class="stitle reveal">TRABAJOS<br/>DEL <em>SEMESTRE</em></h2>
+    </div>
+    <div class="acts-grid"></div>
+  </section>
+
+  <!-- 4. CERTIFICADOS -->
+  <section class="certs" id="certificados">
+    <div class="certs-wrap">
+      <div class="slbl reveal lite">/ 003 — CERTIFICADOS</div>
+      <h2 class="stitle lite reveal">LOGROS &amp;<br/><em class="lime">CURSOS</em></h2>
+      <div class="certs-grid"></div>
+    </div>
+  </section>
+
+  <!-- 5. EVIDENCIAS -->
+  <section class="evid" id="evidencias">
+    <div class="evid-wrap">
+      <div class="slbl reveal">/ 004 — EVIDENCIAS</div>
+      <h2 class="stitle reveal">GALERÍA DE<br/><em>CAPTURAS</em></h2>
+      <div class="evid-inner"></div>
+    </div>
+  </section>
+
+  <!-- 6. HABILIDADES -->
+  <section class="skills" id="habilidades">
+    <div class="skills-wrap">
+      <div class="slbl reveal lite">/ 005 — HABILIDADES</div>
+      <h2 class="stitle lite reveal">STACK &amp;<br/><em class="lime">CAPACIDADES</em></h2>
+      <div class="schips"></div>
+      <div class="sbars"></div>
+    </div>
+  </section>
+
+  <!-- 7. CONTACTO -->
+  <section class="contact" id="contacto">
+    <div class="contact-wrap reveal">
+      <div class="slbl inv">/ 006 — CONTACTO</div>
+      <h2 class="contact-big">CONE<br/>CTEMOS<span>.</span></h2>
+      <p class="contact-sub">Irvin Martínez — UTP Panamá — Ciberseguridad</p>
+      <div class="c-links">
+        <a href="mailto:irvin.martinez@utp.ac.pa" class="clink cl-email">
+          <span class="cl-ico">&#x2709;</span>
+          <span>irvin.martinez@utp.ac.pa</span>
+        </a>
+        <a href="#" target="_blank" rel="noopener" class="clink cl-li">
+          <span class="cl-ico">in</span>
+          <span>LinkedIn</span>
+        </a>
+        <a href="#" target="_blank" rel="noopener" class="clink cl-yt">
+          <span class="cl-ico">&#x25B6;</span>
+          <span>YouTube</span>
+        </a>
+        <a href="https://github.com/irvinMartinez2709" target="_blank" rel="noopener" class="clink cl-yt">
+          <span class="cl-ico">&#x1f5a5;</span>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="foot-in">
+      <span class="foot-logo">IM<span>.</span>PORTFOLIO</span>
+      <span class="foot-copy">&copy; 2026 Irvin Martínez &mdash; Portafolio de Programación II</span>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
