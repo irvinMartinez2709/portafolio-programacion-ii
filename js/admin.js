@@ -253,7 +253,10 @@
         headers: { ...auth, 'Content-Type': 'application/json' },
         body: JSON.stringify({ sha: newCommitSha, force: false })
       });
-      if (!updateRes.ok) throw new Error('Error al actualizar la rama');
+      if (!updateRes.ok) {
+        const body = await updateRes.text();
+        throw new Error(`Error al actualizar la rama (${updateRes.status}): ${body}`);
+      }
 
       alert('✅ Cambios subidos a GitHub. La página se actualizará en ~1-2 minutos.');
       pendingChanges = {};
