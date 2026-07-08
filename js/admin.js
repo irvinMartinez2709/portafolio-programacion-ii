@@ -20,6 +20,10 @@
 
   async function loadCredentials() {
     try {
+      const saved = localStorage.getItem('admin_credentials');
+      if (saved) { credentials = JSON.parse(saved); return; }
+    } catch(e) {}
+    try {
       const r = await fetch('data/credentials.json');
       credentials = await r.json();
     } catch (e) {
@@ -178,27 +182,84 @@
   async function commitAll() {
     const token = localStorage.getItem('gh_token');
     if (!token) {
-      const msg = '⚠️ No hay token de GitHub.\n\nLos cambios están guardados LOCALMENTE (en localStorage).\nPara subirlos al repositorio:\n\n1. Ve a GitHub > Settings > Developer Settings > Personal Access Tokens > Fine-grained tokens\n2. Crea un token con permisos "contents: write" para tu repo\n3. En la consola de admin.js (F12 > Console), escribe:\n   localStorage.setItem("gh_token", "TU_TOKEN_AQUI")\n4. Vuelve a hacer clic en "Subir a GitHub"';
+      const msg = '⚠️ No hay token de GitHub.\n\nLos cambios están guardados LOCALMENTE (en localStorage).\nPara subirlos al repositorio:\n\n1. Ve a GitHub > Settings > Developer Settings > Personal Access Tokens > Fine-grained tokens\n2. Crea un token con permisos "contents: write" para tu repo\n3. En la consola del navegador (F12 > Console), escribe:\n   localStorage.setItem("gh_token", "TU_TOKEN_AQUI")\n4. Vuelve a hacer clic en "Subir a GitHub"';
       alert(msg);
       return;
     }
-    const repo = 'irvinMartinez2709/portafolio-programacion-ii';
-    const payload = { changes: pendingChanges, data: { activities: data.activities, certificates: data.certificates, profile: data.profile, skills: data.skills, evidences: data.evidences, credentials: credentials } };
+    const owner = 'irvinMartinez2709';
+    const repo = 'portafolio-programacion-ii';
+    const auth = { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json' };
+    const json = (r) => r.json();
     try {
-      const r = await fetch(`https://api.github.com/repos/${repo}/dispatches`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json' },
-        body: JSON.stringify({ event_type: 'admin-update', client_payload: payload })
-      });
-      if (r.ok) {
-        alert('✅ Cambios enviados al repositorio. La página se actualizará en ~30 segundos.');
-        pendingChanges = {};
-      } else {
-        const msg = await r.text();
-        alert('⚠️ Error ' + r.status + ':\n' + msg);
+      /* 1. Obtener el commit actual de la rama main */
+      const refUrl = `https://api.github.com/repos/${owner}/${repo}/git/refs/heads/main`;
+      const refRes = await fetch(refUrl, { headers: auth });
+      if (!refRes.ok) throw new Error(`No se pudo obtener la rama (${refRes.status}): asegúrate de que el token tenga permisos de escritura en el repo.`);
+      const latestSha = (await json(refRes)).object.sha;
+
+      /* 2. Obtener el tree SHA del commit actual */
+      const commitRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/commits/${latestSha}`, { headers: auth });
+      const baseTreeSha = (await json(commitRes)).tree.sha;
+
+      /* 3. Preparar archivos a actualizar */
+      const files = {
+        'data/activities.json': JSON.stringify(data.activities, null, 2),
+        'data/certificates.json': JSON.stringify(data.certificates, null, 2),
+        'data/profile.json': JSON.stringify(data.profile, null, 2),
+        'data/skills.json': JSON.stringify(data.skills, null, 2),
+        'data/evidences.json': JSON.stringify(data.evidences, null, 2),
+      };
+      if (pendingChanges.credentials) {
+        files['data/credentials.json'] = JSON.stringify(credentials, null, 2);
       }
+
+      /* 4. Crear blobs para cada archivo */
+      const treeItems = [];
+      for (const [path, content] of Object.entries(files)) {
+        const blobRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/blobs`, {
+          method: 'POST',
+          headers: { ...auth, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content, encoding: 'utf-8' })
+        });
+        if (!blobRes.ok) throw new Error(`Error al crear blob para ${path}`);
+        treeItems.push({ path, mode: '100644', type: 'blob', sha: (await json(blobRes)).sha });
+      }
+
+      /* 5. Crear un nuevo tree basado en el actual + cambios */
+      const treeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees`, {
+        method: 'POST',
+        headers: { ...auth, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base_tree: baseTreeSha, tree: treeItems })
+      });
+      if (!treeRes.ok) throw new Error('Error al crear el tree');
+
+      /* 6. Crear un commit apuntando al nuevo tree */
+      const newTreeSha = (await json(treeRes)).sha;
+      const commitRes2 = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/commits`, {
+        method: 'POST',
+        headers: { ...auth, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'admin: actualizar contenido del portafolio',
+          tree: newTreeSha,
+          parents: [latestSha]
+        })
+      });
+      if (!commitRes2.ok) throw new Error('Error al crear el commit');
+
+      /* 7. Mover la rama main al nuevo commit */
+      const newCommitSha = (await json(commitRes2)).sha;
+      const updateRes = await fetch(refUrl, {
+        method: 'PATCH',
+        headers: { ...auth, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sha: newCommitSha, force: false })
+      });
+      if (!updateRes.ok) throw new Error('Error al actualizar la rama');
+
+      alert('✅ Cambios subidos a GitHub. La página se actualizará en ~1-2 minutos.');
+      pendingChanges = {};
+      localStorage.setItem('admin_pending', '{}');
     } catch (e) {
-      alert('Error de conexión: ' + e.message);
+      alert('⚠️ Error: ' + e.message);
     }
   }
 
@@ -364,6 +425,7 @@
   function saveAll() {
     localStorage.setItem('admin_data', JSON.stringify(data));
     localStorage.setItem('admin_pending', JSON.stringify(pendingChanges));
+    localStorage.setItem('admin_credentials', JSON.stringify(credentials));
   }
 
   // Add a "Commit to GitHub" button in the sidebar or dashboard
@@ -372,9 +434,14 @@
     if (!sidebar) return;
     const btn = document.createElement('button');
     btn.className = 'admin-snav-item';
-    btn.innerHTML = '<span class="asi-icon">&#x1f4e4;</span> Subir a GitHub';
+    const token = localStorage.getItem('gh_token');
+    const statusIcon = token ? '\u2705' : '\u26A0\uFE0F';
+    btn.innerHTML = `<span class="asi-icon">${statusIcon}</span> Subir a GitHub`;
+    if (!token) {
+      btn.title = 'Token no configurado. Haz clic para instrucciones.';
+    }
     btn.addEventListener('click', () => {
-      saveAll(); // ensure localStorage is updated
+      saveAll();
       commitAll();
     });
     sidebar.appendChild(btn);
