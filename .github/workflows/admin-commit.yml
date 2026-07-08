@@ -1,38 +1,14 @@
-name: Admin Auto-Commit
+# DISABLED: Este workflow causaba JSON corrupto y condiciones de carrera.
+# Ahora admin.js usa la API de Git de GitHub directamente.
+# Mantenemos el archivo solo como referencia.
+name: Admin Auto-Commit (DISABLED)
 
 on:
-  repository_dispatch:
-    types: [admin-update]
+  # No se activa nunca - reemplazado por API directa en admin.js
+  workflow_dispatch:
 
 jobs:
   commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.ADMIN_PAT }}
-
-      - name: Write updated data files
-        run: |
-          echo '${{ toJson(github.event.client_payload.data.activities) }}' > data/activities.json
-          echo '${{ toJson(github.event.client_payload.data.certificates) }}' > data/certificates.json
-          echo '${{ toJson(github.event.client_payload.data.profile) }}' > data/profile.json
-          echo '${{ toJson(github.event.client_payload.data.skills) }}' > data/skills.json
-          echo '${{ toJson(github.event.client_payload.data.evidences) }}' > data/evidences.json
-
-      - name: Write credentials if changed
-        run: |
-          CHANGES='${{ toJson(github.event.client_payload.changes) }}'
-          if echo "$CHANGES" | grep -q '"credentials"'; then
-            echo '${{ toJson(github.event.client_payload.data.credentials) }}' > data/credentials.json
-          fi
-        shell: bash
-
-      - name: Commit and push
-        run: |
-          git config user.name "Admin Bot"
-          git config user.email "admin@portafolio-bot"
-          git add data/
-          git diff --staged --quiet || git commit -m "admin: actualizar contenido del portafolio"
-          git push
+      - run: echo "DISABLED - admin.js now uses direct Git API"
