@@ -1,6 +1,6 @@
 {
   "name": "Irvin Martínez",
-  "email": "irvin.martinez@utp.ac.pa",
+  "email": "irvin.martinez2@utp.ac.pa",
   "career": "Licenciatura en Ciberseguridad",
   "faculty": "Facultad de Ingeniería de Sistemas Computacionales",
   "university": "Universidad Tecnológica de Panamá",
@@ -10,13 +10,8 @@
   "photo": "assets/img/profile/placeholder.jpg",
   "bio": "Soy Irvin Martínez, estudiante de la Universidad Tecnológica de Panamá en la carrera de Licenciatura en Ciberseguridad. Este portafolio reúne las actividades realizadas en Programación II, mostrando mi avance en análisis, desarrollo, organización de evidencias y aplicación práctica de los contenidos trabajados durante el semestre.",
   "social": {
-    "linkedin": "#",
+    "linkedin": "www.linkedin.com/in/irvin-martínez-318b6435b",
     "youtube": "#",
     "github": "https://github.com/irvinMartinez2709"
-  },
-  "heroTitleL1": "PROGRAMACIÓN",
-  "heroTitleL2": "II",
-  "heroSub": "Universidad Tecnológica de Panamá",
-  "heroDesc": "Portafolio académico que documenta actividades, proyectos y certificaciones del curso de Programación II.",
-  "heroTags": ["UTP", "Programación II", "2026", "Ciberseguridad", "GitHub Pages"]
+  }
 }
