@@ -12,7 +12,7 @@
 </head>
 <body>
   <div id="app">
-    <!-- LOGIN SCREEN -->
+    <!-- LOGIN -->
     <div id="loginScreen" class="admin-login">
       <div class="admin-login-box">
         <div class="admin-login-logo">ADMIN<span>.</span>PANEL</div>
@@ -45,11 +45,14 @@
       <div class="admin-dash-body">
         <aside class="admin-sidebar">
           <nav class="admin-sidenav">
-            <button class="admin-snav-item active" data-section="profile">
-              <span class="asi-icon">👤</span> Perfil
+            <button class="admin-snav-item active" data-section="inicio">
+              <span class="asi-icon">🏠</span> Inicio
             </button>
             <button class="admin-snav-item" data-section="about">
               <span class="asi-icon">📝</span> Sobre mí
+            </button>
+            <button class="admin-snav-item" data-section="profile">
+              <span class="asi-icon">👤</span> Perfil
             </button>
             <button class="admin-snav-item" data-section="contact">
               <span class="asi-icon">📬</span> Contacto
@@ -64,7 +67,7 @@
               <span class="asi-icon">⚡</span> Habilidades
             </button>
             <button class="admin-snav-item" data-section="particles">
-              <span class="asi-icon">✨</span> Partículas Lava
+              <span class="asi-icon">✨</span> Partículas
             </button>
             <button class="admin-snav-item" data-section="credentials">
               <span class="asi-icon">🔐</span> Credenciales
@@ -73,8 +76,30 @@
         </aside>
 
         <main class="admin-main">
-          <!-- PROFILE -->
-          <section class="admin-section active" id="sec-profile">
+          <!-- INICIO -->
+          <section class="admin-section active" id="sec-inicio">
+            <h2 class="admin-section-title">Editar Inicio (Hero)</h2>
+            <form id="inicioForm" class="admin-form">
+              <div class="admin-field"><label>Título línea 1</label><input type="text" id="heroTitleL1" placeholder="Ej: PROGRAMACIÓN" /></div>
+              <div class="admin-field"><label>Título línea 2</label><input type="text" id="heroTitleL2" placeholder="Ej: II" /></div>
+              <div class="admin-field"><label>Subtítulo</label><input type="text" id="heroSub" placeholder="Ej: Universidad Tecnológica de Panamá" /></div>
+              <div class="admin-field"><label>Descripción</label><input type="text" id="heroDesc" placeholder="Breve descripción del portafolio" /></div>
+              <div class="admin-field"><label>Tags (separados por coma)</label><input type="text" id="heroTags" placeholder="UTP, Programación II, 2026" /></div>
+              <button type="submit" class="admin-btn">Guardar Inicio</button>
+            </form>
+          </section>
+
+          <!-- SOBRE MÍ -->
+          <section class="admin-section" id="sec-about">
+            <h2 class="admin-section-title">Editar Sobre Mí</h2>
+            <form id="aboutForm" class="admin-form">
+              <div class="admin-field"><label>Biografía</label><textarea id="aboutBio" rows="6" placeholder="Escribe tu biografía aquí..."></textarea></div>
+              <button type="submit" class="admin-btn">Guardar Sobre Mí</button>
+            </form>
+          </section>
+
+          <!-- PERFIL -->
+          <section class="admin-section" id="sec-profile">
             <h2 class="admin-section-title">Editar Perfil</h2>
             <form id="profileForm" class="admin-form">
               <div class="admin-row">
@@ -96,16 +121,7 @@
             </form>
           </section>
 
-          <!-- ABOUT (Sobre mí) -->
-          <section class="admin-section" id="sec-about">
-            <h2 class="admin-section-title">Editar Sobre Mí</h2>
-            <form id="aboutForm" class="admin-form">
-              <div class="admin-field"><label>Biografía</label><textarea id="aboutBio" rows="6" placeholder="Escribe tu biografía aquí..."></textarea></div>
-              <button type="submit" class="admin-btn">Guardar Sobre Mí</button>
-            </form>
-          </section>
-
-          <!-- CONTACT -->
+          <!-- CONTACTO -->
           <section class="admin-section" id="sec-contact">
             <h2 class="admin-section-title">Editar Contacto</h2>
             <form id="contactForm" class="admin-form">
@@ -117,7 +133,7 @@
             </form>
           </section>
 
-          <!-- ACTIVITIES -->
+          <!-- ACTIVIDADES -->
           <section class="admin-section" id="sec-activities">
             <h2 class="admin-section-title">Gestionar Actividades</h2>
             <form id="activityForm" class="admin-form">
@@ -137,7 +153,7 @@
             <div id="activitiesList" class="admin-list"></div>
           </section>
 
-          <!-- CERTIFICATES -->
+          <!-- CERTIFICADOS -->
           <section class="admin-section" id="sec-certificates">
             <h2 class="admin-section-title">Gestionar Certificados</h2>
             <form id="certForm" class="admin-form">
@@ -150,7 +166,7 @@
             <div id="certificatesList" class="admin-list"></div>
           </section>
 
-          <!-- SKILLS -->
+          <!-- HABILIDADES -->
           <section class="admin-section" id="sec-skills">
             <h2 class="admin-section-title">Gestionar Habilidades</h2>
             <form id="skillForm" class="admin-form">
@@ -172,37 +188,36 @@
             <div id="chipsList" class="admin-list"></div>
           </section>
 
-          <!-- PARTICLES -->
+          <!-- PARTÍCULAS -->
           <section class="admin-section" id="sec-particles">
-            <h2 class="admin-section-title">Configurar Partículas Lava</h2>
+            <h2 class="admin-section-title">Configurar Partículas</h2>
             <form id="particleForm" class="admin-form">
               <div class="admin-field">
-                <label>Cantidad de partículas</label>
+                <label>Cantidad</label>
                 <input type="number" id="particleCount" placeholder="60" min="10" max="200" required />
-                <small style="color:var(--text-secondary);display:block;margin-top:4px;">Más partículas = más efecto visual, pero mayor consumo de CPU.</small>
+                <small style="color:var(--text-secondary);display:block;margin-top:4px;">Mín 10, máx 200. Más partículas = más consumo de CPU.</small>
               </div>
               <button type="submit" class="admin-btn">Guardar</button>
             </form>
             <p style="color:var(--text-secondary);font-size:13px;margin-top:12px;">Valor actual: <span id="currentParticleCount" style="color:var(--neon-cyan);font-weight:600;">60</span></p>
           </section>
 
-          <!-- CREDENTIALS -->
+          <!-- CREDENCIALES -->
           <section class="admin-section" id="sec-credentials">
             <h2 class="admin-section-title">Cambiar Credenciales</h2>
             <form id="credForm" class="admin-form">
               <div class="admin-field"><label>Nuevo usuario</label><input type="text" id="newUser" required /></div>
               <div class="admin-field"><label>Nueva contraseña</label><input type="password" id="newPass" required /></div>
-              <div class="admin-field"><label>Confirmar contraseña</label><input type="password" id="confirmPass" required /></div>
+              <div class="admin-field"><label>Confirmar</label><input type="password" id="confirmPass" required /></div>
               <p id="credError" class="admin-error" style="display:none;">Las contraseñas no coinciden</p>
               <p id="credSuccess" class="admin-success" style="display:none;">Credenciales actualizadas</p>
-              <button type="submit" class="admin-btn">Cambiar Credenciales</button>
+              <button type="submit" class="admin-btn">Cambiar</button>
             </form>
           </section>
         </main>
       </div>
     </div>
   </div>
-
   <script src="js/admin.js"></script>
 </body>
 </html>

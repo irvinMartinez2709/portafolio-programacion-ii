@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IM.PORTFOLIO — Programación II</title>
+  <title>Programación II — Portafolio</title>
   <meta name="description" content="Portafolio académico de Irvin Martínez — Programación II, UTP Panamá, Ciberseguridad 2026." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -28,7 +28,7 @@
   <!-- HEADER -->
   <header class="header" id="header">
     <div class="h-in">
-      <a href="#inicio" class="logo">IM<span>.</span>PORTFOLIO</a>
+      <a href="#inicio" class="logo">Programación <span>II</span></a>
       <nav class="nav" aria-label="Navegación principal">
         <a href="#inicio"        class="nl">Inicio</a>
         <a href="#sobre-mi"     class="nl">Sobre mí</a>
@@ -37,7 +37,6 @@
         <a href="#habilidades"  class="nl">Habilidades</a>
         <a href="#contacto"     class="nl">Contacto</a>
       </nav>
-      <a href="#contacto" class="h-cta">Contáctame <span aria-hidden="true">&#x2192;</span></a>
       <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -54,177 +53,155 @@
     <a href="#contacto"     class="mnl">Contacto</a>
   </div>
 
-  <!-- 1. HERO -->
+  <!-- HERO / INICIO -->
   <section class="hero" id="inicio">
     <canvas class="hero-canvas" id="lavaCanvas"></canvas>
-    <div class="hero-overlay" aria-hidden="true"></div>
-
-    <div class="hero-poster">
-      <div class="hero-left">
-        <div class="photo-frame" id="pFrame">
-          <img src="assets/img/profile/placeholder.jpg" alt="Foto de perfil" />
-        </div>
-      </div>
-
-      <div class="hero-right">
-        <div class="h-tags">
-          <span class="htag">UTP</span>
-          <span class="htag">Programación II</span>
-          <span class="htag">2026</span>
-          <span class="htag">Ciberseguridad</span>
-          <span class="htag">GitHub Pages</span>
-        </div>
-        <h1 class="hero-title">
-          <span class="ht l1">PORTA</span>
-          <span class="ht l2">FOLIO</span>
+    <div class="hero-overlay"></div>
+    <div class="hero-grid">
+      <div class="hero-main">
+        <div class="hero-tags" id="heroTags"></div>
+        <h1 class="hero-headline" id="heroHeadline">
+          <span class="hh-line">PROGRAMACIÓN</span>
+          <span class="hh-line hl-glow">II</span>
         </h1>
-        <div class="h-subrow">
-          <span class="h-subline" aria-hidden="true"></span>
-          <span class="h-sublbl">PROGRAMACIÓN II — UTP PANAMÁ</span>
+        <p class="hero-sub" id="heroSub">Universidad Tecnológica de Panamá</p>
+        <p class="hero-desc" id="heroDesc">Portafolio académico del semestre</p>
+        <div class="hero-actions">
+          <a href="#actividades" class="btn-primary">Ver actividades</a>
+          <a href="#contacto" class="btn-secondary">Contacto</a>
         </div>
-        <p class="h-name">Irvin Martínez</p>
-        <p class="h-desc">
-          Evidencias académicas, proyectos y actividades
-          desarrolladas durante el semestre.
-        </p>
-        <div class="h-btns">
-          <a href="#actividades" class="btn-p">Ver actividades</a>
-          <a href="#contacto"    class="btn-o">Contacto</a>
+      </div>
+      <div class="hero-side">
+        <div class="hero-photo-wrap">
+          <div class="hero-photo">
+            <img src="assets/img/profile/placeholder.jpg" alt="Foto de perfil" id="heroPhoto" />
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="mq-bar" aria-hidden="true">
-      <div class="mq-track">
-        <span>PROGRAMACIÓN II</span><b class="ms">&#x25C6;</b>
-        <span>UTP PANAMÁ</span><b class="ms">&#x25C6;</b>
-        <span>CIBERSEGURIDAD</span><b class="ms">&#x25C6;</b>
-        <span>GITHUB PAGES</span><b class="ms">&#x25C6;</b>
-        <span>PORTAFOLIO DIGITAL</span><b class="ms">&#x25C6;</b>
-        <span>IRVIN MARTÍNEZ</span><b class="ms">&#x25C6;</b>
-        <span>FACULTAD DE SISTEMAS</span><b class="ms">&#x25C6;</b>
-        <span>PROGRAMACIÓN II</span><b class="ms">&#x25C6;</b>
-        <span>UTP PANAMÁ</span><b class="ms">&#x25C6;</b>
-        <span>CIBERSEGURIDAD</span><b class="ms">&#x25C6;</b>
-        <span>GITHUB PAGES</span><b class="ms">&#x25C6;</b>
-        <span>PORTAFOLIO DIGITAL</span><b class="ms">&#x25C6;</b>
-        <span>IRVIN MARTÍNEZ</span><b class="ms">&#x25C6;</b>
-        <span>FACULTAD DE SISTEMAS</span><b class="ms">&#x25C6;</b>
+    <div class="hero-marquee">
+      <div class="mq-inner">
+        <span>PROGRAMACIÓN II</span><b>✦</b>
+        <span>UTP PANAMÁ</span><b>✦</b>
+        <span>CIBERSEGURIDAD</span><b>✦</b>
+        <span>IRVIN MARTÍNEZ</span><b>✦</b>
+        <span>PROGRAMACIÓN II</span><b>✦</b>
+        <span>UTP PANAMÁ</span><b>✦</b>
+        <span>CIBERSEGURIDAD</span><b>✦</b>
+        <span>IRVIN MARTÍNEZ</span><b>✦</b>
       </div>
     </div>
   </section>
 
-  <!-- 2. SOBRE MÍ -->
-  <section class="about" id="sobre-mi">
-    <div class="about-wrap">
-      <div class="about-top reveal">
-        <div class="slbl">/ 001 — SOBRE MÍ</div>
-        <h2 class="stitle">QUIÉN <em>SOY</em> YO.</h2>
-      </div>
-      <div class="about-body">
-        <div class="about-text-wrap reveal">
-          <p class="about-text">
-            Soy Irvin Martínez, estudiante de la Universidad Tecnológica de Panamá
-            en la carrera de Licenciatura en Ciberseguridad. Este portafolio reúne
-            las actividades realizadas en Programación II, mostrando mi avance en
-            análisis, desarrollo, organización de evidencias y aplicación práctica
-            de los contenidos trabajados durante el semestre.
-          </p>
+  <!-- SOBRE MÍ -->
+  <section class="about section" id="sobre-mi">
+    <div class="container">
+      <div class="section-label reveal">/ 01 · SOBRE MÍ</div>
+      <div class="about-grid">
+        <div class="about-cards reveal">
+          <div class="info-card">
+            <div class="info-card-icon">🎓</div>
+            <div class="info-card-body">
+              <span class="info-card-label">Universidad</span>
+              <span class="info-card-value" id="aboutUni">UTP Panamá</span>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-icon">💻</div>
+            <div class="info-card-body">
+              <span class="info-card-label">Asignatura</span>
+              <span class="info-card-value" id="aboutSubject">Programación II</span>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-icon">👨‍🏫</div>
+            <div class="info-card-body">
+              <span class="info-card-label">Profesor</span>
+              <span class="info-card-value" id="aboutProfessor">Napoleón Ibarra</span>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-icon">🛡️</div>
+            <div class="info-card-body">
+              <span class="info-card-label">Carrera</span>
+              <span class="info-card-value" id="aboutCareer">Ciberseguridad</span>
+            </div>
+          </div>
         </div>
-        <div class="ic-grid">
-          <div class="ic reveal" style="--di:.00s">
-            <span class="ic-icon">&#127891;</span>
-            <span class="ic-lbl">Universidad</span>
-            <span class="ic-val">UTP Panamá</span>
-          </div>
-          <div class="ic reveal" style="--di:.08s">
-            <span class="ic-icon">&#128187;</span>
-            <span class="ic-lbl">Asignatura</span>
-            <span class="ic-val">Programación II</span>
-          </div>
-          <div class="ic reveal" style="--di:.16s">
-            <span class="ic-icon">&#128104;&#8205;&#127979;</span>
-            <span class="ic-lbl">Profesor</span>
-            <span class="ic-val">Napoleón Ibarra</span>
-          </div>
-          <div class="ic reveal" style="--di:.24s">
-            <span class="ic-icon">&#128737;</span>
-            <span class="ic-lbl">Carrera</span>
-            <span class="ic-val">Ciberseguridad</span>
-          </div>
+        <div class="about-text-box reveal">
+          <h2 class="section-title">MÁS QUE <em>CÓDIGO</em></h2>
+          <p class="about-bio" id="aboutBio">Cargando...</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3. ACTIVIDADES -->
-  <section class="acts" id="actividades">
-    <div class="acts-head">
-      <div class="slbl reveal">/ 002 — ACTIVIDADES</div>
-      <h2 class="stitle reveal">TRABAJOS<br/>DEL <em>SEMESTRE</em></h2>
+  <!-- ACTIVIDADES -->
+  <section class="acts section" id="actividades">
+    <div class="container">
+      <div class="section-label reveal">/ 02 · ACTIVIDADES</div>
+      <h2 class="section-title reveal">TRABAJOS DEL <em>SEMESTRE</em></h2>
+      <div class="acts-grid"></div>
     </div>
-    <div class="acts-grid"></div>
   </section>
 
-  <!-- 4. CERTIFICADOS -->
-  <section class="certs" id="certificados">
-    <div class="certs-wrap">
-      <div class="certs-head">
-        <div class="slbl reveal lite">/ 003 — CERTIFICADOS</div>
-        <h2 class="stitle lite reveal">LOGROS &amp;<br/><em class="lime">CURSOS</em></h2>
-      </div>
+  <!-- CERTIFICADOS -->
+  <section class="certs section" id="certificados">
+    <div class="container">
+      <div class="section-label reveal lite">/ 03 · CERTIFICADOS</div>
+      <h2 class="section-title reveal lite">LOGROS &amp; <em class="lime">CURSOS</em></h2>
       <div class="certs-grid"></div>
     </div>
   </section>
 
-  <!-- 5. HABILIDADES -->
-  <section class="skills" id="habilidades">
-    <div class="skills-wrap">
-      <div class="skills-head">
-        <div class="slbl reveal lite">/ 004 — HABILIDADES</div>
-        <h2 class="stitle lite reveal">STACK &amp;<br/><em class="lime">CAPACIDADES</em></h2>
-      </div>
-      <div class="skills-body">
-        <div class="sbars"></div>
-        <div class="schips"></div>
-      </div>
+  <!-- HABILIDADES -->
+  <section class="skills section" id="habilidades">
+    <div class="container">
+      <div class="section-label reveal lite">/ 04 · HABILIDADES</div>
+      <h2 class="section-title reveal lite"><em class="lime">CONOCIMIENTOS</em> &amp; TOOLS</h2>
+      <div class="sbars"></div>
+      <div class="schips"></div>
     </div>
   </section>
 
-  <!-- 6. CONTACTO -->
-  <section class="contact" id="contacto">
-    <div class="contact-wrap reveal">
-      <div class="contact-left">
-        <div class="slbl inv">/ 005 — CONTACTO</div>
-        <h2 class="contact-big">CONE<br/>CTEMOS<span>.</span></h2>
-        <p class="contact-sub">Irvin Martínez — UTP Panamá — Ciberseguridad</p>
-      </div>
-      <div class="contact-right">
-        <a href="mailto:irvin.martinez@utp.ac.pa" class="clink cl-email">
-          <span class="cl-ico">&#x2709;</span>
-          <span>irvin.martinez@utp.ac.pa</span>
-        </a>
-        <a href="#" target="_blank" rel="noopener" class="clink cl-li">
-          <span class="cl-ico">in</span>
-          <span>LinkedIn</span>
-        </a>
-        <a href="#" target="_blank" rel="noopener" class="clink cl-yt">
-          <span class="cl-ico">&#x25B6;</span>
-          <span>YouTube</span>
-        </a>
-        <a href="https://github.com/irvinMartinez2709" target="_blank" rel="noopener" class="clink cl-gh">
-          <span class="cl-ico">&#x1f5a5;</span>
-          <span>GitHub</span>
-        </a>
+  <!-- CONTACTO -->
+  <section class="contact section" id="contacto">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-left reveal">
+          <div class="section-label inv">/ 05 · CONTACTO</div>
+          <h2 class="contact-headline">ESCRÍBE<span>ME</span></h2>
+          <p class="contact-intro" id="contactIntro">Irvin Martínez — UTP Panamá</p>
+        </div>
+        <div class="contact-right reveal">
+          <a href="mailto:irvin.martinez@utp.ac.pa" class="contact-link" id="cEmail">
+            <span class="cl-icon">✉</span>
+            <span class="cl-text">irvin.martinez@utp.ac.pa</span>
+          </a>
+          <a href="#" target="_blank" rel="noopener" class="contact-link" id="cLinkedin">
+            <span class="cl-icon">in</span>
+            <span class="cl-text">LinkedIn</span>
+          </a>
+          <a href="#" target="_blank" rel="noopener" class="contact-link" id="cYoutube">
+            <span class="cl-icon">▶</span>
+            <span class="cl-text">YouTube</span>
+          </a>
+          <a href="https://github.com/irvinMartinez2709" target="_blank" rel="noopener" class="contact-link" id="cGithub">
+            <span class="cl-icon">⌂</span>
+            <span class="cl-text">GitHub</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="foot">
-    <div class="foot-in">
-      <span class="foot-logo">IM<span>.</span>PORTFOLIO</span>
-      <span class="foot-copy">&copy; 2026 Irvin Martínez &mdash; Portafolio de Programación II</span>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-brand">Programación <span>II</span></span>
+        <span class="footer-copy">&copy; 2026 Irvin Martínez</span>
+      </div>
     </div>
   </footer>
 
