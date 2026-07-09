@@ -137,7 +137,6 @@
     const p = data.profile
     document.getElementById('contEmail').value = p.email || ''
     document.getElementById('contLinkedin').value = (p.social && p.social.linkedin) || ''
-    document.getElementById('contYoutube').value = (p.social && p.social.youtube) || ''
     document.getElementById('contGithub').value = (p.social && p.social.github) || ''
   }
 
@@ -316,7 +315,6 @@
     if (!data.profile.social) data.profile.social = {}
     data.profile.email = document.getElementById('contEmail').value
     data.profile.social.linkedin = document.getElementById('contLinkedin').value
-    data.profile.social.youtube = document.getElementById('contYoutube').value
     data.profile.social.github = document.getElementById('contGithub').value
     addToPending('profile', data.profile)
     saveAll()

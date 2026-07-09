@@ -206,7 +206,7 @@
 
     /* desc */
     const desc = document.getElementById('heroDesc')
-    if (desc) desc.textContent = p.heroDesc || (p.bio ? p.bio.slice(0, 60) + '...' : 'Portafolio académico del semestre')
+    if (desc) desc.textContent = p.heroDesc || 'Portafolio académico del semestre'
 
     /* tags */
     const tagsEl = document.getElementById('heroTags')
@@ -328,8 +328,6 @@
     if (email && p.email) { email.href = `mailto:${p.email}`; email.querySelector('.cl-text').textContent = p.email }
     const li = document.getElementById('cLinkedin')
     if (li && p.social?.linkedin) li.href = p.social.linkedin
-    const yt = document.getElementById('cYoutube')
-    if (yt && p.social?.youtube) yt.href = p.social.youtube
     const gh = document.getElementById('cGithub')
     if (gh && p.social?.github) gh.href = p.social.github
   }
