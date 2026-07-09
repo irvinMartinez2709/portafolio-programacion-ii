@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "title": "Investigación 1",
+    "date": "27 de marzo",
+    "grade": 100,
+    "status": "Devuelto",
+    "cover": "",
+    "pdf": ""
+  }
+]
