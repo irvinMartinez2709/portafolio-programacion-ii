@@ -45,17 +45,20 @@
       <div class="admin-dash-body">
         <aside class="admin-sidebar">
           <nav class="admin-sidenav">
-            <button class="admin-snav-item active" data-section="activities">
+            <button class="admin-snav-item active" data-section="profile">
+              <span class="asi-icon">👤</span> Perfil
+            </button>
+            <button class="admin-snav-item" data-section="about">
+              <span class="asi-icon">📝</span> Sobre mí
+            </button>
+            <button class="admin-snav-item" data-section="contact">
+              <span class="asi-icon">📬</span> Contacto
+            </button>
+            <button class="admin-snav-item" data-section="activities">
               <span class="asi-icon">📋</span> Actividades
             </button>
             <button class="admin-snav-item" data-section="certificates">
               <span class="asi-icon">🏆</span> Certificados
-            </button>
-            <button class="admin-snav-item" data-section="evidences">
-              <span class="asi-icon">🖼️</span> Evidencias
-            </button>
-            <button class="admin-snav-item" data-section="profile">
-              <span class="asi-icon">👤</span> Perfil
             </button>
             <button class="admin-snav-item" data-section="skills">
               <span class="asi-icon">⚡</span> Habilidades
@@ -70,54 +73,8 @@
         </aside>
 
         <main class="admin-main">
-          <!-- ACTIVITIES -->
-          <section class="admin-section active" id="sec-activities">
-            <h2 class="admin-section-title">Gestionar Actividades</h2>
-            <form id="activityForm" class="admin-form">
-              <div class="admin-field"><label>Título</label><input type="text" id="actTitle" placeholder="Ej: Investigación 1" required /></div>
-              <div class="admin-field"><label>Fecha</label><input type="text" id="actDate" placeholder="Ej: 27 de marzo" /></div>
-              <div class="admin-row">
-                <div class="admin-field"><label>Calificación</label><input type="number" id="actGrade" placeholder="0-100" min="0" max="100" /></div>
-                <div class="admin-field"><label>Estado</label>
-                  <select id="actStatus"><option value="Devuelto">Devuelto</option><option value="Entregado">Entregado</option><option value="Pendiente">Pendiente</option></select>
-                </div>
-              </div>
-              <div class="admin-field"><label>URL Portada</label><input type="text" id="actCover" placeholder="assets/img/activities/..." /></div>
-              <div class="admin-field"><label>URL PDF</label><input type="text" id="actPdf" placeholder="assets/docs/..." /></div>
-              <button type="submit" class="admin-btn">Añadir Actividad</button>
-            </form>
-            <div id="activitiesList" class="admin-list"></div>
-          </section>
-
-          <!-- CERTIFICATES -->
-          <section class="admin-section" id="sec-certificates">
-            <h2 class="admin-section-title">Gestionar Certificados</h2>
-            <form id="certForm" class="admin-form">
-              <div class="admin-field"><label>Título</label><input type="text" id="certTitle" placeholder="Ej: Java" required /></div>
-              <div class="admin-field"><label>Descripción</label><input type="text" id="certDesc" placeholder="Breve descripción" /></div>
-              <div class="admin-field"><label>URL Imagen</label><input type="text" id="certImage" placeholder="assets/img/certificates/..." /></div>
-              <button type="submit" class="admin-btn">Añadir Certificado</button>
-            </form>
-            <div id="certificatesList" class="admin-list"></div>
-          </section>
-
-          <!-- EVIDENCES -->
-          <section class="admin-section" id="sec-evidences">
-            <h2 class="admin-section-title">Gestionar Evidencias</h2>
-            <form id="evidenceForm" class="admin-form">
-              <div class="admin-field">
-                <label>Actividad relacionada</label>
-                <select id="evActSelect"></select>
-              </div>
-              <div class="admin-field"><label>URL Imagen</label><input type="text" id="evidSrc" placeholder="assets/img/activities/..." required /></div>
-              <div class="admin-field"><label>Etiqueta</label><input type="text" id="evidLabel" placeholder="Ej: Captura 1" /></div>
-              <button type="submit" class="admin-btn">Añadir Evidencia</button>
-            </form>
-            <div id="evidencesList" class="admin-list"></div>
-          </section>
-
           <!-- PROFILE -->
-          <section class="admin-section" id="sec-profile">
+          <section class="admin-section active" id="sec-profile">
             <h2 class="admin-section-title">Editar Perfil</h2>
             <form id="profileForm" class="admin-form">
               <div class="admin-row">
@@ -135,13 +92,62 @@
               <div class="admin-field"><label>Asignatura</label><input type="text" id="profSubject" /></div>
               <div class="admin-field"><label>Año</label><input type="text" id="profYear" /></div>
               <div class="admin-field"><label>URL Foto</label><input type="text" id="profPhoto" /></div>
-              <div class="admin-field"><label>Biografía</label><textarea id="profBio" rows="4"></textarea></div>
-              <div class="admin-row">
-                <div class="admin-field"><label>LinkedIn URL</label><input type="text" id="profLinkedin" /></div>
-                <div class="admin-field"><label>YouTube URL</label><input type="text" id="profYoutube" /></div>
-              </div>
               <button type="submit" class="admin-btn">Guardar Perfil</button>
             </form>
+          </section>
+
+          <!-- ABOUT (Sobre mí) -->
+          <section class="admin-section" id="sec-about">
+            <h2 class="admin-section-title">Editar Sobre Mí</h2>
+            <form id="aboutForm" class="admin-form">
+              <div class="admin-field"><label>Biografía</label><textarea id="aboutBio" rows="6" placeholder="Escribe tu biografía aquí..."></textarea></div>
+              <button type="submit" class="admin-btn">Guardar Sobre Mí</button>
+            </form>
+          </section>
+
+          <!-- CONTACT -->
+          <section class="admin-section" id="sec-contact">
+            <h2 class="admin-section-title">Editar Contacto</h2>
+            <form id="contactForm" class="admin-form">
+              <div class="admin-field"><label>Email</label><input type="email" id="contEmail" placeholder="correo@ejemplo.com" /></div>
+              <div class="admin-field"><label>LinkedIn URL</label><input type="text" id="contLinkedin" placeholder="https://linkedin.com/in/..." /></div>
+              <div class="admin-field"><label>YouTube URL</label><input type="text" id="contYoutube" placeholder="https://youtube.com/..." /></div>
+              <div class="admin-field"><label>GitHub URL</label><input type="text" id="contGithub" placeholder="https://github.com/..." /></div>
+              <button type="submit" class="admin-btn">Guardar Contacto</button>
+            </form>
+          </section>
+
+          <!-- ACTIVITIES -->
+          <section class="admin-section" id="sec-activities">
+            <h2 class="admin-section-title">Gestionar Actividades</h2>
+            <form id="activityForm" class="admin-form">
+              <div class="admin-field"><label>Título</label><input type="text" id="actTitle" placeholder="Ej: Investigación 1" required /></div>
+              <div class="admin-field"><label>Fecha</label><input type="text" id="actDate" placeholder="Ej: 27 de marzo" /></div>
+              <div class="admin-row">
+                <div class="admin-field"><label>Calificación</label><input type="number" id="actGrade" placeholder="0-100" min="0" max="100" /></div>
+                <div class="admin-field"><label>Estado</label>
+                  <select id="actStatus"><option value="Devuelto">Devuelto</option><option value="Entregado">Entregado</option><option value="Pendiente">Pendiente</option></select>
+                </div>
+              </div>
+              <div class="admin-field"><label>URL Portada</label><input type="text" id="actCover" placeholder="assets/img/activities/..." /></div>
+              <div class="admin-field"><label>URL PDF</label><input type="text" id="actPdf" placeholder="assets/docs/..." /></div>
+              <button type="submit" class="admin-btn" id="actSubmitBtn">Añadir Actividad</button>
+              <button type="button" class="admin-btn admin-btn-cancel" id="actCancelBtn" style="display:none;">Cancelar</button>
+            </form>
+            <div id="activitiesList" class="admin-list"></div>
+          </section>
+
+          <!-- CERTIFICATES -->
+          <section class="admin-section" id="sec-certificates">
+            <h2 class="admin-section-title">Gestionar Certificados</h2>
+            <form id="certForm" class="admin-form">
+              <div class="admin-field"><label>Título</label><input type="text" id="certTitle" placeholder="Ej: Java" required /></div>
+              <div class="admin-field"><label>Descripción</label><input type="text" id="certDesc" placeholder="Breve descripción" /></div>
+              <div class="admin-field"><label>URL Imagen</label><input type="text" id="certImage" placeholder="assets/img/certificates/..." /></div>
+              <button type="submit" class="admin-btn" id="certSubmitBtn">Añadir Certificado</button>
+              <button type="button" class="admin-btn admin-btn-cancel" id="certCancelBtn" style="display:none;">Cancelar</button>
+            </form>
+            <div id="certificatesList" class="admin-list"></div>
           </section>
 
           <!-- SKILLS -->
@@ -152,14 +158,16 @@
                 <div class="admin-field"><label>Nombre</label><input type="text" id="skillName" placeholder="Ej: HTML5" required /></div>
                 <div class="admin-field"><label>Porcentaje</label><input type="number" id="skillPct" placeholder="0-100" min="0" max="100" required /></div>
               </div>
-              <button type="submit" class="admin-btn">Añadir Habilidad</button>
+              <button type="submit" class="admin-btn" id="skillSubmitBtn">Añadir Habilidad</button>
+              <button type="button" class="admin-btn admin-btn-cancel" id="skillCancelBtn" style="display:none;">Cancelar</button>
             </form>
             <div id="skillsList" class="admin-list"></div>
 
             <h3 class="admin-section-subtitle">Chips (etiquetas)</h3>
             <form id="chipForm" class="admin-form">
               <div class="admin-field"><label>Nuevo chip</label><input type="text" id="chipName" placeholder="Ej: React" required /></div>
-              <button type="submit" class="admin-btn">Añadir Chip</button>
+              <button type="submit" class="admin-btn" id="chipSubmitBtn">Añadir Chip</button>
+              <button type="button" class="admin-btn admin-btn-cancel" id="chipCancelBtn" style="display:none;">Cancelar</button>
             </form>
             <div id="chipsList" class="admin-list"></div>
           </section>

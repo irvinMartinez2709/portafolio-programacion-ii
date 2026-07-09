@@ -178,6 +178,17 @@ body { cursor: auto; }
 }
 .admin-btn:hover { background: var(--neon-cyan); box-shadow: 0 0 20px var(--neon-cyan); }
 
+.admin-btn-cancel {
+  background: none !important;
+  border: 1px solid var(--glass-border) !important;
+  color: var(--text-secondary) !important;
+}
+.admin-btn-cancel:hover {
+  border-color: var(--neon-magenta) !important;
+  color: var(--neon-magenta) !important;
+  box-shadow: none !important;
+}
+
 .admin-btn-sm.danger {
   border-color: var(--neon-magenta);
   color: var(--neon-magenta);
@@ -207,6 +218,7 @@ body { cursor: auto; }
   cursor: pointer; transition: all 0.2s;
 }
 .admin-list-item button:hover { border-color: var(--neon-magenta); color: var(--neon-magenta); }
+.admin-list-item button:first-of-type:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
 
 /* ── RESPONSIVE ─────────────────────────────────────────────── */
 @media (max-width: 768px) {

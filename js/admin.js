@@ -4,10 +4,11 @@
   let credentials = { username: 'Sarita', password: '_2709_' };
   let data = {
     profile: {}, activities: [], certificates: [],
-    skills: { items: [], chips: [], particleCount: 60 },
-    evidences: {}
+    skills: { items: [], chips: [], particleCount: 60 }
   };
   let pendingChanges = {};
+  let editingIndex = null;
+  let editingType = null;
 
   const loginScreen = document.getElementById('loginScreen');
   const dashScreen = document.getElementById('dashboardScreen');
@@ -33,18 +34,16 @@
 
   async function loadAllData() {
     try {
-      const [p, a, c, s, e] = await Promise.all([
+      const [p, a, c, s] = await Promise.all([
         fetch('data/profile.json').then(r => r.json()),
         fetch('data/activities.json').then(r => r.json()),
         fetch('data/certificates.json').then(r => r.json()),
         fetch('data/skills.json').then(r => r.json()),
-        fetch('data/evidences.json').then(r => r.json()),
       ]);
       data.profile = p;
       data.activities = a;
       data.certificates = c;
       data.skills = s;
-      data.evidences = e;
     } catch (err) {
       console.warn('Error loading data:', err);
     }
@@ -86,12 +85,12 @@
   /* ── POPULATE FORMS ────────────────────────────────────────── */
   function populateAll() {
     populateProfileForm();
+    populateAboutForm();
+    populateContactForm();
     populateActivitiesList();
     populateCertificatesList();
     populateSkillsList();
     populateChipsList();
-    populateEvidencesList();
-    populateEvSelect();
     populateParticleCount();
   }
 
@@ -107,16 +106,36 @@
     document.getElementById('profSubject').value = p.subject || '';
     document.getElementById('profYear').value = p.year || '';
     document.getElementById('profPhoto').value = p.photo || '';
-    document.getElementById('profBio').value = p.bio || '';
-    document.getElementById('profLinkedin').value = (p.social && p.social.linkedin) || '';
-    document.getElementById('profYoutube').value = (p.social && p.social.youtube) || '';
+  }
+
+  function populateAboutForm() {
+    const p = data.profile;
+    document.getElementById('aboutBio').value = p.bio || '';
+  }
+
+  function populateContactForm() {
+    const p = data.profile;
+    document.getElementById('contEmail').value = p.email || '';
+    document.getElementById('contLinkedin').value = (p.social && p.social.linkedin) || '';
+    document.getElementById('contYoutube').value = (p.social && p.social.youtube) || '';
+    document.getElementById('contGithub').value = (p.social && p.social.github) || '';
+  }
+
+  function cancelEdit(type) {
+    editingIndex = null;
+    editingType = null;
+    document.getElementById(type + 'Form').reset();
+    document.getElementById(type + 'SubmitBtn').textContent = type === 'act' ? 'Añadir Actividad' : type === 'cert' ? 'Añadir Certificado' : type === 'skill' ? 'Añadir Habilidad' : 'Añadir Chip';
+    document.getElementById(type + 'CancelBtn').style.display = 'none';
   }
 
   function populateActivitiesList() {
     const container = document.getElementById('activitiesList');
     if (!data.activities.length) { container.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">No hay actividades aún.</p>'; return; }
     container.innerHTML = data.activities.map((act, i) =>
-      `<div class="admin-list-item"><span>#${i + 1} — <strong>${act.title}</strong> (${act.status || 'Pendiente'})</span><button onclick="adminRemoveActivity(${i})">Eliminar</button></div>`
+      `<div class="admin-list-item"><span>#${i + 1} — <strong>${act.title}</strong> (${act.status || 'Pendiente'})</span>
+        <button onclick="adminEditActivity(${i})">Editar</button>
+        <button onclick="adminRemoveActivity(${i})">Eliminar</button></div>`
     ).join('');
   }
 
@@ -124,7 +143,9 @@
     const container = document.getElementById('certificatesList');
     if (!data.certificates.length) { container.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">No hay certificados aún.</p>'; return; }
     container.innerHTML = data.certificates.map((cert, i) =>
-      `<div class="admin-list-item"><span>#${i+1} - <strong>${cert.title}</strong></span><button onclick="adminRemoveCertificate(${i})">Eliminar</button></div>`
+      `<div class="admin-list-item"><span>#${i+1} - <strong>${cert.title}</strong></span>
+        <button onclick="adminEditCertificate(${i})">Editar</button>
+        <button onclick="adminRemoveCertificate(${i})">Eliminar</button></div>`
     ).join('');
   }
 
@@ -132,7 +153,9 @@
     const container = document.getElementById('skillsList');
     if (!data.skills.items.length) { container.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">No hay habilidades aún.</p>'; return; }
     container.innerHTML = data.skills.items.map((item, i) =>
-      `<div class="admin-list-item"><span><strong>${item.name}</strong> — ${item.percentage}%</span><button onclick="adminRemoveSkill(${i})">Eliminar</button></div>`
+      `<div class="admin-list-item"><span><strong>${item.name}</strong> — ${item.percentage}%</span>
+        <button onclick="adminEditSkill(${i})">Editar</button>
+        <button onclick="adminRemoveSkill(${i})">Eliminar</button></div>`
     ).join('');
   }
 
@@ -140,32 +163,10 @@
     const container = document.getElementById('chipsList');
     if (!data.skills.chips.length) { container.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">No hay chips aún.</p>'; return; }
     container.innerHTML = data.skills.chips.map((chip, i) =>
-      `<div class="admin-list-item"><span><strong>${chip}</strong></span><button onclick="adminRemoveChip(${i})">Eliminar</button></div>`
+      `<div class="admin-list-item"><span><strong>${chip}</strong></span>
+        <button onclick="adminEditChip(${i})">Editar</button>
+        <button onclick="adminRemoveChip(${i})">Eliminar</button></div>`
     ).join('');
-  }
-
-  function populateEvSelect() {
-    const sel = document.getElementById('evActSelect');
-    sel.innerHTML = data.activities.map((act, i) =>
-      `<option value="${i}">${act.title}</option>`
-    ).join('');
-  }
-
-  function populateEvidencesList() {
-    const container = document.getElementById('evidencesList');
-    let html = '';
-    data.activities.forEach((act, idx) => {
-      const key = `act-${idx}`;
-      const evs = data.evidences[key] || [];
-      if (!evs.length) return;
-      html += `<div class="admin-list-item" style="flex-wrap:wrap;"><span><strong>${act.title}</strong>: ${evs.length} evidencia(s)</span>`;
-      evs.forEach((ev, j) => {
-        html += `<button onclick="adminRemoveEvidence(${idx}, ${j})" style="margin-left:4px;">✕ ${ev.label || j+1}</button>`;
-      });
-      html += `</div>`;
-    });
-    if (!html) html = '<p style="color:var(--text-secondary);font-size:13px;">No hay evidencias aún.</p>';
-    container.innerHTML = html;
   }
 
   function populateParticleCount() {
@@ -191,29 +192,24 @@
     const auth = { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json' };
     const json = (r) => r.json();
     try {
-      /* 1. Obtener el commit actual de la rama main */
       const refUrl = `https://api.github.com/repos/${owner}/${repo}/git/refs/heads/main`;
       const refRes = await fetch(refUrl, { headers: auth });
       if (!refRes.ok) throw new Error(`No se pudo obtener la rama (${refRes.status}): asegúrate de que el token tenga permisos de escritura en el repo.`);
       const latestSha = (await json(refRes)).object.sha;
 
-      /* 2. Obtener el tree SHA del commit actual */
       const commitRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/commits/${latestSha}`, { headers: auth });
       const baseTreeSha = (await json(commitRes)).tree.sha;
 
-      /* 3. Preparar archivos a actualizar */
       const files = {
         'data/activities.json': JSON.stringify(data.activities, null, 2),
         'data/certificates.json': JSON.stringify(data.certificates, null, 2),
         'data/profile.json': JSON.stringify(data.profile, null, 2),
         'data/skills.json': JSON.stringify(data.skills, null, 2),
-        'data/evidences.json': JSON.stringify(data.evidences, null, 2),
       };
       if (pendingChanges.credentials) {
         files['data/credentials.json'] = JSON.stringify(credentials, null, 2);
       }
 
-      /* 4. Crear blobs para cada archivo */
       const treeItems = [];
       for (const [path, content] of Object.entries(files)) {
         const blobRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/blobs`, {
@@ -225,7 +221,6 @@
         treeItems.push({ path, mode: '100644', type: 'blob', sha: (await json(blobRes)).sha });
       }
 
-      /* 5. Crear un nuevo tree basado en el actual + cambios */
       const treeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees`, {
         method: 'POST',
         headers: { ...auth, 'Content-Type': 'application/json' },
@@ -233,7 +228,6 @@
       });
       if (!treeRes.ok) throw new Error('Error al crear el tree');
 
-      /* 6. Crear un commit apuntando al nuevo tree */
       const newTreeSha = (await json(treeRes)).sha;
       const commitRes2 = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/commits`, {
         method: 'POST',
@@ -246,7 +240,6 @@
       });
       if (!commitRes2.ok) throw new Error('Error al crear el commit');
 
-      /* 7. Mover la rama main al nuevo commit */
       const newCommitSha = (await json(commitRes2)).sha;
       const updateRes = await fetch(refUrl, {
         method: 'PATCH',
@@ -267,51 +260,6 @@
   }
 
   /* ── FORM HANDLERS ─────────────────────────────────────────── */
-  document.getElementById('activityForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    data.activities.push({
-      title: document.getElementById('actTitle').value,
-      date: document.getElementById('actDate').value,
-      grade: document.getElementById('actGrade').value ? parseInt(document.getElementById('actGrade').value) : null,
-      status: document.getElementById('actStatus').value,
-      cover: document.getElementById('actCover').value,
-      pdf: document.getElementById('actPdf').value,
-    });
-    addToPending('activities', data.activities);
-    populateActivitiesList();
-    populateEvSelect();
-    e.target.reset();
-    saveAll();
-  });
-
-  document.getElementById('certForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    data.certificates.push({
-      title: document.getElementById('certTitle').value,
-      description: document.getElementById('certDesc').value,
-      image: document.getElementById('certImage').value,
-    });
-    addToPending('certificates', data.certificates);
-    populateCertificatesList();
-    e.target.reset();
-    saveAll();
-  });
-
-  document.getElementById('evidenceForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const actIdx = parseInt(document.getElementById('evActSelect').value);
-    const key = `act-${actIdx}`;
-    if (!data.evidences[key]) data.evidences[key] = [];
-    data.evidences[key].push({
-      src: document.getElementById('evidSrc').value,
-      label: document.getElementById('evidLabel').value || `Captura ${data.evidences[key].length + 1}`,
-    });
-    addToPending('evidences', data.evidences);
-    populateEvidencesList();
-    e.target.reset();
-    saveAll();
-  });
-
   document.getElementById('profileForm').addEventListener('submit', (e) => {
     e.preventDefault();
     data.profile = {
@@ -324,24 +272,96 @@
       subject: document.getElementById('profSubject').value,
       year: document.getElementById('profYear').value,
       photo: document.getElementById('profPhoto').value,
-      bio: document.getElementById('profBio').value,
-      social: {
-        linkedin: document.getElementById('profLinkedin').value,
-        youtube: document.getElementById('profYoutube').value,
-        github: 'https://github.com/irvinMartinez2709',
-      }
+      bio: data.profile.bio || '',
+      social: data.profile.social || { linkedin: '', youtube: '', github: 'https://github.com/irvinMartinez2709' }
     };
     addToPending('profile', data.profile);
     saveAll();
     alert('Perfil guardado.');
   });
 
+  document.getElementById('aboutForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    data.profile.bio = document.getElementById('aboutBio').value;
+    addToPending('profile', data.profile);
+    saveAll();
+    alert('Sobre mí guardado.');
+  });
+
+  document.getElementById('contactForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!data.profile.social) data.profile.social = {};
+    data.profile.email = document.getElementById('contEmail').value;
+    data.profile.social.linkedin = document.getElementById('contLinkedin').value;
+    data.profile.social.youtube = document.getElementById('contYoutube').value;
+    data.profile.social.github = document.getElementById('contGithub').value;
+    addToPending('profile', data.profile);
+    saveAll();
+    alert('Contacto guardado.');
+  });
+
+  document.getElementById('activityForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const activity = {
+      title: document.getElementById('actTitle').value,
+      date: document.getElementById('actDate').value,
+      grade: document.getElementById('actGrade').value ? parseInt(document.getElementById('actGrade').value) : null,
+      status: document.getElementById('actStatus').value,
+      cover: document.getElementById('actCover').value,
+      pdf: document.getElementById('actPdf').value,
+    };
+    if (editingIndex !== null && editingType === 'act') {
+      data.activities[editingIndex] = activity;
+      editingIndex = null;
+      editingType = null;
+      document.getElementById('actSubmitBtn').textContent = 'Añadir Actividad';
+      document.getElementById('actCancelBtn').style.display = 'none';
+    } else {
+      data.activities.push(activity);
+    }
+    addToPending('activities', data.activities);
+    populateActivitiesList();
+    e.target.reset();
+    saveAll();
+  });
+
+  document.getElementById('certForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const cert = {
+      title: document.getElementById('certTitle').value,
+      description: document.getElementById('certDesc').value,
+      image: document.getElementById('certImage').value,
+    };
+    if (editingIndex !== null && editingType === 'cert') {
+      data.certificates[editingIndex] = cert;
+      editingIndex = null;
+      editingType = null;
+      document.getElementById('certSubmitBtn').textContent = 'Añadir Certificado';
+      document.getElementById('certCancelBtn').style.display = 'none';
+    } else {
+      data.certificates.push(cert);
+    }
+    addToPending('certificates', data.certificates);
+    populateCertificatesList();
+    e.target.reset();
+    saveAll();
+  });
+
   document.getElementById('skillForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    data.skills.items.push({
+    const skill = {
       name: document.getElementById('skillName').value,
       percentage: parseInt(document.getElementById('skillPct').value),
-    });
+    };
+    if (editingIndex !== null && editingType === 'skill') {
+      data.skills.items[editingIndex] = skill;
+      editingIndex = null;
+      editingType = null;
+      document.getElementById('skillSubmitBtn').textContent = 'Añadir Habilidad';
+      document.getElementById('skillCancelBtn').style.display = 'none';
+    } else {
+      data.skills.items.push(skill);
+    }
     addToPending('skills', data.skills);
     populateSkillsList();
     e.target.reset();
@@ -350,7 +370,16 @@
 
   document.getElementById('chipForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    data.skills.chips.push(document.getElementById('chipName').value);
+    const chip = document.getElementById('chipName').value;
+    if (editingIndex !== null && editingType === 'chip') {
+      data.skills.chips[editingIndex] = chip;
+      editingIndex = null;
+      editingType = null;
+      document.getElementById('chipSubmitBtn').textContent = 'Añadir Chip';
+      document.getElementById('chipCancelBtn').style.display = 'none';
+    } else {
+      data.skills.chips.push(chip);
+    }
     addToPending('skills', data.skills);
     populateChipsList();
     e.target.reset();
@@ -390,12 +419,62 @@
     saveAll();
   });
 
+  /* ── EDIT FUNCTIONS ────────────────────────────────────────── */
+  window.adminEditActivity = function(idx) {
+    editingIndex = idx;
+    editingType = 'act';
+    const act = data.activities[idx];
+    document.getElementById('actTitle').value = act.title || '';
+    document.getElementById('actDate').value = act.date || '';
+    document.getElementById('actGrade').value = act.grade != null ? act.grade : '';
+    document.getElementById('actStatus').value = act.status || 'Pendiente';
+    document.getElementById('actCover').value = act.cover || '';
+    document.getElementById('actPdf').value = act.pdf || '';
+    document.getElementById('actSubmitBtn').textContent = 'Actualizar Actividad';
+    document.getElementById('actCancelBtn').style.display = 'inline-block';
+    document.querySelector('[data-section="activities"]').click();
+  };
+  window.adminEditCertificate = function(idx) {
+    editingIndex = idx;
+    editingType = 'cert';
+    const cert = data.certificates[idx];
+    document.getElementById('certTitle').value = cert.title || '';
+    document.getElementById('certDesc').value = cert.description || '';
+    document.getElementById('certImage').value = cert.image || '';
+    document.getElementById('certSubmitBtn').textContent = 'Actualizar Certificado';
+    document.getElementById('certCancelBtn').style.display = 'inline-block';
+    document.querySelector('[data-section="certificates"]').click();
+  };
+  window.adminEditSkill = function(idx) {
+    editingIndex = idx;
+    editingType = 'skill';
+    const skill = data.skills.items[idx];
+    document.getElementById('skillName').value = skill.name || '';
+    document.getElementById('skillPct').value = skill.percentage || '';
+    document.getElementById('skillSubmitBtn').textContent = 'Actualizar Habilidad';
+    document.getElementById('skillCancelBtn').style.display = 'inline-block';
+    document.querySelector('[data-section="skills"]').click();
+  };
+  window.adminEditChip = function(idx) {
+    editingIndex = idx;
+    editingType = 'chip';
+    document.getElementById('chipName').value = data.skills.chips[idx] || '';
+    document.getElementById('chipSubmitBtn').textContent = 'Actualizar Chip';
+    document.getElementById('chipCancelBtn').style.display = 'inline-block';
+    document.querySelector('[data-section="skills"]').click();
+  };
+
+  /* ── CANCEL BUTTONS ────────────────────────────────────────── */
+  document.getElementById('actCancelBtn').addEventListener('click', () => cancelEdit('act'));
+  document.getElementById('certCancelBtn').addEventListener('click', () => cancelEdit('cert'));
+  document.getElementById('skillCancelBtn').addEventListener('click', () => cancelEdit('skill'));
+  document.getElementById('chipCancelBtn').addEventListener('click', () => cancelEdit('chip'));
+
   /* ── REMOVE FUNCTIONS (globally accessible for onclick) ────── */
   window.adminRemoveActivity = function(idx) {
     data.activities.splice(idx, 1);
     addToPending('activities', data.activities);
     populateActivitiesList();
-    populateEvSelect();
     saveAll();
   };
   window.adminRemoveCertificate = function(idx) {
@@ -416,14 +495,6 @@
     populateChipsList();
     saveAll();
   };
-  window.adminRemoveEvidence = function(actIdx, evIdx) {
-    const key = `act-${actIdx}`;
-    if (data.evidences[key]) data.evidences[key].splice(evIdx, 1);
-    if (data.evidences[key] && !data.evidences[key].length) delete data.evidences[key];
-    addToPending('evidences', data.evidences);
-    populateEvidencesList();
-    saveAll();
-  };
 
   function saveAll() {
     localStorage.setItem('admin_data', JSON.stringify(data));
@@ -431,7 +502,7 @@
     localStorage.setItem('admin_credentials', JSON.stringify(credentials));
   }
 
-  // Add a "Commit to GitHub" button in the sidebar or dashboard
+  /* ── COMMIT BUTTON ─────────────────────────────────────────── */
   function addCommitButton() {
     const sidebar = document.querySelector('.admin-sidenav');
     if (!sidebar) return;

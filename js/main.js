@@ -16,18 +16,16 @@
   let activities = [];
   let certificates = [];
   let skillsData = { items: [], chips: [], particleCount: 60 };
-  let evidences = {};
 
   async function loadData() {
     try {
-      const [p, a, c, s, e] = await Promise.all([
+      const [p, a, c, s] = await Promise.all([
         fetch('data/profile.json').then(r => r.json()),
         fetch('data/activities.json').then(r => r.json()),
         fetch('data/certificates.json').then(r => r.json()),
         fetch('data/skills.json').then(r => r.json()),
-        fetch('data/evidences.json').then(r => r.json()),
       ]);
-      profile = p; activities = a; certificates = c; skillsData = s; evidences = e;
+      profile = p; activities = a; certificates = c; skillsData = s;
     } catch (err) {
       console.warn('Error loading data:', err);
     }
@@ -39,7 +37,7 @@
   });
   document.addEventListener('mouseleave', () => { curDot.style.opacity = '0'; curRing.style.opacity = '0'; });
   document.addEventListener('mouseenter', () => { curDot.style.opacity = '1'; curRing.style.opacity = '1'; });
-  document.querySelectorAll('a, button, .cert-card, .eg-item').forEach(el => {
+  document.querySelectorAll('a, button, .cert-card').forEach(el => {
     el.addEventListener('mouseenter', () => curRing.classList.add('hover'));
     el.addEventListener('mouseleave', () => curRing.classList.remove('hover'));
   });
@@ -216,12 +214,10 @@
     if (liLink && profile.social?.linkedin) liLink.href = profile.social.linkedin;
     const ytLink = document.querySelector('.cl-yt');
     if (ytLink && profile.social?.youtube) ytLink.href = profile.social.youtube;
+    const ghLink = document.querySelector('.cl-gh');
+    if (ghLink && profile.social?.github) ghLink.href = profile.social.github;
     const photoImg = document.querySelector('.photo-frame img');
     if (photoImg) photoImg.src = profile.photo || 'assets/img/profile/placeholder.jpg';
-    const ncName = document.querySelector('.nc-name');
-    if (ncName) ncName.textContent = profile.name;
-    const ncAv = document.querySelector('.nc-av');
-    if (ncAv) ncAv.textContent = profile.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
   }
 
   function renderActivities() {
@@ -236,13 +232,15 @@
       const gradeClass = act.grade === 100 ? 'perfect' : act.grade != null ? '' : 'pending';
       const gradeD = act.grade != null ? `${act.grade}<small>/100</small>` : '&mdash;<small>/100</small>';
       return `<article class="rcard reveal" style="--di:${i * 0.12}s">
-        <div class="rcard-img-wrap">
-          <img src="${act.cover || ''}" alt="${act.title}" class="rcard-img" onerror="this.classList.add('error')" />
-          <div class="rcard-img-fb">${act.title}</div>
-          <div class="rcard-img-overlay"><a href="${act.pdf || '#'}" target="_blank" rel="noopener" class="rcard-pdf-pill">Ver PDF &#8599;</a></div>
+        <div class="rcard-top">
+          <div class="rcard-num">${String(i + 1).padStart(2, '0')}</div>
+          <span class="rcbadge ${badgeClass}">${act.status || 'Pendiente'}</span>
         </div>
-        <div class="rcard-top"><div class="rcard-num">${String(i + 1).padStart(2, '0')}</div><span class="rcbadge ${badgeClass}">${act.status || 'Pendiente'}</span></div>
         <div class="rcard-body">
+          <div class="rcard-img-wrap">
+            <img src="${act.cover || ''}" alt="${act.title}" class="rcard-img" onerror="this.classList.add('error')" />
+            <div class="rcard-img-fb">${act.title}</div>
+          </div>
           <h3 class="rcard-title">${act.title}</h3>
           <dl class="rcard-meta">
             <div class="rmr"><dt>Fecha</dt><dd>${act.date || 'Por confirmar'}</dd></div>
@@ -250,7 +248,6 @@
           </dl>
           <div class="rcard-btns">
             <a href="${act.pdf || '#'}" target="_blank" rel="noopener" class="rc-btn">Abrir PDF &#8599;</a>
-            <a href="#evidencias" class="rc-btn-o">Ver capturas</a>
           </div>
         </div>
         <div class="rcard-speed"></div>
@@ -282,51 +279,8 @@
     });
   }
 
-  function renderEvidences() {
-    const wrap = document.querySelector('.evid-inner');
-    if (!wrap) return;
-    wrap.querySelectorAll('.evid-project').forEach(el => el.remove());
-    if (!activities.length) {
-      wrap.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🖼️</div><div class="empty-state-text">No hay evidencias aún.</div></div>`;
-      return;
-    }
-    let hasEv = false;
-    activities.forEach((act, idx) => {
-      const key = `act-${idx}`;
-      const evList = evidences[key] || [];
-      evList.push(...(act.evidences || []));
-      // deduplicate
-      const seen = new Set();
-      const unique = evList.filter(e => { const k = e.src + e.label; if (seen.has(k)) return false; seen.add(k); return true; });
-      if (!unique.length) return;
-      hasEv = true;
-      const el = document.createElement('div');
-      el.className = 'evid-project reveal';
-      el.style.setProperty('--di', `${idx * 0.1}s`);
-      el.innerHTML = `<div class="ep-head"><span class="ep-num">${String(idx + 1).padStart(2, '0')}</span>
-        <div class="ep-meta-wrap"><h3 class="ep-title">${act.title}</h3><span class="ep-meta">${act.date || ''}</span></div>
-        <a href="${act.pdf || '#'}" target="_blank" rel="noopener" class="ep-pdf">PDF &#8599;</a></div>
-        <div class="evid-grid">${unique.map((ev, j) =>
-          `<div class="eg-item" data-lb-src="${ev.src || ''}" data-lb-alt="${ev.label || act.title}" role="button" tabindex="0">
-            <img src="${ev.src || ''}" alt="${ev.label || act.title + ' ' + (j + 1)}" onerror="this.classList.add('error')" />
-            <div class="eg-img-fb">Evidencia no disponible</div>
-            <div class="eg-overlay"><span>AMPLIAR &#8599;</span></div>
-            <span class="eg-label">${ev.label || `Captura ${j + 1}`}</span></div>`
-        ).join('')}</div>`;
-      wrap.appendChild(el);
-      revealObserver.observe(el);
-      el.querySelectorAll('.eg-item').forEach(e => e.addEventListener('click', () => openLightbox(e.dataset.lbSrc, e.dataset.lbAlt)));
-    });
-    if (!hasEv) wrap.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🖼️</div><div class="empty-state-text">No hay evidencias aún.</div></div>`;
-  }
-
   function renderSkills() {
     if (!skillsData) return;
-    const chipsC = document.querySelector('.schips');
-    if (chipsC && skillsData.chips) {
-      chipsC.innerHTML = skillsData.chips.map((c, i) => `<span class="schip reveal" style="--di:${i * 0.07}s">${c}</span>`).join('');
-      observeReveal(chipsC);
-    }
     const barsC = document.querySelector('.sbars');
     if (barsC && skillsData.items) {
       barsC.innerHTML = skillsData.items.map((item, i) =>
@@ -338,6 +292,11 @@
       barsC.querySelectorAll('.sbar').forEach(el => barObserver.observe(el));
       observeReveal(barsC);
     }
+    const chipsC = document.querySelector('.schips');
+    if (chipsC && skillsData.chips) {
+      chipsC.innerHTML = skillsData.chips.map((c, i) => `<span class="schip reveal" style="--di:${i * 0.07}s">${c}</span>`).join('');
+      observeReveal(chipsC);
+    }
   }
 
   async function boot() {
@@ -345,7 +304,6 @@
     renderProfile();
     renderActivities();
     renderCertificates();
-    renderEvidences();
     renderSkills();
     new LavaEffect('lavaCanvas');
     document.querySelectorAll('img').forEach(img => img.addEventListener('error', function () { this.classList.add('error'); }));
