@@ -27,9 +27,7 @@
     try {
       const r = await fetch('data/credentials.json')
       credentials = await r.json()
-    } catch (e) {
-      console.warn('No credentials file, using defaults')
-    }
+    } catch (e) {}
   }
 
   async function loadAllData() {
@@ -40,10 +38,25 @@
         fetch('data/certificates.json').then(r => r.json()),
         fetch('data/skills.json').then(r => r.json()),
       ])
-      data.profile = p; data.activities = a; data.certificates = c; data.skills = s
+      return { profile: p, activities: a, certificates: c, skills: s }
     } catch (err) {
       console.warn('Error loading data:', err)
+      return null
     }
+  }
+
+  function deepMerge(target, source) {
+    const result = { ...target }
+    for (const key of Object.keys(source)) {
+      if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+        result[key] = deepMerge(result[key] || {}, source[key])
+      } else {
+        if (result[key] === undefined || result[key] === null || result[key] === '') {
+          result[key] = source[key]
+        }
+      }
+    }
+    return result
   }
 
   /* LOGIN */
@@ -138,7 +151,7 @@
 
   function populateActivitiesList() {
     const c = document.getElementById('activitiesList')
-    if (!data.activities.length) { c.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">No hay actividades.</p>'; return }
+    if (!data.activities.length) { c.innerHTML = '<p style="color:var(--text2);font-size:13px;">No hay actividades.</p>'; return }
     c.innerHTML = data.activities.map((a, i) =>
       `<div class="admin-list-item"><span>#${i+1} <strong>${a.title}</strong> (${a.status||'Pendiente'})</span>
         <button onclick="adminEditActivity(${i})">Editar</button>
@@ -148,7 +161,7 @@
 
   function populateCertificatesList() {
     const c = document.getElementById('certificatesList')
-    if (!data.certificates.length) { c.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">No hay certificados.</p>'; return }
+    if (!data.certificates.length) { c.innerHTML = '<p style="color:var(--text2);font-size:13px;">No hay certificados.</p>'; return }
     c.innerHTML = data.certificates.map((cert, i) =>
       `<div class="admin-list-item"><span>#${i+1} <strong>${cert.title}</strong></span>
         <button onclick="adminEditCertificate(${i})">Editar</button>
@@ -158,7 +171,7 @@
 
   function populateSkillsList() {
     const c = document.getElementById('skillsList')
-    if (!data.skills.items.length) { c.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">No hay habilidades.</p>'; return }
+    if (!data.skills.items.length) { c.innerHTML = '<p style="color:var(--text2);font-size:13px;">No hay habilidades.</p>'; return }
     c.innerHTML = data.skills.items.map((item, i) =>
       `<div class="admin-list-item"><span><strong>${item.name}</strong> — ${item.percentage}%</span>
         <button onclick="adminEditSkill(${i})">Editar</button>
@@ -168,7 +181,7 @@
 
   function populateChipsList() {
     const c = document.getElementById('chipsList')
-    if (!data.skills.chips.length) { c.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">No hay chips.</p>'; return }
+    if (!data.skills.chips.length) { c.innerHTML = '<p style="color:var(--text2);font-size:13px;">No hay chips.</p>'; return }
     c.innerHTML = data.skills.chips.map((chip, i) =>
       `<div class="admin-list-item"><span><strong>${chip}</strong></span>
         <button onclick="adminEditChip(${i})">Editar</button>
@@ -185,24 +198,31 @@
   /* HELPERS */
   function addToPending(key, value) { pendingChanges[key] = value }
 
-  async function commitAll() {
+  function saveAll() {
+    localStorage.setItem('admin_data', JSON.stringify(data))
+    localStorage.setItem('admin_pending', JSON.stringify(pendingChanges))
+    localStorage.setItem('admin_credentials', JSON.stringify(credentials))
+    console.log('✅ Datos guardados en localStorage:', JSON.stringify(data.profile).slice(0, 200))
+  }
+
+  async function commitToGitHub() {
     const token = localStorage.getItem('gh_token')
     if (!token) {
-      alert('⚠️ No hay token de GitHub.\n\nLos cambios están guardados LOCALMENTE.\nPara subirlos: ve a GitHub > Settings > Developer Settings > Personal Access Tokens > Fine-grained tokens, crea uno con "contents: write", luego en consola del navegador escribe:\n  localStorage.setItem("gh_token", "TU_TOKEN")\n  y vuelve a hacer clic en Subir a GitHub.')
+      alert('⚠️ No hay token de GitHub.\n\nLos cambios están guardados LOCALMENTE.\n\nPara subirlos:\n1. Crea un token en GitHub > Settings > Developer Settings > Personal Access Tokens > Fine-grained tokens\n2. Permiso: "contents: write" para tu repo\n3. En consola del navegador (F12):\n   localStorage.setItem("gh_token", "TU_TOKEN")\n4. Vuelve a hacer clic en "Subir a GitHub"')
       return
     }
     const owner = 'irvinMartinez2709'
     const repo = 'portafolio-programacion-ii'
-    const auth = { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json' }
-    const json = (r) => r.json()
+    const headers = { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+    const j = (r) => r.json()
     try {
       const refUrl = `https://api.github.com/repos/${owner}/${repo}/git/refs/heads/main`
-      const refRes = await fetch(refUrl, { headers: auth })
-      if (!refRes.ok) throw new Error(`No se pudo obtener la rama (${refRes.status})`)
-      const latestSha = (await json(refRes)).object.sha
+      const refRes = await fetch(refUrl, { headers })
+      if (!refRes.ok) throw new Error(`Error al obtener rama (${refRes.status})`)
+      const latestSha = (await j(refRes)).object.sha
 
-      const commitRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/commits/${latestSha}`, { headers: auth })
-      const baseTreeSha = (await json(commitRes)).tree.sha
+      const commitRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/commits/${latestSha}`, { headers })
+      const baseTreeSha = (await j(commitRes)).tree.sha
 
       const files = {
         'data/activities.json': JSON.stringify(data.activities, null, 2),
@@ -217,46 +237,43 @@
       const treeItems = []
       for (const [path, content] of Object.entries(files)) {
         const blobRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/blobs`, {
-          method: 'POST',
-          headers: { ...auth, 'Content-Type': 'application/json' },
+          method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
           body: JSON.stringify({ content, encoding: 'utf-8' })
         })
         if (!blobRes.ok) throw new Error(`Error al crear blob para ${path}`)
-        treeItems.push({ path, mode: '100644', type: 'blob', sha: (await json(blobRes)).sha })
+        treeItems.push({ path, mode: '100644', type: 'blob', sha: (await j(blobRes)).sha })
       }
 
       const treeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees`, {
-        method: 'POST',
-        headers: { ...auth, 'Content-Type': 'application/json' },
+        method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({ base_tree: baseTreeSha, tree: treeItems })
       })
       if (!treeRes.ok) throw new Error('Error al crear tree')
-      const newTreeSha = (await json(treeRes)).sha
+      const newTreeSha = (await j(treeRes)).sha
 
       const commitRes2 = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/commits`, {
-        method: 'POST',
-        headers: { ...auth, 'Content-Type': 'application/json' },
+        method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: 'admin: actualizar portafolio', tree: newTreeSha, parents: [latestSha] })
       })
       if (!commitRes2.ok) throw new Error('Error al crear commit')
-      const newCommitSha = (await json(commitRes2)).sha
+      const newCommitSha = (await j(commitRes2)).sha
 
-      const updateRes = await fetch(refUrl, {
-        method: 'PATCH',
-        headers: { ...auth, 'Content-Type': 'application/json' },
+      const updRes = await fetch(refUrl, {
+        method: 'PATCH', headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({ sha: newCommitSha, force: false })
       })
-      if (!updateRes.ok) throw new Error('Error al actualizar rama')
+      if (!updRes.ok) throw new Error('Error al actualizar rama')
 
-      alert('✅ Cambios subidos a GitHub.')
+      alert('✅ Cambios subidos a GitHub. La página se actualizará en ~1-2 min.')
       pendingChanges = {}
       localStorage.setItem('admin_pending', '{}')
     } catch (e) {
-      alert('⚠️ Error: ' + e.message)
+      alert('⚠️ Error: ' + e.message + '\n\nVerifica que el token tenga permisos "contents: write" para el repo.')
     }
   }
 
-  /* FORM HANDLERS */
+  /* ── FORM HANDLERS (siempre preservan datos existentes) ──── */
+
   document.getElementById('inicioForm').addEventListener('submit', (e) => {
     e.preventDefault()
     const raw = document.getElementById('heroTags').value
@@ -267,7 +284,7 @@
     data.profile.heroTags = raw ? raw.split(',').map(t => t.trim()).filter(Boolean) : []
     addToPending('profile', data.profile)
     saveAll()
-    alert('Inicio guardado.')
+    alert('✅ Inicio guardado.')
   })
 
   document.getElementById('aboutForm').addEventListener('submit', (e) => {
@@ -275,7 +292,7 @@
     data.profile.bio = document.getElementById('aboutBio').value
     addToPending('profile', data.profile)
     saveAll()
-    alert('Sobre mí guardado.')
+    alert('✅ Sobre mí guardado.')
   })
 
   document.getElementById('profileForm').addEventListener('submit', (e) => {
@@ -291,7 +308,7 @@
     data.profile.photo = document.getElementById('profPhoto').value
     addToPending('profile', data.profile)
     saveAll()
-    alert('Perfil guardado.')
+    alert('✅ Perfil guardado.')
   })
 
   document.getElementById('contactForm').addEventListener('submit', (e) => {
@@ -303,7 +320,7 @@
     data.profile.social.github = document.getElementById('contGithub').value
     addToPending('profile', data.profile)
     saveAll()
-    alert('Contacto guardado.')
+    alert('✅ Contacto guardado.')
   })
 
   document.getElementById('activityForm').addEventListener('submit', (e) => {
@@ -419,7 +436,7 @@
     saveAll()
   })
 
-  /* EDIT FUNCTIONS */
+  /* ── EDITAR ─────────────────────────────────────────────── */
   window.adminEditActivity = function(idx) {
     editingIndex = idx; editingType = 'act'
     const a = data.activities[idx]
@@ -433,7 +450,6 @@
     document.getElementById('actCancelBtn').style.display = 'inline-block'
     document.querySelector('[data-section="activities"]').click()
   }
-
   window.adminEditCertificate = function(idx) {
     editingIndex = idx; editingType = 'cert'
     const c = data.certificates[idx]
@@ -444,7 +460,6 @@
     document.getElementById('certCancelBtn').style.display = 'inline-block'
     document.querySelector('[data-section="certificates"]').click()
   }
-
   window.adminEditSkill = function(idx) {
     editingIndex = idx; editingType = 'skill'
     const s = data.skills.items[idx]
@@ -454,7 +469,6 @@
     document.getElementById('skillCancelBtn').style.display = 'inline-block'
     document.querySelector('[data-section="skills"]').click()
   }
-
   window.adminEditChip = function(idx) {
     editingIndex = idx; editingType = 'chip'
     document.getElementById('chipName').value = data.skills.chips[idx] || ''
@@ -463,45 +477,42 @@
     document.querySelector('[data-section="skills"]').click()
   }
 
-  /* CANCEL */
   document.getElementById('actCancelBtn').addEventListener('click', () => cancelEdit('act'))
   document.getElementById('certCancelBtn').addEventListener('click', () => cancelEdit('cert'))
   document.getElementById('skillCancelBtn').addEventListener('click', () => cancelEdit('skill'))
   document.getElementById('chipCancelBtn').addEventListener('click', () => cancelEdit('chip'))
 
-  /* REMOVE */
+  /* ── ELIMINAR ───────────────────────────────────────────── */
   window.adminRemoveActivity = function(idx) {
+    if (!confirm('¿Eliminar esta actividad?')) return
     data.activities.splice(idx, 1)
     addToPending('activities', data.activities)
     populateActivitiesList()
     saveAll()
   }
   window.adminRemoveCertificate = function(idx) {
+    if (!confirm('¿Eliminar este certificado?')) return
     data.certificates.splice(idx, 1)
     addToPending('certificates', data.certificates)
     populateCertificatesList()
     saveAll()
   }
   window.adminRemoveSkill = function(idx) {
+    if (!confirm('¿Eliminar esta habilidad?')) return
     data.skills.items.splice(idx, 1)
     addToPending('skills', data.skills)
     populateSkillsList()
     saveAll()
   }
   window.adminRemoveChip = function(idx) {
+    if (!confirm('¿Eliminar este chip?')) return
     data.skills.chips.splice(idx, 1)
     addToPending('skills', data.skills)
     populateChipsList()
     saveAll()
   }
 
-  function saveAll() {
-    localStorage.setItem('admin_data', JSON.stringify(data))
-    localStorage.setItem('admin_pending', JSON.stringify(pendingChanges))
-    localStorage.setItem('admin_credentials', JSON.stringify(credentials))
-  }
-
-  /* COMMIT BUTTON */
+  /* ── BOTÓN SUBIR A GITHUB ───────────────────────────────── */
   function addCommitButton() {
     const sidebar = document.querySelector('.admin-sidenav')
     if (!sidebar) return
@@ -509,21 +520,45 @@
     btn.className = 'admin-snav-item'
     const token = localStorage.getItem('gh_token')
     btn.innerHTML = `<span class="asi-icon">${token ? '✅' : '⚠️'}</span> Subir a GitHub`
-    btn.addEventListener('click', () => { saveAll(); commitAll() })
+    btn.addEventListener('click', () => { saveAll(); commitToGitHub() })
     sidebar.appendChild(btn)
   }
 
-  /* INIT */
+  /* ── INIT ───────────────────────────────────────────────── */
   async function init() {
     await loadCredentials()
-    await loadAllData()
+
+    /* 1. Cargar datos frescos desde JSON */
+    const fresh = await loadAllData()
+    if (fresh) {
+      data.profile = fresh.profile || {}
+      data.activities = fresh.activities || []
+      data.certificates = fresh.certificates || []
+      data.skills = fresh.skills || { items: [], chips: [], particleCount: 60 }
+    }
+
+    /* 2. Si hay datos en localStorage, hacer merge (preservar todo) */
     try {
       const saved = localStorage.getItem('admin_data')
       if (saved) {
         const parsed = JSON.parse(saved)
-        if (parsed.activities) data = parsed
+        if (parsed.activities) {
+          data.activities = parsed.activities
+        }
+        if (parsed.certificates) {
+          data.certificates = parsed.certificates
+        }
+        if (parsed.skills) {
+          data.skills = deepMerge(data.skills, parsed.skills)
+        }
+        if (parsed.profile && parsed.profile.name) {
+          data.profile = deepMerge(data.profile, parsed.profile)
+        }
       }
-    } catch(e) {}
+    } catch(e) {
+      console.warn('Error parsing localStorage:', e)
+    }
+
     addCommitButton()
   }
 
