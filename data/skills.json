@@ -1,11 +1,11 @@
 {
   "bars": [
     {
-      "name": "HTML5",
+      "name": "HTML",
       "level": 85
     },
     {
-      "name": "CSS3",
+      "name": "CSS",
       "level": 80
     },
     {
@@ -23,11 +23,15 @@
     {
       "name": "Ciberseguridad",
       "level": 65
+    },
+    {
+      "name": "GDScript",
+      "level": 70
     }
   ],
   "chips": [
-    "HTML5",
-    "CSS3",
+    "HTML",
+    "CSS",
     "JavaScript",
     "Python",
     "GitHub Pages",
@@ -35,5 +39,7 @@
     "Trabajo en equipo",
     "Resolución de problemas"
   ],
-  "particleCount": 100
+  "particleCount": 100,
+  "lavaEnabled": true,
+  "lavaSpeed": 5
 }

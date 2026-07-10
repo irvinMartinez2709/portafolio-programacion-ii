@@ -2,7 +2,7 @@
   {
     "name": "Investigación 1",
     "date": "27 de marzo",
-    "score": "98",
+    "score": "98/100",
     "status": "devuelto",
     "cover": "assets/img/activities/Investigacion 1.webp",
     "url": "assets/docs/Investigación 1/Investigación 1 - Python.pdf"
@@ -10,9 +10,57 @@
   {
     "name": "Portafolio",
     "date": "13 de julio",
-    "score": "--",
+    "score": "-/-",
     "status": "entregado",
     "cover": "assets/img/activities/Portafolio.webp",
     "url": "https://irvinmartinez2709.github.io/portafolio-programacion-ii/"
+  },
+  {
+    "name": "Taller práctico 1",
+    "date": "10 de abril",
+    "score": "100/100",
+    "status": "devuelto",
+    "cover": "assets/img/activities/Taller práctico 1.webp",
+    "url": "assets/docs/Taller práctico 1"
+  },
+  {
+    "name": "Ejercicio práctico 1",
+    "date": "24 de abril",
+    "score": "96/100",
+    "status": "devuelto",
+    "cover": "assets/img/activities/Ejercicio práctico 1.webp",
+    "url": "assets/docs/Ejercicio práctico 1"
+  },
+  {
+    "name": "Examen parcial 1",
+    "date": "12 de mayo",
+    "score": "86/100",
+    "status": "devuelto",
+    "cover": "assets/img/activities/Parcial 1.webp",
+    "url": "assets/docs/Examen parcial 1"
+  },
+  {
+    "name": "Ejercicio práctico 2",
+    "date": "29 de mayo",
+    "score": "91/100",
+    "status": "devuelto",
+    "cover": "assets/img/activities/Ejercicio práctico 2.webp",
+    "url": "assets/docs/Ejercicio práctico 2"
+  },
+  {
+    "name": "Examen parcial 2",
+    "date": "16 de junio",
+    "score": "-/-",
+    "status": "entregado",
+    "cover": "assets/img/activities/Parcial 2.webp",
+    "url": "assets/docs/Examen parcial 2"
+  },
+  {
+    "name": "Examen Final",
+    "date": "13 de julio",
+    "score": "-/-",
+    "status": "pendiente",
+    "cover": "",
+    "url": ""
   }
 ]
