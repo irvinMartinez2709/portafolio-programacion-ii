@@ -1,10 +1,10 @@
 [
   {
-    "title": "Investigación 1",
+    "name": "Investigación 1",
     "date": "27 de marzo",
-    "grade": 100,
-    "status": "Devuelto",
-    "cover": "",
-    "pdf": ""
+    "score": "98",
+    "status": "devuelto",
+    "cover": "assets/img/activities/Investigacion 1.webp",
+    "url": "assets/docs/Investigación 1/Investigación 1 - Python.pdf"
   }
 ]
