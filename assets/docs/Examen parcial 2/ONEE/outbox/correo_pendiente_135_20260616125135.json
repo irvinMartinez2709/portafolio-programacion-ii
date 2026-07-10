@@ -1,0 +1,9 @@
+{
+  "id": 135,
+  "pedido": 2,
+  "destinatario": "ssd@gmail.com",
+  "asunto": "Tu pedido PF-00002 fue entregado",
+  "cuerpo": "Tu pedido PF-00002 fue marcado como entregado.",
+  "error_smtp": "SMTP incompleto. Revisa MAIL_SERVER, MAIL_PORT, MAIL_DEFAULT_SENDER y MAIL_PASSWORD.",
+  "fecha": "2026-06-16T12:51:35.541565"
+}

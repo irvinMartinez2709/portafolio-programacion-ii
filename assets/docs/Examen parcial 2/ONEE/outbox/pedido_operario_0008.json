@@ -1,0 +1,60 @@
+{
+  "tipo": "ORDEN_COCINA",
+  "timestamp": "2026-06-12T20:00:59.216269",
+  "pedido": {
+    "numero": "PF-00008",
+    "items": [
+      {
+        "nombre": "Margarita Clásica personalizada",
+        "cantidad": 1,
+        "ingredientes_extra": "Masa: Masa delgada; Salsa: Salsa de tomate; Pepperoni (Extra, Mitad derecha); Tasajo (Extra, Mitad izquierda)"
+      },
+      {
+        "nombre": "Jugo de Naranja",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Papas Crinkle",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Margarita Clásica",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Hawaiana Tropical",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Vegetariana Garden",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Cuatro Quesos",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "BBQ Pollo",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Pepperoni Suprema",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Combo Familiar",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      }
+    ],
+    "observaciones": "Tomatitos"
+  }
+}

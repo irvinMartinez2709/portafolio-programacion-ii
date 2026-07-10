@@ -1,0 +1,14 @@
+{
+  "tipo": "CONFIRMACION_PAGO",
+  "empresa": "CHINOS CAFÉ S.A.",
+  "timestamp": "2026-06-16T12:56:23.941865",
+  "pago": {
+    "id": 14,
+    "pedido": "PF-00012",
+    "metodo": "yappy",
+    "referencia": "3234565432",
+    "monto": 45.66,
+    "estado": "pagado",
+    "fecha": "2026-06-16T12:56:23.928742"
+  }
+}

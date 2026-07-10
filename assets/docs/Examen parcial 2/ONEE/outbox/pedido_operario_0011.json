@@ -1,0 +1,20 @@
+{
+  "tipo": "ORDEN_COCINA",
+  "timestamp": "2026-06-16T12:02:07.136837",
+  "pedido": {
+    "numero": "PF-00011",
+    "items": [
+      {
+        "nombre": "Pepperoni Suprema personalizada",
+        "cantidad": 1,
+        "ingredientes_extra": "Masa: Masa tradicional; Salsa: Salsa garlic; Pepperoni (Normal, Pizza completa); Chorizo (Normal, Pizza completa); Cebolla (Normal, Pizza completa)"
+      },
+      {
+        "nombre": "Pepsi",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      }
+    ],
+    "observaciones": ""
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "tipo": "ORDEN_COCINA",
+  "timestamp": "2026-06-12T09:20:23.514832",
+  "pedido": {
+    "numero": "PF-00007",
+    "items": [
+      {
+        "nombre": "Margarita Clásica",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Hawaiana Tropical",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Vegetariana Garden",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Pan de Ajo",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Salsa BBQ",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Sprite",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Coca-Cola",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "BBQ Pollo",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Pepperoni Suprema",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      }
+    ],
+    "observaciones": ""
+  }
+}

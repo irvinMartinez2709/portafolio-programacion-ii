@@ -1,0 +1,46 @@
+{
+  "tipo": "CONFIRMACION_PEDIDO_CLIENTE",
+  "empresa": "CHINOS CAFÉ S.A.",
+  "timestamp": "2026-06-16T11:16:15.177535",
+  "pedido": {
+    "numero": "PF-00010",
+    "fecha": "2026-06-16T11:16:15.143034",
+    "estado": "recibido",
+    "cliente": "María González",
+    "metodo_entrega": "delivery",
+    "subtotal": 19.63,
+    "delivery": 2.0,
+    "impuesto": 1.51,
+    "total": 24.14,
+    "items": [
+      {
+        "tipo": "pizza",
+        "nombre": "Margarita Clásica personalizada",
+        "cantidad": 1,
+        "precio_unitario": 11.14,
+        "subtotal": 11.14
+      },
+      {
+        "tipo": "refresco",
+        "nombre": "Pepsi",
+        "cantidad": 1,
+        "precio_unitario": 1.25,
+        "subtotal": 1.25
+      },
+      {
+        "tipo": "adicional",
+        "nombre": "Queso Dip",
+        "cantidad": 1,
+        "precio_unitario": 1.25,
+        "subtotal": 1.25
+      },
+      {
+        "tipo": "adicional",
+        "nombre": "Alitas de Pollo",
+        "cantidad": 1,
+        "precio_unitario": 5.99,
+        "subtotal": 5.99
+      }
+    ]
+  }
+}

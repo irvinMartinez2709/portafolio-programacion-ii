@@ -1,0 +1,25 @@
+{
+  "tipo": "CONFIRMACION_PEDIDO_CLIENTE",
+  "empresa": "CHINOS CAFÉ S.A.",
+  "timestamp": "2026-06-12T08:39:35.970720",
+  "pedido": {
+    "numero": "PF-00004",
+    "fecha": "2026-06-12T08:39:35.946957",
+    "estado": "recibido",
+    "cliente": "Magdalena",
+    "metodo_entrega": "delivery",
+    "subtotal": 1.5,
+    "delivery": 3.5,
+    "impuesto": 0.35,
+    "total": 5.43,
+    "items": [
+      {
+        "tipo": "adicional",
+        "nombre": "Pan de Ajo",
+        "cantidad": 1,
+        "precio_unitario": 1.5,
+        "subtotal": 1.5
+      }
+    ]
+  }
+}

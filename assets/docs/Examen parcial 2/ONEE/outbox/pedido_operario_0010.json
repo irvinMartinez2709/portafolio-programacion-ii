@@ -1,0 +1,30 @@
+{
+  "tipo": "ORDEN_COCINA",
+  "timestamp": "2026-06-16T11:16:15.197762",
+  "pedido": {
+    "numero": "PF-00010",
+    "items": [
+      {
+        "nombre": "Margarita Clásica personalizada",
+        "cantidad": 1,
+        "ingredientes_extra": "Masa: Masa pan pizza; Salsa: Salsa garlic; Pepperoni (Normal, Pizza completa); Chorizo (Normal, Pizza completa); Jamon (Normal, Pizza completa); Pollo (Normal, Pizza completa); Tasajo (Normal, Pizza completa)"
+      },
+      {
+        "nombre": "Pepsi",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Queso Dip",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Alitas de Pollo",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      }
+    ],
+    "observaciones": "MUCHA SALSA"
+  }
+}

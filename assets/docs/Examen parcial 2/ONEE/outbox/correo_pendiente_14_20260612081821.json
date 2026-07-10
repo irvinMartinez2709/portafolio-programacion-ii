@@ -1,0 +1,9 @@
+{
+  "id": 14,
+  "pedido": 3,
+  "destinatario": "pedidos@chinoscafe.pa",
+  "asunto": "Nuevo pedido PF-00003",
+  "cuerpo": "Nuevo pedido PF-00003. Total: $12.76. Cliente: Magdalena.",
+  "error_smtp": "SMTP incompleto. Revisa MAIL_SERVER, MAIL_PORT, MAIL_DEFAULT_SENDER y MAIL_PASSWORD.",
+  "fecha": "2026-06-12T08:18:21.938725"
+}

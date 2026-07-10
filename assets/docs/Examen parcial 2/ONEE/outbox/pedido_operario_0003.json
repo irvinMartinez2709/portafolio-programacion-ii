@@ -1,0 +1,15 @@
+{
+  "tipo": "ORDEN_COCINA",
+  "timestamp": "2026-06-12T08:18:21.830115",
+  "pedido": {
+    "numero": "PF-00003",
+    "items": [
+      {
+        "nombre": "Margarita Clásica",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      }
+    ],
+    "observaciones": "cv"
+  }
+}

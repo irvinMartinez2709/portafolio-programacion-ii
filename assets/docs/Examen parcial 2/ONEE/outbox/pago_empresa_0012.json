@@ -1,0 +1,14 @@
+{
+  "tipo": "CONFIRMACION_PAGO",
+  "empresa": "CHINOS CAFÉ S.A.",
+  "timestamp": "2026-06-16T12:02:26.108034",
+  "pago": {
+    "id": 12,
+    "pedido": "PF-00011",
+    "metodo": "efectivo",
+    "referencia": "EFECTIVO-1781611346038",
+    "monto": 17.5,
+    "estado": "pendiente",
+    "fecha": "2026-06-16T12:02:26.095437"
+  }
+}

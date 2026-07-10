@@ -1,0 +1,75 @@
+{
+  "tipo": "CONFIRMACION_RETIRO_LOCAL",
+  "timestamp": "2026-06-16T12:57:35.405234",
+  "pedido": {
+    "id": 8,
+    "numero": "PF-00008",
+    "cliente": "Irvin un wey",
+    "estado": "retirado",
+    "codigo_retiro": "PF-00008",
+    "fecha_retiro": "2026-06-16T12:57:35.387397",
+    "total": 122.5,
+    "items": [
+      {
+        "tipo": "pizza",
+        "nombre": "Margarita Clásica personalizada",
+        "cantidad": 1,
+        "subtotal": 10.12
+      },
+      {
+        "tipo": "refresco",
+        "nombre": "Jugo de Naranja",
+        "cantidad": 1,
+        "subtotal": 1.5
+      },
+      {
+        "tipo": "adicional",
+        "nombre": "Papas Crinkle",
+        "cantidad": 1,
+        "subtotal": 2.5
+      },
+      {
+        "tipo": "pizza",
+        "nombre": "Margarita Clásica",
+        "cantidad": 1,
+        "subtotal": 8.99
+      },
+      {
+        "tipo": "pizza",
+        "nombre": "Hawaiana Tropical",
+        "cantidad": 1,
+        "subtotal": 9.99
+      },
+      {
+        "tipo": "pizza",
+        "nombre": "Vegetariana Garden",
+        "cantidad": 1,
+        "subtotal": 9.49
+      },
+      {
+        "tipo": "pizza",
+        "nombre": "Cuatro Quesos",
+        "cantidad": 1,
+        "subtotal": 12.99
+      },
+      {
+        "tipo": "pizza",
+        "nombre": "BBQ Pollo",
+        "cantidad": 1,
+        "subtotal": 11.99
+      },
+      {
+        "tipo": "pizza",
+        "nombre": "Pepperoni Suprema",
+        "cantidad": 1,
+        "subtotal": 10.99
+      },
+      {
+        "tipo": "combo",
+        "nombre": "Combo Familiar",
+        "cantidad": 1,
+        "subtotal": 34.99
+      }
+    ]
+  }
+}

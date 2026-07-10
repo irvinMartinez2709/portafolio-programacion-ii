@@ -1,0 +1,12 @@
+{
+  "tipo": "CANCELACION_PEDIDO",
+  "timestamp": "2026-06-12T08:50:02.370116",
+  "pedido": {
+    "numero": "PF-00006",
+    "cliente": "Magdalena",
+    "estado": "cancelado",
+    "motivo": "NO HAY",
+    "total": 12.21,
+    "reembolso_simulado": true
+  }
+}

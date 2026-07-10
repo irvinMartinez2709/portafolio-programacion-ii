@@ -1,0 +1,60 @@
+{
+  "tipo": "CONFIRMACION_PEDIDO_CLIENTE",
+  "empresa": "CHINOS CAFÉ S.A.",
+  "timestamp": "2026-06-12T20:07:54.956369",
+  "pedido": {
+    "numero": "PF-00009",
+    "fecha": "2026-06-12T20:07:54.935779",
+    "estado": "recibido",
+    "cliente": "Irvin un wey",
+    "metodo_entrega": "delivery",
+    "subtotal": 28.84,
+    "delivery": 3.75,
+    "impuesto": 2.28,
+    "total": 39.88,
+    "items": [
+      {
+        "tipo": "pizza",
+        "nombre": "BBQ Pollo personalizada",
+        "cantidad": 1,
+        "precio_unitario": 13.12,
+        "subtotal": 13.12
+      },
+      {
+        "tipo": "refresco",
+        "nombre": "Jugo de Naranja",
+        "cantidad": 1,
+        "precio_unitario": 1.5,
+        "subtotal": 1.5
+      },
+      {
+        "tipo": "adicional",
+        "nombre": "Alitas de Pollo",
+        "cantidad": 1,
+        "precio_unitario": 5.99,
+        "subtotal": 5.99
+      },
+      {
+        "tipo": "adicional",
+        "nombre": "Alitas de Pollo",
+        "cantidad": 1,
+        "precio_unitario": 5.99,
+        "subtotal": 5.99
+      },
+      {
+        "tipo": "adicional",
+        "nombre": "Salsa Ranch",
+        "cantidad": 1,
+        "precio_unitario": 0.75,
+        "subtotal": 0.75
+      },
+      {
+        "tipo": "adicional",
+        "nombre": "Pan de Ajo",
+        "cantidad": 1,
+        "precio_unitario": 1.5,
+        "subtotal": 1.5
+      }
+    ]
+  }
+}

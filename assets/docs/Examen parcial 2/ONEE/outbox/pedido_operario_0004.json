@@ -1,0 +1,15 @@
+{
+  "tipo": "ORDEN_COCINA",
+  "timestamp": "2026-06-12T08:39:35.986131",
+  "pedido": {
+    "numero": "PF-00004",
+    "items": [
+      {
+        "nombre": "Pan de Ajo",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      }
+    ],
+    "observaciones": ""
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": 17,
+  "pedido": 3,
+  "destinatario": "pedidos@chinoscafe.pa",
+  "asunto": "Pago confirmado pedido PF-00003",
+  "cuerpo": "Se registro pago para el pedido PF-00003. Metodo: yappy. Monto: $12.76.",
+  "error_smtp": "SMTP incompleto. Revisa MAIL_SERVER, MAIL_PORT, MAIL_DEFAULT_SENDER y MAIL_PASSWORD.",
+  "fecha": "2026-06-12T08:18:38.993203"
+}

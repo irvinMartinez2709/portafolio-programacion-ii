@@ -1,0 +1,15 @@
+{
+  "tipo": "ORDEN_COCINA",
+  "timestamp": "2026-06-16T12:50:39.588009",
+  "pedido": {
+    "numero": "PF-00012",
+    "items": [
+      {
+        "nombre": "Margarita Clásica personalizada",
+        "cantidad": 1,
+        "ingredientes_extra": "Masa: Masa delgada; Salsa: Salsa de tomate; Pepperoni (Normal, Pizza completa)"
+      }
+    ],
+    "observaciones": ""
+  }
+}

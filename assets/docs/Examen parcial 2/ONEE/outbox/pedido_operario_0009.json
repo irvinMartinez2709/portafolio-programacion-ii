@@ -1,0 +1,40 @@
+{
+  "tipo": "ORDEN_COCINA",
+  "timestamp": "2026-06-12T20:07:54.971935",
+  "pedido": {
+    "numero": "PF-00009",
+    "items": [
+      {
+        "nombre": "BBQ Pollo personalizada",
+        "cantidad": 1,
+        "ingredientes_extra": "Masa: Masa pan pizza; Salsa: Salsa de tomate; Pepperoni (Extra, Mitad derecha); Carne molida (Extra, Pizza completa); Tasajo (Extra, Mitad izquierda)"
+      },
+      {
+        "nombre": "Jugo de Naranja",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Alitas de Pollo",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Alitas de Pollo",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Salsa Ranch",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      },
+      {
+        "nombre": "Pan de Ajo",
+        "cantidad": 1,
+        "ingredientes_extra": ""
+      }
+    ],
+    "observaciones": "Lorem Ipsum"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": 132,
+  "pedido": 12,
+  "destinatario": "cocina@chinoscafe.pa",
+  "asunto": "Cocina: preparar PF-00012",
+  "cuerpo": "Hola Sara,\n\nTu pedido PF-00012 tiene estado: orden de cocina.\nTotal: $45.66\n\nCHINOS CAFE PIZZAFLOW",
+  "error_smtp": "SMTP incompleto. Revisa MAIL_SERVER, MAIL_PORT, MAIL_DEFAULT_SENDER y MAIL_PASSWORD.",
+  "fecha": "2026-06-16T12:50:39.734981"
+}

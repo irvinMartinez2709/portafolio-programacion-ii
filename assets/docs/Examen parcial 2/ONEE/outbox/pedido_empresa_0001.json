@@ -1,0 +1,16 @@
+{
+  "tipo": "NOTIFICACION_EMPRESA",
+  "empresa": "CHINOS CAFÉ S.A.",
+  "timestamp": "2026-06-16T13:59:58.854202",
+  "pedido": {
+    "numero": "PF-00001",
+    "cliente": {
+      "nombre": "sara",
+      "correo": "magdalena.gonzalez2@utp.ac.pa"
+    },
+    "total": 14.9,
+    "metodo_entrega": "delivery",
+    "zona": "David Centro",
+    "estado": "recibido"
+  }
+}

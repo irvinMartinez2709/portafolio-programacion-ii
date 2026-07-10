@@ -1,0 +1,25 @@
+{
+  "tipo": "CONFIRMACION_PEDIDO_CLIENTE",
+  "empresa": "CHINOS CAFÉ S.A.",
+  "timestamp": "2026-06-12T07:55:07.422825",
+  "pedido": {
+    "numero": "PF-00002",
+    "fecha": "2026-06-12T07:55:07.392910",
+    "estado": "recibido",
+    "cliente": "Magdalena",
+    "metodo_entrega": "delivery",
+    "subtotal": 8.99,
+    "delivery": 2.0,
+    "impuesto": 0.77,
+    "total": 12.76,
+    "items": [
+      {
+        "tipo": "pizza",
+        "nombre": "Margarita Clásica",
+        "cantidad": 1,
+        "precio_unitario": 8.99,
+        "subtotal": 8.99
+      }
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "tipo": "REEMBOLSO_SIMULADO",
+  "timestamp": "2026-06-12T08:50:07.337877",
+  "pedido": "PF-00005",
+  "monto": 12.21,
+  "motivo": "NO HAY",
+  "estado": "pendiente_revision"
+}

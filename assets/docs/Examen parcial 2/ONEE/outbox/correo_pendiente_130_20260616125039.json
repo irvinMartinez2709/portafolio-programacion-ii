@@ -1,0 +1,9 @@
+{
+  "id": 130,
+  "pedido": 12,
+  "destinatario": "magdalena.gonzalez2@utp.ac.pa",
+  "asunto": "Tu pedido PF-00012 fue recibido",
+  "cuerpo": "Hola Sara,\n\nTu pedido PF-00012 tiene estado: recibido.\nTotal: $45.66\n\nCHINOS CAFE PIZZAFLOW",
+  "error_smtp": "SMTP incompleto. Revisa MAIL_SERVER, MAIL_PORT, MAIL_DEFAULT_SENDER y MAIL_PASSWORD.",
+  "fecha": "2026-06-16T12:50:39.645536"
+}
