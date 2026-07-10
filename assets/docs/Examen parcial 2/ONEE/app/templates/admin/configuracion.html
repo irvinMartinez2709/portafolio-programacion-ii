@@ -1,0 +1,98 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Configuración — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>⚙️ Configuración del Sistema</h1><div class="breadcrumb-custom">Parámetros globales editables</div></div>
+</div>
+<div class="form-card" style="max-width:650px">
+  <form method="POST">
+    <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--cream)">🏢 Datos de la Empresa</h6>
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <label class="form-label">Nombre de la Empresa</label>
+        <input type="text" name="nombre_empresa" class="form-control" value="{{ config.get('nombre_empresa','CHINOS CAFÉ S.A.') }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Número Yappy Comercial</label>
+        <input type="text" name="yappy_numero" class="form-control" value="{{ config.get('yappy_numero','6000-0000') }}" placeholder="6000-0000">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Correo Empresa</label>
+        <input type="email" name="correo_empresa" class="form-control" value="{{ config.get('correo_empresa','') }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Correo Operario/Cocina</label>
+        <input type="email" name="correo_operario" class="form-control" value="{{ config.get('correo_operario','') }}">
+      </div>
+    </div>
+
+    <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--cream)">🍕 Límites del Pizza Builder</h6>
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <label class="form-label">Mín. Ingredientes</label>
+        <input type="number" name="min_ingredientes" class="form-control" min="1" max="20" value="{{ config.get('min_ingredientes','2') }}">
+        <div style="font-size:.75rem;color:#888;margin-top:.25rem">Default: 2</div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Máx. Ingredientes</label>
+        <input type="number" name="max_ingredientes" class="form-control" min="1" max="20" value="{{ config.get('max_ingredientes','10') }}">
+        <div style="font-size:.75rem;color:#888;margin-top:.25rem">Default: 10</div>
+      </div>
+    </div>
+
+    <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--cream)">💰 Financiero</h6>
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <label class="form-label">Comisión Repartidor (%)</label>
+        <div class="input-group">
+          <input type="number" name="porcentaje_comision" class="form-control" step="1" min="0" max="100" value="{{ config.get('porcentaje_comision','60') }}">
+          <span class="input-group-text">%</span>
+        </div>
+        <div style="font-size:.75rem;color:#888;margin-top:.25rem">Default: 60%</div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">ITBMS (%)</label>
+        <div class="input-group">
+          <input type="number" name="impuesto" class="form-control" step="0.5" min="0" max="100" value="{{ config.get('impuesto','7') }}">
+          <span class="input-group-text">%</span>
+        </div>
+        <div style="font-size:.75rem;color:#888;margin-top:.25rem">Default: 7%</div>
+      </div>
+    </div>
+
+    <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--cream)">🔧 Sistema</h6>
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <label class="form-label">Modo Offline</label>
+        <select name="modo_offline" class="form-select">
+          <option value="true" {{ 'selected' if config.get('modo_offline','true')=='true' }}>Activo (sin internet)</option>
+          <option value="false" {{ 'selected' if config.get('modo_offline','true')=='false' }}>Inactivo</option>
+        </select>
+      </div>
+    </div>
+
+    <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--cream)">SMTP simulado</h6>
+    <div class="row g-3 mb-4">
+      <div class="col-md-6"><label class="form-label">Servidor</label><input name="mail_server" class="form-control" value="{{ config.get('mail_server','smtp.gmail.com') }}"></div>
+      <div class="col-md-3"><label class="form-label">Puerto</label><input name="mail_port" class="form-control" value="{{ config.get('mail_port','587') }}"></div>
+      <div class="col-md-3"><label class="form-label">TLS</label><select name="mail_use_tls" class="form-select"><option value="true" {{ 'selected' if config.get('mail_use_tls','true')=='true' }}>Si</option><option value="false" {{ 'selected' if config.get('mail_use_tls','true')=='false' }}>No</option></select></div>
+      <div class="col-md-6"><label class="form-label">Usuario SMTP</label><input name="mail_username" class="form-control" value="{{ config.get('mail_username','') }}" placeholder="correo@dominio.com"></div>
+      <div class="col-md-6"><label class="form-label">Remitente</label><input name="mail_default_sender" class="form-control" value="{{ config.get('mail_default_sender','') }}" placeholder="correo@dominio.com"></div>
+      <div class="col-12"><small class="text-muted">La contrasena SMTP no se muestra ni se guarda desde el panel. Configurala con MAIL_PASSWORD en .env.</small></div>
+    </div>
+
+    <button type="submit" class="btn-primary-custom">
+      <i class="bi bi-check-circle"></i> Guardar Configuración
+    </button>
+  </form>
+</div>
+
+<div class="form-card mt-3" style="background:var(--cream);border:2px solid rgba(31,61,43,.15);max-width:650px">
+  <h6 style="color:var(--basil);font-weight:700;margin-bottom:.5rem">📋 Valores Actuales</h6>
+  <div class="row g-2">
+    {% for k, v in config.items() %}
+    <div class="col-md-6"><span style="font-size:.78rem;color:#888">{{ k }}:</span> <code style="font-size:.78rem">{{ v }}</code></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

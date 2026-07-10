@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Mi Perfil - CHINOS CAFE{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="page-header">
+    <div>
+      <h1>Mi Perfil</h1>
+      <div class="breadcrumb-custom">Datos personales y preferencias de entrega</div>
+    </div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-5">
+      <div class="form-card">
+        <form method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input name="nombre" class="form-control" value="{{ current_user.nombre }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Correo</label>
+            <input class="form-control" value="{{ current_user.correo or '' }}" disabled>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Telefono</label>
+            <input name="telefono" class="form-control" value="{{ current_user.telefono or '' }}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Direccion</label>
+            <textarea name="direccion" class="form-control" rows="2">{{ current_user.direccion or '' }}</textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Zona preferida</label>
+            <select name="id_zona_preferida" class="form-select">
+              <option value="">Sin zona fija</option>
+              {% for z in zonas %}
+              <option value="{{ z.id }}" {{ 'selected' if current_user.id_zona_preferida == z.id }}>{{ z.nombre_zona }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Foto de perfil</label>
+            <input type="file" name="foto_perfil" class="form-control" accept=".png,.jpg,.jpeg,.webp">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nueva contrasena</label>
+            <input type="password" name="new_password" class="form-control" minlength="6" placeholder="Dejar en blanco para no cambiar">
+          </div>
+          <button class="btn-primary-custom w-100 justify-content-center" type="submit">Guardar perfil</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="form-card">
+        <h5 style="color:var(--basil);font-weight:800">Historial reciente</h5>
+        <div class="table-responsive mt-3">
+          <table class="table">
+            <thead><tr><th>Pedido</th><th>Estado</th><th>Total</th><th></th></tr></thead>
+            <tbody>
+              {% for p in pedidos %}
+              <tr>
+                <td>{{ p.numero }}</td>
+                <td><span class="badge-estado badge-{{ p.estado_actual }}">{{ p.estado_actual.replace('_',' ').title() }}</span></td>
+                <td>${{ "%.2f"|format(p.total) }}</td>
+                <td><a class="btn-basil" style="padding:.3rem .7rem" href="{{ url_for('cliente.ver_pedido', pedido_id=p.id) }}">Ver</a></td>
+              </tr>
+              {% else %}
+              <tr><td colspan="4" class="text-muted text-center">Sin pedidos todavia.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

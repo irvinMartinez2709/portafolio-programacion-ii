@@ -1,0 +1,29 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Editar Pizza — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>🍕 Editar Pizza</h1><div class="breadcrumb-custom"><a href="{{ url_for('admin.pizzas') }}">Pizzas</a> › Editar</div></div>
+</div>
+<div class="form-card" style="max-width:600px">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="row g-3">
+      <div class="col-12"><label class="form-label">Nombre *</label><input type="text" name="nombre" class="form-control" value="{{ pizza.nombre }}" required></div>
+      <div class="col-12"><label class="form-label">Descripción</label><textarea name="descripcion" class="form-control" rows="2">{{ pizza.descripcion }}</textarea></div>
+      <div class="col-md-4"><label class="form-label">Tipo de Masa</label><input type="text" name="tipo_masa" class="form-control" value="{{ pizza.tipo_masa }}"></div>
+      <div class="col-md-4"><label class="form-label">Tipo de Salsa</label><input type="text" name="tipo_salsa" class="form-control" value="{{ pizza.tipo_salsa }}"></div>
+      <div class="col-md-4"><label class="form-label">Tipo de Queso</label><input type="text" name="tipo_queso" class="form-control" value="{{ pizza.tipo_queso }}"></div>
+      <div class="col-md-6"><label class="form-label">Precio Base ($) *</label><input type="number" name="precio_base" class="form-control" step="0.01" value="{{ pizza.precio_base }}" required></div>
+      <div class="col-md-6"><label class="form-label">Estado</label><select name="estado" class="form-select"><option value="activa" {{ 'selected' if pizza.estado=='activa' }}>Activa</option><option value="inactiva" {{ 'selected' if pizza.estado=='inactiva' }}>Inactiva</option></select></div>
+      <div class="col-md-6"><label class="form-label">Imagen</label><input type="file" name="imagen" class="form-control" accept=".png,.jpg,.jpeg,.webp"></div>
+      <div class="col-md-6">
+        <label class="form-label">Vista previa</label><br>
+        <img src="{{ img_url(pizza.imagen) }}" alt="{{ pizza.nombre }}" style="width:110px;height:80px;object-fit:cover;border-radius:8px">
+      </div>
+      <div class="col-12 d-flex gap-2 pt-2">
+        <button type="submit" class="btn-primary-custom"><i class="bi bi-check-lg"></i> Actualizar</button>
+        <a href="{{ url_for('admin.pizzas') }}" class="btn-outline-custom" style="color:var(--basil);border-color:var(--basil)">Cancelar</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

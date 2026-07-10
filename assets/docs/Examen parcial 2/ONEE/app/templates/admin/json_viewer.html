@@ -1,0 +1,84 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}JSON - Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Visor JSON</h1>
+    <div class="breadcrumb-custom">Outbox operativo y auditoria</div>
+  </div>
+  {% if selected and selected.archivo %}
+  <a href="{{ url_for('admin.descargar_json', filename=selected.archivo) }}" class="btn-basil">
+    <i class="bi bi-download"></i> Descargar
+  </a>
+  {% endif %}
+</div>
+
+<div class="form-card mb-3">
+  <form method="GET" class="row g-2 align-items-end">
+    <div class="col-md-4">
+      <label class="form-label">Tipo</label>
+      <input name="tipo" value="{{ tipo }}" class="form-control" placeholder="pago, cancelacion, entrega">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">ID pedido</label>
+      <input name="pedido" value="{{ pedido }}" class="form-control" placeholder="Ej: 12">
+    </div>
+    <div class="col-md-3">
+      <button class="btn-basil w-100 justify-content-center" type="submit">
+        <i class="bi bi-funnel"></i> Filtrar
+      </button>
+    </div>
+    <div class="col-md-2">
+      <a href="{{ url_for('admin.json_viewer') }}" class="btn-outline-basil w-100 justify-content-center">Limpiar</a>
+    </div>
+  </form>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="form-card h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 style="color:var(--basil);font-weight:800;margin:0">Archivos JSON</h6>
+        <span class="badge-estado badge-pendiente">{{ jsons|length }}</span>
+      </div>
+
+      <div class="json-file-list">
+        {% for item in jsons %}
+        <a class="json-file-item {{ 'active' if selected and selected.id == item.id }}"
+           href="{{ url_for('admin.json_viewer', tipo=tipo, pedido=pedido, json_id=item.id) }}">
+          <div class="d-flex justify-content-between gap-2">
+            <strong>{{ item.archivo or ('JSON #' ~ item.id) }}</strong>
+            <span class="badge-estado badge-activo">{{ item.tipo_json }}</span>
+          </div>
+          <div class="json-file-meta">
+            Pedido: {{ item.id_pedido or '-' }} · {{ item.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}
+          </div>
+        </a>
+        {% else %}
+        <div class="text-center py-4 text-muted">No hay JSON generados todavia.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="form-card h-100">
+      {% if selected %}
+      <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+        <div>
+          <h5 style="color:var(--basil);font-weight:800;margin:0">{{ selected.archivo or ('JSON #' ~ selected.id) }}</h5>
+          <div style="font-size:.84rem;color:#777;margin-top:.25rem">
+            Tipo: <strong>{{ selected.tipo_json }}</strong>
+            · Pedido: <strong>{{ selected.id_pedido or '-' }}</strong>
+            · Fecha: <strong>{{ selected.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</strong>
+          </div>
+        </div>
+      </div>
+      <pre class="json-viewer-pre">{{ pretty_json }}</pre>
+      {% else %}
+      <div class="text-center py-5 text-muted">Selecciona un archivo JSON para ver su contenido.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

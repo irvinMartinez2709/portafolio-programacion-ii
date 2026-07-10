@@ -1,0 +1,35 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Zonas — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>📍 Zonas de Entrega</h1></div>
+  <a href="{{ url_for('admin.crear_zona') }}" class="btn-primary-custom"><i class="bi bi-plus-lg"></i> Nueva Zona</a>
+</div>
+<div class="table-custom">
+  <div class="table-responsive-admin"><table class="table mb-0">
+    <thead><tr>
+      <th style="background:var(--basil);color:var(--cream);padding:1rem">Zona</th>
+      <th style="background:var(--basil);color:var(--cream)">Corregimiento</th>
+      <th style="background:var(--basil);color:var(--cream)">Costo</th>
+      <th style="background:var(--basil);color:var(--cream)">Tiempo Est.</th>
+      <th style="background:var(--basil);color:var(--cream)">Estado</th>
+      <th style="background:var(--basil);color:var(--cream)">Acción</th>
+    </tr></thead>
+    <tbody>
+      {% for z in zonas %}
+      <tr>
+        <td style="padding:1rem"><strong>📍 {{ z.nombre_zona }}</strong></td>
+        <td>{{ z.corregimiento.nombre }}</td>
+        <td style="font-weight:700;color:var(--tomato)">${{ "%.2f"|format(z.costo_delivery) }}</td>
+        <td>~{{ z.tiempo_estimado_min }} min</td>
+        <td><span class="badge-estado badge-{{ z.estado }}">{{ z.estado.title() }}</span></td>
+        <td><a href="{{ url_for('admin.editar_zona', zid=z.id) }}" class="btn-basil" style="font-size:.78rem;padding:.3rem .7rem"><i class="bi bi-pencil"></i></a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="text-center text-muted py-4">No hay zonas.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

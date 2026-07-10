@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Registrarse - CHINOS CAFE{% endblock %}
+{% block navbar %}{% endblock %}
+{% block chatbot %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card" style="max-width:520px">
+    <div class="auth-logo">PF</div>
+    <h2 class="auth-title">Crear Cuenta</h2>
+    <p class="auth-subtitle">Registro de cliente para pedidos y seguimiento</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+      <div class="alert alert-{{ 'danger' if category == 'danger' else 'warning' if category == 'warning' else 'success' }} py-2 px-3 mb-3" style="font-size:.85rem;border-radius:8px">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST" autocomplete="off">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Nombre *</label>
+          <input type="text" name="nombre" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Telefono</label>
+          <input type="text" name="telefono" class="form-control">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Correo *</label>
+          <input type="email" name="correo" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Usuario *</label>
+          <input type="text" name="usuario" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Contrasena *</label>
+          <input type="password" name="password" class="form-control" minlength="6" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Confirmar *</label>
+          <input type="password" name="confirm_password" class="form-control" minlength="6" required>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary-custom w-100 justify-content-center mt-4">Registrarme</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <a href="{{ url_for('auth.login') }}" style="font-size:.88rem;color:var(--basil);font-weight:700">Ya tengo cuenta</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

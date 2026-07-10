@@ -1,0 +1,16 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<div class="page-header"><div><h1>Editar Combo</h1><div class="breadcrumb-custom"><a href="{{ url_for('admin.combos') }}">Combos</a> / Editar</div></div></div>
+<div class="form-card" style="max-width:560px">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="row g-3">
+      <div class="col-12"><label class="form-label">Nombre *</label><input type="text" name="nombre" class="form-control" value="{{ combo.nombre }}" required></div>
+      <div class="col-12"><label class="form-label">Descripcion</label><textarea name="descripcion" class="form-control" rows="2">{{ combo.descripcion or '' }}</textarea></div>
+      <div class="col-md-4"><label class="form-label">Precio *</label><input type="number" name="precio" class="form-control" step="0.01" value="{{ combo.precio }}" required></div>
+      <div class="col-md-4"><label class="form-label">Estado</label><select name="estado" class="form-select"><option value="activo" {{ 'selected' if combo.estado=='activo' }}>Activo</option><option value="inactivo" {{ 'selected' if combo.estado=='inactivo' }}>Inactivo</option></select></div>
+      <div class="col-md-4"><label class="form-label">Imagen</label><input type="file" name="imagen" class="form-control" accept=".png,.jpg,.jpeg,.webp"></div>
+      <div class="col-12 d-flex gap-2"><button type="submit" class="btn-primary-custom"><i class="bi bi-check-lg"></i> Guardar</button><a href="{{ url_for('admin.combos') }}" class="btn-outline-custom" style="color:var(--basil);border-color:var(--basil)">Cancelar</a></div>
+    </div>
+  </form>
+</div>
+{% endblock %}

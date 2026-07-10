@@ -1,0 +1,42 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}{{ titulo or 'Usuarios' }} - Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>{{ titulo or 'Usuarios' }}</h1></div>
+  <a href="{{ url_for('admin.crear_usuario') }}" class="btn-primary-custom"><i class="bi bi-plus-lg"></i> Nuevo Usuario</a>
+</div>
+<div class="table-custom">
+  <div class="table-responsive-admin"><table class="table mb-0">
+    <thead><tr>
+      <th style="background:var(--basil);color:var(--cream);padding:1rem">ID</th>
+      <th style="background:var(--basil);color:var(--cream)">Nombre</th>
+      <th style="background:var(--basil);color:var(--cream)">Usuario</th>
+      <th style="background:var(--basil);color:var(--cream)">Correo</th>
+      <th style="background:var(--basil);color:var(--cream)">Rol</th>
+      <th style="background:var(--basil);color:var(--cream)">Estado</th>
+      <th style="background:var(--basil);color:var(--cream)">Acciones</th>
+    </tr></thead>
+    <tbody>
+      {% for u in usuarios %}
+      <tr>
+        <td style="padding:1rem">{{ u.id }}</td>
+        <td><strong>{{ u.nombre }}</strong><br><small class="text-muted">{{ u.telefono or '' }}</small></td>
+        <td><code>{{ u.usuario }}</code></td>
+        <td style="font-size:.85rem">{{ u.correo or '-' }}</td>
+        <td><span class="badge-masa">{{ u.rol_nombre }}</span></td>
+        <td><span class="badge-estado badge-{{ u.estado }}">{{ u.estado.title() }}</span></td>
+        <td class="d-flex gap-2">
+          <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.editar_usuario', uid=u.id) }}">Editar</a>
+          <form method="POST" action="{{ url_for('admin.toggle_usuario', uid=u.id) }}">
+            <button class="btn btn-sm btn-outline-secondary" type="submit">Cambiar</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center text-muted py-4">No hay usuarios.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Nueva Pizza — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>🍕 Nueva Pizza</h1><div class="breadcrumb-custom"><a href="{{ url_for('admin.pizzas') }}">Pizzas</a> › Crear</div></div>
+</div>
+<div class="form-card" style="max-width:600px">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="row g-3">
+      <div class="col-12"><label class="form-label">Nombre *</label><input type="text" name="nombre" class="form-control" required></div>
+      <div class="col-12"><label class="form-label">Descripción</label><textarea name="descripcion" class="form-control" rows="2"></textarea></div>
+      <div class="col-md-4"><label class="form-label">Tipo de Masa</label><input type="text" name="tipo_masa" class="form-control" value="Delgada"></div>
+      <div class="col-md-4"><label class="form-label">Tipo de Salsa</label><input type="text" name="tipo_salsa" class="form-control" value="Tomate"></div>
+      <div class="col-md-4"><label class="form-label">Tipo de Queso</label><input type="text" name="tipo_queso" class="form-control" value="Mozzarella"></div>
+      <div class="col-md-6"><label class="form-label">Precio Base ($) *</label><input type="number" name="precio_base" class="form-control" step="0.01" min="0" required></div>
+      <div class="col-md-6"><label class="form-label">Estado</label><select name="estado" class="form-select"><option value="activa">Activa</option><option value="inactiva">Inactiva</option></select></div>
+      <div class="col-12"><label class="form-label">Imagen</label><input type="file" name="imagen" class="form-control" accept=".png,.jpg,.jpeg,.webp"></div>
+      <div class="col-12 d-flex gap-2 pt-2">
+        <button type="submit" class="btn-primary-custom"><i class="bi bi-check-lg"></i> Guardar</button>
+        <a href="{{ url_for('admin.pizzas') }}" class="btn-outline-custom" style="color:var(--basil);border-color:var(--basil)">Cancelar</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

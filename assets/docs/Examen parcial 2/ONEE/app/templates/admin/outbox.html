@@ -1,0 +1,74 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Outbox / JSON — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>📧 Outbox / JSON Generados</h1><div class="breadcrumb-custom">Correos simulados y archivos JSON</div></div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6 col-lg-3"><div class="stat-card"><div class="stat-icon">📧</div><div class="stat-value">{{ correos|length }}</div><div class="stat-label">Correos Simulados</div></div></div>
+  <div class="col-md-6 col-lg-3"><div class="stat-card yellow"><div class="stat-icon">📄</div><div class="stat-value">{{ jsons|length }}</div><div class="stat-label">JSON Generados</div></div></div>
+</div>
+
+<h5 style="color:var(--basil);font-weight:700;margin-bottom:1rem">📧 Correos Simulados (outbox/)</h5>
+<div class="table-custom mb-4">
+  <table class="table mb-0">
+    <thead><tr>
+      <th style="background:var(--basil);color:var(--cream);padding:.75rem 1rem">ID</th>
+      <th style="background:var(--basil);color:var(--cream)">Pedido</th>
+      <th style="background:var(--basil);color:var(--cream)">Destinatario</th>
+      <th style="background:var(--basil);color:var(--cream)">Asunto</th>
+      <th style="background:var(--basil);color:var(--cream)">Archivo</th>
+      <th style="background:var(--basil);color:var(--cream)">Generado</th>
+    </tr></thead>
+    <tbody>
+      {% for c in correos %}
+      <tr>
+        <td style="padding:.75rem 1rem">#{{ c.id }}</td>
+        <td>{% if c.id_pedido %}<strong>PF-{{ '%05d' % c.id_pedido }}</strong>{% else %}—{% endif %}</td>
+        <td style="font-size:.83rem">{{ c.destinatario }}</td>
+        <td style="font-size:.83rem">{{ c.asunto }}</td>
+        <td><code style="font-size:.75rem;background:var(--cream);padding:.1rem .4rem;border-radius:4px">{{ c.archivo_generado }}</code></td>
+        <td style="font-size:.8rem">{{ c.fecha_generado.strftime('%d/%m/%Y %H:%M') }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="text-center text-muted py-3">No hay correos simulados aún.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h5 style="color:var(--basil);font-weight:700;margin-bottom:1rem">📄 JSON Logs</h5>
+<div class="table-custom">
+  <table class="table mb-0">
+    <thead><tr>
+      <th style="background:var(--basil);color:var(--cream);padding:.75rem 1rem">ID</th>
+      <th style="background:var(--basil);color:var(--cream)">Pedido</th>
+      <th style="background:var(--basil);color:var(--cream)">Tipo</th>
+      <th style="background:var(--basil);color:var(--cream)">Archivo</th>
+      <th style="background:var(--basil);color:var(--cream)">Fecha</th>
+    </tr></thead>
+    <tbody>
+      {% for j in jsons %}
+      <tr>
+        <td style="padding:.75rem 1rem">#{{ j.id }}</td>
+        <td>{% if j.id_pedido %}<strong>PF-{{ '%05d' % j.id_pedido }}</strong>{% else %}—{% endif %}</td>
+        <td><span class="badge-masa">{{ j.tipo_json }}</span></td>
+        <td><code style="font-size:.75rem;background:var(--cream);padding:.1rem .4rem;border-radius:4px">{{ j.archivo or '—' }}</code></td>
+        <td style="font-size:.8rem">{{ j.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center text-muted py-3">No hay JSON logs aún.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="form-card mt-4" style="background:var(--cream);border:2px solid rgba(31,61,43,.15)">
+  <h6 style="color:var(--basil);font-weight:700;margin-bottom:.5rem">ℹ️ Sobre el Outbox</h6>
+  <p style="font-size:.85rem;color:#555;margin:0">
+    Los archivos JSON se generan automáticamente en la carpeta <code>outbox/</code> del proyecto cada vez que se confirma un pedido o pago.<br>
+    Formatos: <code>pedido_cliente_XXXX.json</code> · <code>pedido_empresa_XXXX.json</code> · <code>pedido_operario_XXXX.json</code> · <code>pago_empresa_XXXX.json</code>
+  </p>
+</div>
+{% endblock %}

@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+{% block title %}Panel Repartidor - CHINOS CAFÉ{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Header -->
+  <div class="page-header mb-4">
+    <div>
+      <h1>🛵 Panel del Repartidor</h1>
+      <div class="breadcrumb-custom">{{ current_user.nombre }}
+        {% if driver and driver.zona_actual %}
+          &nbsp;·&nbsp; <span class="badge-estado badge-activa">📍 {{ driver.zona_actual.nombre_zona }}</span>
+        {% endif %}
+      </div>
+    </div>
+    <a href="{{ url_for('repartidor.perfil') }}" class="btn-outline-basil">
+      <i class="bi bi-person-gear"></i> Mi Perfil
+    </a>
+  </div>
+
+  {% if not driver %}
+  <div class="form-card text-center py-5">
+    <div style="font-size:3rem">🚫</div>
+    <h5 style="color:var(--tomato);margin-top:1rem">Perfil de repartidor no encontrado</h5>
+    <p style="color:#666;font-size:.88rem">Contacta al administrador para que configure tu perfil.</p>
+  </div>
+  {% else %}
+
+  <!-- Tarjetas de ganancias -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="earnings-card">
+        <div class="earn-label">💰 Ganancias hoy</div>
+        <div class="earn-value">${{ "%.2f"|format(ganancias_hoy) }}</div>
+        <div class="earn-sub">{{ entregas_hoy }} entrega{{ 's' if entregas_hoy != 1 else '' }} hoy</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card green">
+        <div class="stat-value">${{ "%.2f"|format(ganancias_total) }}</div>
+        <div class="stat-label">Ganancias totales</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-value">{{ entregas_total }}</div>
+        <div class="stat-label">Entregas totales</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card yellow">
+        <div class="stat-value">{{ '✓' if driver.disponible else '✗' }}</div>
+        <div class="stat-label">{{ 'Disponible' if driver.disponible else 'No disponible' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Regla de ganancias -->
+  <div class="form-card mb-4" style="border-left:4px solid var(--cheese);padding:1rem 1.5rem">
+    <small style="color:#888;font-weight:700;letter-spacing:.5px;text-transform:uppercase">Cómo se calculan tus ganancias</small>
+    <div style="margin-top:.5rem;font-size:.9rem;color:#444">
+      <strong>Comisión:</strong> {{ driver.porcentaje_comision }}% del flete de cada pedido
+      &nbsp;·&nbsp; <strong>Propina:</strong> Se suma completa a tu ganancia
+      &nbsp;·&nbsp; Solo cuentan pedidos con estado <span class="badge-estado badge-entregado">entregado</span>
+    </div>
+  </div>
+
+  <!-- Entregas activas -->
+  {% set activos = asignaciones | selectattr('estado','in',['asignado','en_camino']) | list %}
+  {% set entregados = asignaciones | selectattr('estado','equalto','entregado') | list %}
+
+  <h5 style="color:var(--basil);margin-bottom:1rem;font-weight:800">
+    <i class="bi bi-lightning-charge-fill" style="color:var(--cheese)"></i>
+    Entregas activas
+    {% if activos %}<span class="badge-estado badge-en_preparacion ms-2">{{ activos|length }}</span>{% endif %}
+  </h5>
+
+  {% if activos %}
+  <div class="row g-3 mb-4">
+    {% for asig in activos %}
+    <div class="col-md-6">
+      <div class="form-card" style="border-left:4px solid var(--basil)">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <strong style="color:var(--basil);font-size:1.05rem">#{{ asig.pedido.numero }}</strong>
+          <span class="badge-estado badge-{{ asig.estado }}">{{ asig.estado.replace('_',' ').title() }}</span>
+        </div>
+
+        <table style="font-size:.85rem;width:100%;margin-bottom:.75rem">
+          <tr>
+            <td style="color:#888;padding:.2rem 0;width:90px"><i class="bi bi-person"></i> Cliente:</td>
+            <td><strong>{{ asig.pedido.cliente.nombre }}</strong></td>
+          </tr>
+          <tr>
+            <td style="color:#888;padding:.2rem 0"><i class="bi bi-geo-alt"></i> Zona:</td>
+            <td>{{ asig.pedido.zona.nombre_zona if asig.pedido.zona else '-' }}</td>
+          </tr>
+          <tr>
+            <td style="color:#888;padding:.2rem 0"><i class="bi bi-house"></i> Dir.:</td>
+            <td>{{ asig.pedido.direccion_entrega or '-' }}</td>
+          </tr>
+          <tr>
+            <td style="color:#888;padding:.2rem 0"><i class="bi bi-telephone"></i> Tel.:</td>
+            <td>
+              {% if asig.pedido.cliente.telefono %}
+              <a href="tel:{{ asig.pedido.cliente.telefono }}" style="color:var(--basil);font-weight:600">
+                {{ asig.pedido.cliente.telefono }}
+              </a>
+              {% else %}-{% endif %}
+            </td>
+          </tr>
+        </table>
+
+        <div style="background:var(--cream);border-radius:8px;padding:.85rem;margin-bottom:.85rem;font-size:.84rem;border:1px solid rgba(31,61,43,.1)">
+          <div class="d-flex justify-content-between mb-1">
+            <span style="color:#666">Flete total:</span>
+            <strong>${{ "%.2f"|format(asig.monto_flete) }}</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-1">
+            <span style="color:#666">Tu comisión ({{ asig.porcentaje_comision }}%):</span>
+            <strong style="color:var(--basil)">${{ "%.2f"|format(asig.comision_repartidor or 0) }}</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-1">
+            <span style="color:#666">Propina:</span>
+            <strong style="color:#2e7d32">${{ "%.2f"|format(asig.propina or 0) }}</strong>
+          </div>
+          <hr style="margin:.5rem 0;border-color:rgba(31,61,43,.15)">
+          <div class="d-flex justify-content-between">
+            <span style="font-weight:700">Tu ganancia:</span>
+            <strong style="color:var(--basil);font-size:1rem">
+              ${{ "%.2f"|format((asig.comision_repartidor or 0) + (asig.propina or 0)) }}
+            </strong>
+          </div>
+        </div>
+
+        {% if asig.estado == 'asignado' %}
+        <form method="POST" action="{{ url_for('repartidor.en_camino', asig_id=asig.id) }}">
+          <button type="submit" class="btn-basil w-100 justify-content-center">
+            <i class="bi bi-truck"></i> Salir a entregar
+          </button>
+        </form>
+        {% elif asig.estado == 'en_camino' %}
+        <form method="POST" action="{{ url_for('repartidor.entregado', asig_id=asig.id) }}">
+          <select name="resultado" class="form-select form-select-sm mb-2">
+            <option value="entregado_exitosamente">✅ Entregado exitosamente</option>
+            <option value="cliente_no_responde">📵 Cliente no responde</option>
+            <option value="direccion_incorrecta">❓ Dirección incorrecta</option>
+            <option value="pedido_rechazado">❌ Pedido rechazado</option>
+          </select>
+          <textarea name="observacion_final" class="form-control form-control-sm mb-2"
+                    rows="2" placeholder="Observación final (opcional)"></textarea>
+          <button type="submit" class="btn-primary-custom w-100 justify-content-center">
+            <i class="bi bi-check-circle"></i> Marcar como entregado
+          </button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="form-card text-center py-4 mb-4">
+    <div style="font-size:2.5rem">🛵</div>
+    <h5 style="color:#888;margin-top:.75rem">No tienes entregas activas</h5>
+    <p style="color:#aaa;font-size:.85rem">El administrador te asignará pedidos cuando estén listos.</p>
+  </div>
+  {% endif %}
+
+  <!-- Pedidos disponibles en tu zona (visibilidad) -->
+  {% if pedidos_disponibles %}
+  <h5 style="color:var(--basil);margin-bottom:1rem;font-weight:800">
+    <i class="bi bi-geo-alt-fill" style="color:var(--tomato)"></i>
+    Pedidos disponibles
+    <span class="badge-estado badge-pendiente ms-2">{{ pedidos_disponibles|length }}</span>
+  </h5>
+  <div class="table-custom mb-4">
+    <div class="table-responsive-admin">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Estado</th>
+            <th>Cliente</th>
+            <th>Dirección</th>
+            <th>Total</th>
+            <th>Fecha</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in pedidos_disponibles %}
+          <tr>
+            <td><strong>#{{ p.numero }}</strong></td>
+            <td><span class="badge-estado badge-{{ p.estado_actual }}">{{ p.estado_actual.replace('_',' ').title() }}</span></td>
+            <td>{{ p.cliente.nombre }}</td>
+            <td style="font-size:.82rem">{{ p.direccion_entrega or '-' }}</td>
+            <td><strong>${{ "%.2f"|format(p.total) }}</strong></td>
+            <td style="font-size:.8rem;color:#888">{{ p.fecha_pedido.strftime('%d/%m %H:%M') }}</td>
+            <td>
+              <form method="POST" action="{{ url_for('repartidor.aceptar_pedido', pedido_id=p.id) }}">
+                <button type="submit" class="btn-basil btn-sm">
+                  <i class="bi bi-check-circle"></i> Aceptar
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Historial de entregas -->
+  {% if entregados %}
+  <h5 style="color:var(--basil);margin-bottom:1rem;font-weight:800">
+    <i class="bi bi-clock-history" style="color:var(--cheese)"></i>
+    Historial de entregas
+  </h5>
+  <div class="table-custom">
+    <div class="table-responsive-admin">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Zona</th>
+            <th>Flete</th>
+            <th>Comisión</th>
+            <th>Propina</th>
+            <th>Mi ganancia</th>
+            <th>Fecha entrega</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for asig in entregados[:30] %}
+          <tr>
+            <td><strong>#{{ asig.pedido.numero }}</strong></td>
+            <td>{{ asig.pedido.zona.nombre_zona if asig.pedido.zona else '-' }}</td>
+            <td>${{ "%.2f"|format(asig.monto_flete) }}</td>
+            <td>${{ "%.2f"|format(asig.comision_repartidor or 0) }}</td>
+            <td style="color:#2e7d32">${{ "%.2f"|format(asig.propina or 0) }}</td>
+            <td>
+              <strong style="color:var(--basil)">
+                ${{ "%.2f"|format((asig.comision_repartidor or 0) + (asig.propina or 0)) }}
+              </strong>
+            </td>
+            <td style="font-size:.82rem;color:#888">
+              {{ asig.fecha_entrega.strftime('%d/%m/%y %H:%M') if asig.fecha_entrega else '-' }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  {% endif %}{# end if driver #}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-refresh cada 30s para ver nuevas asignaciones
+setTimeout(() => location.reload(), 30000);
+</script>
+{% endblock %}

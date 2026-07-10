@@ -1,0 +1,83 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Correos SMTP - Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Correos SMTP</h1>
+    <div class="breadcrumb-custom">Envio real, historial y reintentos</div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-5">
+    <div class="form-card h-100">
+      <h5>Estado SMTP</h5>
+      <p class="mb-1"><strong>Servidor:</strong> {{ estado.server or 'No configurado' }}:{{ estado.port }}</p>
+      <p class="mb-1"><strong>TLS:</strong> {{ 'Si' if estado.use_tls else 'No' }}</p>
+      <p class="mb-1"><strong>Remitente:</strong> {{ estado.sender or 'No configurado' }}</p>
+      <p class="mb-1"><strong>Usuario:</strong> {{ estado.username or 'No configurado' }}</p>
+      <p class="mb-3"><strong>Password:</strong> ********</p>
+      {% if estado.configured %}
+        <span class="badge bg-success">Configurado</span>
+      {% else %}
+        <span class="badge bg-warning text-dark">Faltan: {{ estado.missing|join(', ') }}</span>
+      {% endif %}
+      <div class="mt-3 text-muted" style="font-size:.9rem">
+        Configura MAIL_SERVER, MAIL_PORT, MAIL_USE_TLS, MAIL_USERNAME, MAIL_PASSWORD y MAIL_DEFAULT_SENDER en .env.
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="form-card h-100">
+      <h5>Enviar correo de prueba</h5>
+      <form method="POST" action="{{ url_for('admin.correo_prueba') }}" class="row g-3">
+        <div class="col-md-8">
+          <label class="form-label">Destinatario</label>
+          <input type="email" name="destinatario" class="form-control" value="{{ estado.sender }}" required>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <button class="btn-primary-custom w-100" type="submit"><i class="bi bi-send"></i> Enviar correo de prueba</button>
+        </div>
+      </form>
+      <div class="mt-3">Correos pendientes o fallidos: <strong>{{ pendientes }}</strong></div>
+    </div>
+  </div>
+</div>
+
+<div class="table-custom">
+  <table class="table mb-0">
+    <thead><tr>
+      <th style="background:var(--basil);color:var(--cream);padding:1rem">Fecha</th>
+      <th style="background:var(--basil);color:var(--cream)">Destino</th>
+      <th style="background:var(--basil);color:var(--cream)">Asunto</th>
+      <th style="background:var(--basil);color:var(--cream)">Tipo</th>
+      <th style="background:var(--basil);color:var(--cream)">Estado</th>
+      <th style="background:var(--basil);color:var(--cream)">Error SMTP</th>
+      <th style="background:var(--basil);color:var(--cream)">Acciones</th>
+    </tr></thead>
+    <tbody>
+      {% for c in correos %}
+      <tr>
+        <td style="padding:1rem">{{ c.fecha_generado.strftime('%Y-%m-%d %H:%M') if c.fecha_generado else '-' }}</td>
+        <td>{{ c.destinatario }}</td>
+        <td>{{ c.asunto }}</td>
+        <td>{{ c.tipo }}</td>
+        <td><span class="badge bg-{{ 'success' if c.estado_envio == 'enviado' else 'warning' if c.estado_envio == 'pendiente' else 'danger' }}">{{ c.estado_envio or 'pendiente' }}</span></td>
+        <td style="max-width:320px;white-space:normal">{{ c.error_envio or '-' }}</td>
+        <td>
+          {% if c.tipo == 'smtp' and c.estado_envio != 'enviado' %}
+          <form method="POST" action="{{ url_for('admin.reintentar_correo', correo_id=c.id) }}">
+            <button class="btn btn-sm btn-outline-primary" type="submit">Reintentar</button>
+          </form>
+          {% else %}
+          -
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center text-muted py-4">No hay correos registrados.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

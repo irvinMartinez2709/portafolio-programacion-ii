@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Iniciar Sesion - CHINOS CAFE{% endblock %}
+{% block navbar %}{% endblock %}
+{% block chatbot %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-logo">
+    <img src="{{ url_for('static', filename='img/branding/login.png') }}"
+         alt="DAVID"
+         class="login-logo">
+</div>
+    <h2 class="auth-title">CHINOS CAFE</h2>
+    <p class="auth-subtitle">PizzaFlow - Sistema de Pedidos</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+      <div class="alert alert-{{ 'danger' if category == 'danger' else 'warning' }} py-2 px-3 mb-3" style="font-size:.85rem;border-radius:8px">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST" autocomplete="off">
+      <div class="mb-3">
+        <label class="form-label">Usuario</label>
+        <div class="input-group">
+          <span class="input-group-text" style="background:var(--cream);border:2px solid rgba(31,61,43,.15);border-right:none"><i class="bi bi-person" style="color:var(--basil)"></i></span>
+          <input type="text" name="usuario" class="form-control" style="border-left:none" placeholder="Usuario" required autofocus autocomplete="username">
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="form-label">Contrasena</label>
+        <div class="input-group">
+          <span class="input-group-text" style="background:var(--cream);border:2px solid rgba(31,61,43,.15);border-right:none"><i class="bi bi-lock" style="color:var(--basil)"></i></span>
+          <input type="password" name="password" class="form-control" style="border-left:none" placeholder="********" required autocomplete="current-password">
+        </div>
+      </div>
+      <button type="submit" class="btn-primary-custom w-100 justify-content-center">
+        <i class="bi bi-box-arrow-in-right"></i> Ingresar
+      </button>
+    </form>
+
+    <div class="text-center mt-3">
+      <a href="{{ url_for('auth.register') }}" style="font-size:.88rem;color:var(--basil);font-weight:700">Crear cuenta de cliente</a><br>
+      <a href="{{ url_for('public.index') }}" style="font-size:.82rem;color:#888"><i class="bi bi-arrow-left"></i> Volver al inicio</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

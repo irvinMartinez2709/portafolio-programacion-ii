@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Pizzas y Combos — CHINOS CAFÉ{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="page-header">
+    <div><h1>🍕 Menú Completo</h1></div>
+    <a href="{{ url_for('cliente.pizza_builder') }}" class="btn-primary-custom">🍕 Crear mi Pizza</a>
+  </div>
+  <div class="row g-4 mb-4">
+    {% for pizza in pizzas %}
+    <div class="col-sm-6 col-lg-4">
+      <div class="card-pizza h-100">
+        <div class="pizza-img"><img src="{{ img_url(pizza.imagen) }}" alt="{{ pizza.nombre }}" style="width:100%;height:180px;object-fit:cover;border-radius:8px"></div>
+        <div class="card-body">
+          <h5 class="pizza-name">{{ pizza.nombre }}</h5>
+          <p class="pizza-desc">{{ pizza.descripcion }}</p>
+          <div class="d-flex flex-wrap gap-1 mb-3">
+            {% if pizza.tipo_masa %}<span class="badge-masa">{{ pizza.tipo_masa }}</span>{% endif %}
+            {% if pizza.tipo_salsa %}<span class="badge-masa">{{ pizza.tipo_salsa }}</span>{% endif %}
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="pizza-price">${{ "%.2f"|format(pizza.precio_base) }}</span>
+            <a href="{{ url_for('cliente.nuevo_pedido') }}" class="btn-tomato" style="font-size:.82rem;padding:.4rem .9rem;border-radius:20px">Ordenar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% if combos %}
+  <h3 style="color:var(--basil);font-weight:800;margin-bottom:1.5rem">🎁 Combos</h3>
+  <div class="row g-4">
+    {% for combo in combos %}
+    <div class="col-sm-6 col-lg-4">
+      <div class="card-pizza h-100">
+        <div class="pizza-img"><img src="{{ img_url(combo.imagen) }}" alt="{{ combo.nombre }}" style="width:100%;height:180px;object-fit:cover;border-radius:8px"></div>
+        <div class="card-body">
+          <h5 class="pizza-name">{{ combo.nombre }}</h5>
+          <p class="pizza-desc">{{ combo.descripcion }}</p>
+          <div class="d-flex align-items-center justify-content-between mt-3">
+            <span class="pizza-price">${{ "%.2f"|format(combo.precio) }}</span>
+            <a href="{{ url_for('cliente.nuevo_pedido') }}" class="btn-basil" style="font-size:.82rem;padding:.4rem .9rem;border-radius:20px">Pedir</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

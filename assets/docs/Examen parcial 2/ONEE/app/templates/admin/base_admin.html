@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>{% block title %}Admin - CHINOS CAFE{% endblock %}</title>
+  <link rel="icon" href="data:,">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css', v=config.ASSET_VERSION) }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-text">🍕 CHINOS CAFÉ</div>
+    <div class="brand-sub">Panel Administrador</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section">General</div>
+    <a href="{{ url_for('admin.dashboard') }}" class="sidebar-link {{ 'active' if request.endpoint=='admin.dashboard' }}"><i class="bi bi-speedometer2 icon"></i> Dashboard</a>
+    <a href="{{ url_for('admin.pedidos') }}" class="sidebar-link {{ 'active' if 'pedido' in request.endpoint }}"><i class="bi bi-receipt icon"></i> Pedidos</a>
+    <a href="{{ url_for('admin.pagos') }}" class="sidebar-link {{ 'active' if 'pago' in request.endpoint }}"><i class="bi bi-credit-card icon"></i> Pagos</a>
+    <a href="{{ url_for('admin.outbox') }}" class="sidebar-link {{ 'active' if 'outbox' in request.endpoint }}"><i class="bi bi-envelope icon"></i> Outbox / JSON</a>
+    <a href="{{ url_for('admin.correos') }}" class="sidebar-link {{ 'active' if 'correo' in request.endpoint }}"><i class="bi bi-send-check icon"></i> Correos SMTP</a>
+    <a href="{{ url_for('admin.json_viewer') }}" class="sidebar-link {{ 'active' if 'json' in request.endpoint }}"><i class="bi bi-braces icon"></i> Visor JSON</a>
+
+    <div class="sidebar-section">Productos</div>
+    <a href="{{ url_for('admin.pizzas') }}" class="sidebar-link {{ 'active' if 'pizza' in request.endpoint }}"><i class="bi bi-circle icon"></i> Pizzas</a>
+    <a href="{{ url_for('admin.masas') }}" class="sidebar-link {{ 'active' if 'masa' in request.endpoint }}"><i class="bi bi-layers icon"></i> Masas</a>
+    <a href="{{ url_for('admin.salsas') }}" class="sidebar-link {{ 'active' if 'salsa' in request.endpoint }}"><i class="bi bi-droplet icon"></i> Salsas</a>
+    <a href="{{ url_for('admin.ingredientes') }}" class="sidebar-link {{ 'active' if 'ingrediente' in request.endpoint }}"><i class="bi bi-basket icon"></i> Ingredientes</a>
+    <a href="{{ url_for('admin.refrescos') }}" class="sidebar-link {{ 'active' if 'refresco' in request.endpoint }}"><i class="bi bi-cup-straw icon"></i> Refrescos</a>
+    <a href="{{ url_for('admin.adicionales') }}" class="sidebar-link {{ 'active' if 'adicional' in request.endpoint }}"><i class="bi bi-plus-circle icon"></i> Adicionales</a>
+    <a href="{{ url_for('admin.combos') }}" class="sidebar-link {{ 'active' if 'combo' in request.endpoint }}"><i class="bi bi-collection icon"></i> Combos</a>
+
+    <div class="sidebar-section">Operaciones</div>
+    <a href="{{ url_for('admin.zonas') }}" class="sidebar-link {{ 'active' if 'zona' in request.endpoint }}"><i class="bi bi-geo-alt icon"></i> Zonas de Entrega</a>
+    <a href="{{ url_for('admin.usuarios') }}" class="sidebar-link {{ 'active' if 'usuario' in request.endpoint }}"><i class="bi bi-people icon"></i> Usuarios</a>
+    <a href="{{ url_for('admin.clientes') }}" class="sidebar-link {{ 'active' if request.endpoint=='admin.clientes' }}"><i class="bi bi-person icon"></i> Clientes</a>
+    <a href="{{ url_for('admin.repartidores') }}" class="sidebar-link {{ 'active' if request.endpoint=='admin.repartidores' }}"><i class="bi bi-bicycle icon"></i> Repartidores</a>
+    <a href="{{ url_for('admin.cocina_personal') }}" class="sidebar-link {{ 'active' if request.endpoint=='admin.cocina_personal' }}"><i class="bi bi-fire icon"></i> Cocina</a>
+    <a href="{{ url_for('admin.solicitudes_zona') }}" class="sidebar-link {{ 'active' if request.endpoint=='admin.solicitudes_zona' }}"><i class="bi bi-arrow-repeat icon"></i> Cambios de zona</a>
+    <a href="{{ url_for('admin.chatbot') }}" class="sidebar-link {{ 'active' if 'chatbot' in request.endpoint }}"><i class="bi bi-robot icon"></i> ChinoBot</a>
+    <a href="{{ url_for('admin.configuracion') }}" class="sidebar-link {{ 'active' if 'configuracion' in request.endpoint }}"><i class="bi bi-gear icon"></i> Configuracion</a>
+
+    <div class="sidebar-section">Accesos</div>
+    <a href="{{ url_for('public.index') }}" class="sidebar-link"><i class="bi bi-house icon"></i> Ir al Inicio</a>
+    <a href="{{ url_for('auth.logout') }}" class="sidebar-link" style="color:rgba(240,100,90,.8)"><i class="bi bi-box-arrow-right icon"></i> Cerrar Sesion</a>
+  </div>
+</nav>
+
+<button id="sidebar-toggle" style="display:none;position:fixed;top:1rem;left:1rem;z-index:200;background:var(--basil);color:white;border:none;border-radius:8px;padding:.5rem .7rem;font-size:1.2rem" onclick="document.querySelector('.sidebar').classList.toggle('open')">
+  <i class="bi bi-list"></i>
+</button>
+
+<div class="flash-container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <div class="flash-msg flash-{{ category }}">
+      <span>{% if category == 'success' %}OK{% elif category == 'danger' %}ERROR{% elif category == 'warning' %}AVISO{% else %}INFO{% endif %}</span>
+      {{ message }}
+    </div>
+    {% endfor %}
+  {% endwith %}
+</div>
+
+<div class="main-content">
+  {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js', v=config.ASSET_VERSION) }}"></script>
+<script>
+document.querySelectorAll('form[method="POST"], form[method="post"]').forEach(form => {
+  if (!form.querySelector('input[name="csrf_token"]')) {
+    const token = document.querySelector('meta[name="csrf-token"]')?.content;
+    if (token) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'csrf_token';
+      input.value = token;
+      form.prepend(input);
+    }
+  }
+});
+if (window.innerWidth < 768) document.getElementById('sidebar-toggle').style.display = 'block';
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

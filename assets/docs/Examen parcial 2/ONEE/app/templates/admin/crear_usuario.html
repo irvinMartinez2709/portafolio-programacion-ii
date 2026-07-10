@@ -1,0 +1,35 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Nuevo Usuario - Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Nuevo Usuario</h1><div class="breadcrumb-custom"><a href="{{ url_for('admin.usuarios') }}">Usuarios</a> / Crear</div></div>
+</div>
+<div class="form-card" style="max-width:760px">
+  <form method="POST">
+    <div class="row g-3">
+      <div class="col-md-4"><label class="form-label">Rol *</label>
+        <select name="id_rol" class="form-select" required>
+          {% for r in roles %}<option value="{{ r.id }}">{{ r.nombre }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-8"><label class="form-label">Nombre completo *</label><input type="text" name="nombre" class="form-control" required></div>
+      <div class="col-md-6"><label class="form-label">Correo</label><input type="email" name="correo" class="form-control"></div>
+      <div class="col-md-6"><label class="form-label">Telefono</label><input type="text" name="telefono" class="form-control"></div>
+      <div class="col-12"><label class="form-label">Direccion</label><textarea name="direccion" class="form-control" rows="2"></textarea></div>
+      <div class="col-md-6"><label class="form-label">Zona preferida</label><select name="id_zona_preferida" class="form-select"><option value="">Sin zona</option>{% for z in zonas %}<option value="{{ z.id }}">{{ z.nombre_zona }}</option>{% endfor %}</select></div>
+      <div class="col-md-3"><label class="form-label">Usuario *</label><input type="text" name="usuario" class="form-control" required></div>
+      <div class="col-md-3"><label class="form-label">Contrasena *</label><input type="password" name="password" class="form-control" required minlength="6"></div>
+      <div class="col-md-3"><label class="form-label">Vehiculo</label><input type="text" name="tipo_vehiculo" class="form-control" value="moto"></div>
+      <div class="col-md-3"><label class="form-label">Placa</label><input type="text" name="placa" class="form-control"></div>
+      <div class="col-md-3"><label class="form-label">Comision %</label><input type="number" name="porcentaje_comision" class="form-control" step="0.01" value="60"></div>
+      <div class="col-md-3"><label class="form-label">Zona repartidor</label><select name="id_zona_actual" class="form-select"><option value="">Sin zona</option>{% for z in zonas %}<option value="{{ z.id }}">{{ z.nombre_zona }}</option>{% endfor %}</select></div>
+      <div class="col-md-3"><label class="form-label">Disponible</label><select name="disponible" class="form-select"><option value="1">Si</option><option value="0">No</option></select></div>
+      <div class="col-md-3"><label class="form-label">Turno cocina</label><input type="text" name="turno" class="form-control" value="tarde"></div>
+      <div class="col-12 d-flex gap-2 pt-2">
+        <button type="submit" class="btn-primary-custom"><i class="bi bi-check-lg"></i> Guardar</button>
+        <a href="{{ url_for('admin.usuarios') }}" class="btn-outline-custom" style="color:var(--basil);border-color:var(--basil)">Cancelar</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

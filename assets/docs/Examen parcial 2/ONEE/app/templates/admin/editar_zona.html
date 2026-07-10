@@ -1,0 +1,15 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<div class="page-header"><div><h1>📍 Editar Zona</h1></div></div>
+<div class="form-card" style="max-width:500px">
+  <form method="POST">
+    <div class="row g-3">
+      <div class="col-12"><label class="form-label">Nombre de Zona *</label><input type="text" name="nombre_zona" class="form-control" value="{{ zona.nombre_zona }}" required></div>
+      <div class="col-md-6"><label class="form-label">Costo Delivery ($)</label><input type="number" name="costo_delivery" class="form-control" step="0.25" value="{{ zona.costo_delivery }}"></div>
+      <div class="col-md-6"><label class="form-label">Tiempo Est. (min)</label><input type="number" name="tiempo_estimado_min" class="form-control" value="{{ zona.tiempo_estimado_min }}"></div>
+      <div class="col-12"><label class="form-label">Estado</label><select name="estado" class="form-select"><option value="activa" {{ 'selected' if zona.estado=='activa' }}>Activa</option><option value="inactiva" {{ 'selected' if zona.estado=='inactiva' }}>Inactiva</option></select></div>
+      <div class="col-12 d-flex gap-2"><button type="submit" class="btn-primary-custom"><i class="bi bi-check-lg"></i> Actualizar</button><a href="{{ url_for('admin.zonas') }}" class="btn-outline-custom" style="color:var(--basil);border-color:var(--basil)">Cancelar</a></div>
+    </div>
+  </form>
+</div>
+{% endblock %}

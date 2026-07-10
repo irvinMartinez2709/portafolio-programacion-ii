@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Perfil Repartidor - CHINOS CAFE{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="page-header">
+    <div>
+      <h1>Mi Perfil Repartidor</h1>
+      <div class="breadcrumb-custom">{{ current_user.nombre }}</div>
+    </div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-5">
+      <div class="form-card">
+        <form method="POST">
+          <div class="mb-3"><label class="form-label">Telefono</label><input name="telefono" class="form-control" value="{{ current_user.telefono or '' }}"></div>
+          <div class="mb-3"><label class="form-label">Zona actual</label><input class="form-control" value="{{ driver.zona_actual.nombre_zona if driver.zona_actual else 'Sin zona asignada' }}" disabled></div>
+          <div class="mb-3">
+            <label class="form-label">Solicitar nueva zona</label>
+            <select name="id_zona_nueva" class="form-select">
+              <option value="">No solicitar cambio</option>
+              {% for z in zonas %}
+              <option value="{{ z.id }}">{{ z.nombre_zona }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3"><label class="form-label">Motivo</label><textarea name="motivo" class="form-control" rows="2"></textarea></div>
+          <button class="btn-primary-custom w-100 justify-content-center" type="submit">Guardar / Solicitar</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="form-card mb-3">
+        <h5 style="color:var(--basil);font-weight:800">Solicitudes de zona</h5>
+        {% for s in solicitudes %}
+        <div class="order-summary mb-2">
+          <strong>{{ s.zona_anterior.nombre_zona if s.zona_anterior else 'Sin zona' }} -> {{ s.zona_nueva.nombre_zona }}</strong>
+          <span class="badge-estado badge-{{ s.estado }}">{{ s.estado.title() }}</span>
+          <div style="font-size:.82rem;color:#666">{{ s.fecha_solicitud.strftime('%d/%m/%Y %H:%M') }}</div>
+        </div>
+        {% else %}
+        <p class="text-muted">No hay solicitudes.</p>
+        {% endfor %}
+      </div>
+      <div class="form-card">
+        <h5 style="color:var(--basil);font-weight:800">Pedidos asignados</h5>
+        {% for a in asignaciones %}
+        <div class="d-flex justify-content-between border-bottom py-2">
+          <span>{{ a.pedido.numero }} - {{ a.pedido.estado_actual.replace('_',' ').title() }}</span>
+          <strong>${{ "%.2f"|format((a.comision_repartidor or 0) + (a.propina or 0)) }}</strong>
+        </div>
+        {% else %}
+        <p class="text-muted">Sin pedidos asignados.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

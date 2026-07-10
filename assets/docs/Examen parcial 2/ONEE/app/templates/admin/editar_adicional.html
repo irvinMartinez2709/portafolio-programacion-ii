@@ -1,0 +1,18 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<div class="page-header"><div><h1>Editar Adicional</h1><div class="breadcrumb-custom"><a href="{{ url_for('admin.adicionales') }}">Adicionales</a> / Editar</div></div></div>
+<div class="form-card" style="max-width:560px">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="row g-3">
+      <div class="col-12"><label class="form-label">Nombre *</label><input type="text" name="nombre" class="form-control" value="{{ adicional.nombre }}" required></div>
+      <div class="col-12"><label class="form-label">Descripcion</label><textarea name="descripcion" class="form-control" rows="2">{{ adicional.descripcion or '' }}</textarea></div>
+      <div class="col-md-6"><label class="form-label">Categoria</label><input type="text" name="categoria" class="form-control" value="{{ adicional.categoria or '' }}"></div>
+      <div class="col-md-3"><label class="form-label">Precio *</label><input type="number" name="precio" class="form-control" step="0.01" value="{{ adicional.precio }}" required></div>
+      <div class="col-md-3"><label class="form-label">Stock</label><input type="number" name="stock" class="form-control" value="{{ adicional.stock }}"></div>
+      <div class="col-md-6"><label class="form-label">Estado</label><select name="estado" class="form-select"><option value="activo" {{ 'selected' if adicional.estado=='activo' }}>Activo</option><option value="inactivo" {{ 'selected' if adicional.estado=='inactivo' }}>Inactivo</option></select></div>
+      <div class="col-md-6"><label class="form-label">Imagen</label><input type="file" name="imagen" class="form-control" accept=".png,.jpg,.jpeg,.webp"></div>
+      <div class="col-12 d-flex gap-2"><button type="submit" class="btn-primary-custom"><i class="bi bi-check-lg"></i> Guardar</button><a href="{{ url_for('admin.adicionales') }}" class="btn-outline-custom" style="color:var(--basil);border-color:var(--basil)">Cancelar</a></div>
+    </div>
+  </form>
+</div>
+{% endblock %}

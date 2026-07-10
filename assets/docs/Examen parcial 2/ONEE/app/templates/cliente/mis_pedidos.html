@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Mis Pedidos — CHINOS CAFÉ{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="page-header">
+    <div>
+      <h1>📋 Mis Pedidos</h1>
+      <div class="breadcrumb-custom"><a href="{{ url_for('cliente.dashboard') }}">Inicio</a> › Mis Pedidos</div>
+    </div>
+    <a href="{{ url_for('cliente.nuevo_pedido') }}" class="btn-primary-custom"><i class="bi bi-plus-lg"></i> Nuevo Pedido</a>
+  </div>
+
+  <div class="table-custom">
+    {% if pedidos %}
+    <table class="table mb-0">
+      <thead><tr>
+        <th style="background:var(--basil);color:var(--cream);padding:1rem">Pedido</th>
+        <th style="background:var(--basil);color:var(--cream)">Fecha</th>
+        <th style="background:var(--basil);color:var(--cream)">Entrega</th>
+        <th style="background:var(--basil);color:var(--cream)">Total</th>
+        <th style="background:var(--basil);color:var(--cream)">Estado</th>
+        <th style="background:var(--basil);color:var(--cream)">Pago</th>
+        <th style="background:var(--basil);color:var(--cream)">Acción</th>
+      </tr></thead>
+      <tbody>
+        {% for p in pedidos %}
+        <tr>
+          <td style="padding:1rem"><strong>{{ p.numero }}</strong></td>
+          <td style="font-size:.85rem">{{ p.fecha_pedido.strftime('%d/%m/%Y %H:%M') }}</td>
+          <td>
+            {% if p.metodo_entrega %}
+              {% if p.metodo_entrega.nombre == 'delivery' %}🛵 Delivery{% else %}🏠 Retiro{% endif %}
+            {% endif %}
+          </td>
+          <td style="color:var(--tomato);font-weight:700">${{ "%.2f"|format(p.total) }}</td>
+          <td><span class="badge-estado badge-{{ p.estado_actual }}">{{ p.estado_actual.replace('_',' ').title() }}</span></td>
+          <td>
+            {% set pago = p.pagos.filter_by(estado='pagado').first() %}
+            {% if pago %}
+            <span class="badge-estado badge-pagado">✅ Pagado</span>
+            {% else %}
+            <span class="badge-estado badge-pendiente">⏳ Pendiente</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{{ url_for('cliente.ver_pedido', pedido_id=p.id) }}" class="btn-basil" style="font-size:.78rem;padding:.3rem .7rem"><i class="bi bi-eye"></i></a>
+            {% if not pago %}
+            <a href="{{ url_for('cliente.pagar', pedido_id=p.id) }}" class="btn-tomato ms-1" style="font-size:.78rem;padding:.3rem .7rem">💳</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="text-center py-5">
+      <div style="font-size:4rem">🍕</div>
+      <h5 style="color:#888;margin-top:1rem">Aún no tienes pedidos</h5>
+      <a href="{{ url_for('cliente.pizza_builder') }}" class="btn-primary-custom mt-3">¡Haz tu primer pedido!</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}Pedido {{ pedido.numero }} — CHINOS CAFÉ{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="page-header">
+    <div>
+      <h1>📦 Pedido {{ pedido.numero }}</h1>
+      <div class="breadcrumb-custom"><a href="{{ url_for('cliente.mis_pedidos') }}">Mis Pedidos</a> › {{ pedido.numero }}</div>
+    </div>
+    <span class="badge-estado badge-{{ pedido.estado_actual }}" style="font-size:.9rem;padding:.4rem 1rem">
+      {{ pedido.estado_actual.replace('_',' ').title() }}
+    </span>
+  </div>
+
+  <div class="row g-4">
+    <!-- Timeline -->
+    <div class="col-lg-7">
+      <div class="form-card">
+        <h6 style="color:var(--basil);font-weight:700;margin-bottom:1.5rem">🕐 Estado del Pedido</h6>
+
+        {% set estados = [
+          ('recibido',             '📥', 'Pedido Recibido',        'Tu pedido fue registrado en el sistema'),
+          ('en_preparacion',       '👨‍🍳', 'En Preparación',         'Nuestro equipo está preparando tu pizza'),
+          ('en_horno',             '🔥', 'En el Horno',            'Tu pizza está en el horno, ¡ya casi!'),
+          ('listo',                '✅', 'Listo',                  'Tu pedido está listo'),
+          ('asignado_repartidor',  '📋', 'Asignado a Repartidor',  'Un repartidor tomó tu pedido'),
+          ('en_camino',            '🛵', 'En Camino',              'Tu pedido va en camino'),
+          ('entregado',            '🎉', 'Entregado',              '¡Pedido entregado! ¡Buen provecho!'),
+          ('retirado',             '✅', 'Retirado en Local',       'Pedido retirado en sucursal')
+        ] %}
+
+        {% set estado_order = ['recibido','en_preparacion','en_horno','listo','asignado_repartidor','en_camino','entregado','retirado'] %}
+        {% set current_idx = estado_order.index(pedido.estado_actual) if pedido.estado_actual in estado_order else 0 %}
+
+        <ul class="timeline">
+          {% for estado_key, ico, label, desc in estados %}
+            {% set idx = loop.index0 %}
+            {% set is_done   = idx < current_idx %}
+            {% set is_active = idx == current_idx %}
+            {% set hist_item = historial | selectattr('estado','equalto',estado_key) | first | default(none) %}
+          <li class="timeline-item">
+            <div class="timeline-dot {{ 'done' if is_done else 'active' if is_active else '' }}">{{ ico }}</div>
+            <div class="timeline-content">
+              <div class="time-label" style="{{ 'color:var(--basil)' if is_active else 'color:#aaa' if not is_done else '' }}">
+                {{ label }}
+                {% if is_active %}<span style="background:var(--cheese);color:var(--carbon);font-size:.7rem;padding:.1rem .5rem;border-radius:20px;margin-left:.5rem;font-weight:700">ACTUAL</span>{% endif %}
+              </div>
+              <div class="time-desc">{{ desc }}</div>
+              {% if hist_item %}
+              <div class="time-date">{{ hist_item.fecha_estado.strftime('%d/%m/%Y %H:%M') }}</div>
+              {% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Resumen del pedido -->
+    <div class="col-lg-5">
+      <div class="form-card mb-3">
+        <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem">🧾 Detalle del Pedido</h6>
+        {% for det in pedido.detalles %}
+        <div class="d-flex justify-content-between py-2 border-bottom" style="font-size:.88rem">
+          <div>
+            <strong>{{ det.nombre_item }}</strong> × {{ det.cantidad }}
+            {% if det.ingredientes_extra %}
+            <br><span style="font-size:.75rem;color:#888">{{ det.ingredientes_extra }}</span>
+            {% endif %}
+          </div>
+          <span style="color:var(--tomato);font-weight:700">${{ "%.2f"|format(det.subtotal) }}</span>
+        </div>
+        {% endfor %}
+        <div class="order-summary mt-3">
+          <div class="order-row"><span>Subtotal</span><span>${{ "%.2f"|format(pedido.subtotal) }}</span></div>
+          {% if pedido.monto_delivery > 0 %}
+          <div class="order-row"><span>Delivery ({{ pedido.zona.nombre_zona if pedido.zona else '' }})</span><span>${{ "%.2f"|format(pedido.monto_delivery) }}</span></div>
+          {% endif %}
+          {% if pedido.propina and pedido.propina > 0 %}
+          <div class="order-row"><span>Propina repartidor</span><span>${{ "%.2f"|format(pedido.propina) }}</span></div>
+          {% endif %}
+          <div class="order-row"><span>ITBMS</span><span>${{ "%.2f"|format(pedido.impuesto) }}</span></div>
+          <div class="order-row order-total"><span>TOTAL</span><span>${{ "%.2f"|format(pedido.total) }}</span></div>
+        </div>
+      </div>
+
+      <div class="form-card mb-3">
+        <h6 style="color:var(--basil);font-weight:700;margin-bottom:.75rem">📋 Info del Pedido</h6>
+        <table style="font-size:.85rem;width:100%">
+          <tr><td style="color:#888;padding:.3rem 0">Número:</td><td><strong>{{ pedido.numero }}</strong></td></tr>
+          <tr><td style="color:#888;padding:.3rem 0">Fecha:</td><td>{{ pedido.fecha_pedido.strftime('%d/%m/%Y %H:%M') }}</td></tr>
+          <tr><td style="color:#888;padding:.3rem 0">Entrega:</td><td>{{ pedido.metodo_entrega.nombre.replace('_',' ').title() if pedido.metodo_entrega else '—' }}</td></tr>
+          {% if pedido.retiro %}
+          <tr><td style="color:#888;padding:.3rem 0">Código retiro:</td><td><strong style="color:var(--tomato)">{{ pedido.retiro.codigo_retiro }}</strong></td></tr>
+          {% endif %}
+          {% if pedido.observaciones %}
+          <tr><td style="color:#888;padding:.3rem 0">Notas:</td><td>{{ pedido.observaciones }}</td></tr>
+          {% endif %}
+        </table>
+      </div>
+
+      {% set pago = pedido.pagos.filter_by(estado='pagado').first() %}
+      {% if pago %}
+      <div class="form-card mb-3" style="background:var(--cream);border:2px solid rgba(31,61,43,.15)">
+        <h6 style="color:var(--basil);font-weight:700;margin-bottom:.5rem">✅ Pago Confirmado</h6>
+        <div style="font-size:.85rem">
+          <span style="color:#888">Método:</span> <strong>{{ pago.metodo.replace('_',' ').title() }}</strong><br>
+          {% if pago.referencia %}<span style="color:#888">Ref:</span> {{ pago.referencia }}{% endif %}
+        </div>
+      </div>
+      {% else %}
+      <a href="{{ url_for('cliente.pagar', pedido_id=pedido.id) }}" class="btn-primary-custom w-100 justify-content-center">
+        💳 Proceder al Pago
+      </a>
+      {% endif %}
+
+      {% if pedido.estado_actual == 'recibido' %}
+      <form method="POST" action="{{ url_for('cliente.cancelar_pedido', pedido_id=pedido.id) }}" class="mt-2">
+        <input type="hidden" name="motivo" value="Cancelado por el cliente antes de preparacion">
+        <button type="submit" class="btn-outline-custom w-100 justify-content-center" style="color:var(--tomato);border-color:var(--tomato)">Cancelar Pedido</button>
+      </form>
+      {% endif %}
+
+      <a href="{{ url_for('cliente.mis_pedidos') }}" class="btn-outline-custom w-100 justify-content-center mt-2" style="color:var(--basil);border-color:var(--basil)">
+        <i class="bi bi-arrow-left"></i> Mis Pedidos
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-refresh each 20 seconds if order not delivered
+const estado = "{{ pedido.estado_actual }}";
+if (!['entregado','retirado'].includes(estado)) {
+  setTimeout(() => location.reload(), 20000);
+}
+</script>
+{% endblock %}

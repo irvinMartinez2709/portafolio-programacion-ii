@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %}Pagar Pedido — CHINOS CAFÉ{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:700px">
+  <div class="page-header">
+    <div>
+      <h1>💳 Pagar Pedido</h1>
+      <div class="breadcrumb-custom"><a href="{{ url_for('cliente.ver_pedido', pedido_id=pedido.id) }}">{{ pedido.numero }}</a> › Pago</div>
+    </div>
+    <span style="font-size:1.8rem;font-weight:900;color:var(--tomato)">${{ "%.2f"|format(pedido.total) }}</span>
+  </div>
+
+  {% if pago_existente %}
+  <div class="form-card text-center py-4">
+    <div style="font-size:4rem">✅</div>
+    <h4 style="color:var(--basil);margin-top:1rem">¡Pedido Ya Pagado!</h4>
+    <p style="color:#666">Este pedido fue pagado correctamente.</p>
+    <a href="{{ url_for('cliente.ver_pedido', pedido_id=pedido.id) }}" class="btn-basil mt-2">Ver Estado del Pedido</a>
+  </div>
+  {% else %}
+
+  <!-- Resumen rápido -->
+  <div class="order-summary mb-3">
+    <div class="order-row"><span>Pedido</span><span><strong>{{ pedido.numero }}</strong></span></div>
+    <div class="order-row"><span>Subtotal</span><span>${{ "%.2f"|format(pedido.subtotal) }}</span></div>
+    {% if pedido.monto_delivery > 0 %}<div class="order-row"><span>Delivery</span><span>${{ "%.2f"|format(pedido.monto_delivery) }}</span></div>{% endif %}
+    <div class="order-row"><span>ITBMS</span><span>${{ "%.2f"|format(pedido.impuesto) }}</span></div>
+    <div class="order-row order-total"><span>TOTAL A PAGAR</span><span>${{ "%.2f"|format(pedido.total) }}</span></div>
+  </div>
+
+  <!-- Selector de método -->
+  <div class="form-card mb-3">
+    <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem">Elige tu Método de Pago</h6>
+    <div class="row g-2 mb-3" id="metodos">
+      {% for mid, ico, label in [('yappy','💚','Yappy Comercial'),('efectivo','💵','Efectivo'),('tarjeta_simulada','💳','Tarjeta Simulada')] %}
+      <div class="col-4">
+        <div class="ingredient-btn flex-column text-center p-3 metodo-btn {{ 'selected' if loop.first }}"
+             data-metodo="{{ mid }}" onclick="selectMetodo(this)" style="cursor:pointer">
+          <div style="font-size:1.8rem">{{ ico }}</div>
+          <div style="font-size:.8rem;font-weight:600;margin-top:.3rem">{{ label }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <input type="hidden" id="metodo-seleccionado" value="yappy">
+  </div>
+
+  <!-- Panel Yappy -->
+  <div id="panel-yappy" class="mb-3">
+    <div class="yappy-card">
+      <div class="yappy-logo">Yappy</div>
+      <div style="font-size:.85rem;opacity:.9;margin:. 25rem 0">Pago Comercial</div>
+      <div class="yappy-amount mt-2">${{ "%.2f"|format(pedido.total) }}</div>
+      <div style="margin-top:.75rem;font-size:.9rem">
+        <strong>Comercio:</strong> {{ config.nombre_empresa }}<br>
+        <strong>Número:</strong> {{ config.yappy_numero }}
+      </div>
+      <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:.75rem;margin-top:1rem;font-size:.8rem">
+        📱 Abre tu app Yappy → Comercios → Busca <strong>{{ config.nombre_empresa }}</strong> → Ingresa ${{ "%.2f"|format(pedido.total) }}
+      </div>
+    </div>
+    <div class="mt-3">
+      <label class="form-label">Número de Referencia Yappy</label>
+      <input type="text" id="ref-yappy" class="form-control" placeholder="Ej: YPY-20250101-0001" maxlength="50">
+    </div>
+  </div>
+
+  <!-- Panel Efectivo -->
+  <div id="panel-efectivo" class="mb-3" style="display:none">
+    <div class="form-card" style="background:var(--cream);border:2px solid rgba(31,61,43,.15)">
+      <div style="font-size:2.5rem;text-align:center;margin-bottom:.5rem">💵</div>
+      <h6 style="text-align:center;color:var(--basil);font-weight:700">Pago en Efectivo</h6>
+      <p style="text-align:center;color:#666;font-size:.85rem;margin:0">
+        Presenta este pedido al llegar o paga al repartidor.<br>
+        <strong style="color:var(--tomato)">TOTAL: ${{ "%.2f"|format(pedido.total) }}</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- Panel Tarjeta -->
+  <div id="panel-tarjeta" class="mb-3" style="display:none">
+    <div class="form-card">
+      <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem">💳 Tarjeta Simulada</h6>
+      <div class="mb-2">
+        <label class="form-label" style="font-size:.82rem">Número de Tarjeta</label>
+        <input type="text" class="form-control" id="card-num" placeholder="4242 4242 4242 4242" maxlength="19" oninput="formatCard(this)">
+      </div>
+      <div class="row g-2">
+        <div class="col-6">
+          <label class="form-label" style="font-size:.82rem">Vencimiento</label>
+          <input type="text" class="form-control" id="card-exp" placeholder="MM/AA" maxlength="5">
+        </div>
+        <div class="col-6">
+          <label class="form-label" style="font-size:.82rem">CVV</label>
+          <input type="text" class="form-control" id="card-cvv" placeholder="123" maxlength="3">
+        </div>
+      </div>
+      <div style="background:#f8d7da;border-radius:8px;padding:.6rem .9rem;margin-top:.75rem;font-size:.78rem;color:#721c24">
+        ⚠️ Modo simulación — No se realiza ningún cobro real.
+      </div>
+    </div>
+  </div>
+
+  <form method="POST" id="pay-form" enctype="multipart/form-data">
+    <input type="hidden" name="metodo_pago" id="metodo_pago_input" value="yappy">
+    <input type="hidden" name="referencia" id="referencia_input" value="">
+    <div id="comprobante-wrap" class="form-card mb-3">
+      <label class="form-label">Comprobante Yappy (PNG, JPG, JPEG o PDF, max. 5 MB)</label>
+      <input type="file" name="comprobante" id="comprobante" class="form-control" accept=".png,.jpg,.jpeg,.pdf">
+    </div>
+    <button type="submit" class="btn-primary-custom w-100 justify-content-center py-3" onclick="return prepararPago()">
+      <i class="bi bi-lock-fill"></i> Confirmar Pago — ${{ "%.2f"|format(pedido.total) }}
+    </button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function selectMetodo(el) {
+  document.querySelectorAll('.metodo-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  const m = el.dataset.metodo;
+  document.getElementById('metodo-seleccionado').value = m;
+  document.getElementById('panel-yappy').style.display    = m === 'yappy'           ? 'block' : 'none';
+  document.getElementById('panel-efectivo').style.display = m === 'efectivo'         ? 'block' : 'none';
+  document.getElementById('panel-tarjeta').style.display  = m === 'tarjeta_simulada' ? 'block' : 'none';
+  document.getElementById('comprobante-wrap').style.display = m === 'yappy' ? 'block' : 'none';
+}
+
+function prepararPago() {
+  const metodo = document.getElementById('metodo-seleccionado').value;
+  document.getElementById('metodo_pago_input').value = metodo;
+  let ref = '';
+  if (metodo === 'yappy') {
+    ref = document.getElementById('ref-yappy').value.trim();
+    if (!ref) { showToast('Ingresa el número de referencia Yappy.', 'warning'); return false; }
+    if (!document.getElementById('comprobante').value) { showToast('Sube el comprobante Yappy.', 'warning'); return false; }
+  } else if (metodo === 'tarjeta_simulada') {
+    const num = document.getElementById('card-num').value.replace(/\s/g,'');
+    if (num.length < 16) { showToast('Ingresa un número de tarjeta válido.', 'warning'); return false; }
+    ref = 'CARD-SIM-' + num.slice(-4);
+  } else {
+    ref = 'EFECTIVO-' + Date.now();
+  }
+  document.getElementById('referencia_input').value = ref;
+  return true;
+}
+
+function formatCard(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = v.match(/.{1,4}/g)?.join(' ') || v;
+}
+</script>
+{% endblock %}

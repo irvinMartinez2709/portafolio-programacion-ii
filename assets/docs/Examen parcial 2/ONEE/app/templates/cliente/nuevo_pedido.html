@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+{% block title %}Nuevo Pedido — CHINOS CAFÉ{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="page-header">
+    <div>
+      <h1>🛒 Nuevo Pedido</h1>
+      <div class="breadcrumb-custom"><a href="{{ url_for('cliente.dashboard') }}">Inicio</a> › Nuevo Pedido</div>
+    </div>
+  </div>
+
+  <form method="POST" id="order-form">
+    <input type="hidden" name="items_json" id="items_json" value="[]">
+    <div class="row g-4">
+      <!-- Productos -->
+      <div class="col-lg-7">
+        <!-- Pizzas -->
+        <div class="form-card mb-3">
+          <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem">🍕 Agregar Pizza</h6>
+          <div class="row g-2">
+            {% for pizza in pizzas %}
+            <div class="col-sm-6">
+              <div class="ingredient-btn" style="cursor:pointer" onclick="addItem('pizza','{{ pizza.id }}','{{ pizza.nombre|replace("'","") }}',{{ pizza.precio_base }})">
+                <span>🍕</span>
+                <div>
+                  <div style="font-weight:600;font-size:.85rem">{{ pizza.nombre }}</div>
+                  <div style="font-size:.72rem;color:#888">{{ pizza.tipo_masa }}</div>
+                </div>
+                <span class="price ms-auto">${{ "%.2f"|format(pizza.precio_base) }}</span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Combos -->
+        {% if combos %}
+        <div class="form-card mb-3">
+          <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem">🎁 Agregar Combo</h6>
+          <div class="row g-2">
+            {% for combo in combos %}
+            <div class="col-sm-6">
+              <div class="ingredient-btn" onclick="addItem('combo','{{ combo.id }}','{{ combo.nombre|replace("'","") }}',{{ combo.precio }})">
+                <span>🎁</span>
+                <div>
+                  <div style="font-weight:600;font-size:.85rem">{{ combo.nombre }}</div>
+                  <div style="font-size:.72rem;color:#888">{{ combo.descripcion[:40] }}…</div>
+                </div>
+                <span class="price ms-auto">${{ "%.2f"|format(combo.precio) }}</span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Bebidas + Adicionales -->
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="form-card">
+              <h6 style="color:var(--basil);font-weight:700;margin-bottom:.75rem">🥤 Agregar Bebida</h6>
+              {% for b in bebidas %}
+              <div class="ingredient-btn mb-2" style="font-size:.82rem" onclick="addItem('refresco','{{ b.id }}','{{ b.nombre }}',{{ b.precio }})">
+                <span>🥤</span><span>{{ b.nombre }} ({{ b.tamano }})</span><span class="price">${{ "%.2f"|format(b.precio) }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-card">
+              <h6 style="color:var(--basil);font-weight:700;margin-bottom:.75rem">🍟 Agregar Adicional</h6>
+              {% for a in adicionales %}
+              <div class="ingredient-btn mb-2" style="font-size:.82rem" onclick="addItem('adicional','{{ a.id }}','{{ a.nombre }}',{{ a.precio }})">
+                <span>🍟</span><span>{{ a.nombre }}</span><span class="price">${{ "%.2f"|format(a.precio) }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen + Entrega -->
+      <div class="col-lg-5">
+        <!-- Carrito -->
+        <div class="form-card mb-3">
+          <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem">🧾 Tu Pedido</h6>
+          <div id="cart-items" style="min-height:60px">
+            <p id="cart-empty" style="color:#aaa;font-size:.85rem;text-align:center;padding:1rem 0">No hay items aún. Agrega productos 👆</p>
+          </div>
+          <hr style="border-color:rgba(31,61,43,.1)">
+          <div class="order-summary mt-2">
+            <div class="order-row"><span>Subtotal</span><span id="disp-subtotal">$0.00</span></div>
+            <div class="order-row"><span>Delivery</span><span id="disp-delivery">$0.00</span></div>
+            <div class="order-row"><span>Propina</span><span id="disp-tip">$0.00</span></div>
+            <div class="order-row"><span>ITBMS (7%)</span><span id="disp-tax">$0.00</span></div>
+            <div class="order-row order-total"><span>TOTAL</span><span id="disp-total">$0.00</span></div>
+          </div>
+        </div>
+
+        <!-- Tipo de entrega -->
+        <div class="form-card mb-3">
+          <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem">🚪 Tipo de Entrega</h6>
+          <div class="d-flex gap-2 mb-3">
+            <label class="ingredient-btn flex-fill justify-content-center" style="cursor:pointer">
+              <input type="radio" name="tipo_entrega" value="delivery" onchange="toggleEntrega()" style="display:none">
+              <span>🛵</span> Delivery
+            </label>
+            <label class="ingredient-btn flex-fill justify-content-center" style="cursor:pointer">
+              <input type="radio" name="tipo_entrega" value="retiro_local" onchange="toggleEntrega()" checked style="display:none">
+              <span>🏠</span> Retiro Local
+            </label>
+          </div>
+
+          <div id="delivery-fields" style="display:none">
+            <label class="form-label">Zona de Entrega</label>
+            <select name="id_zona" id="zona-select" class="form-select mb-2" onchange="onZonaChange(this)">
+              <option value="">— Selecciona tu zona —</option>
+              {% for z in zonas %}
+              <option value="{{ z.id }}" data-costo="{{ z.costo_delivery }}" data-tiempo="{{ z.tiempo_estimado_min }}">
+                {{ z.nombre_zona }} — ${{ "%.2f"|format(z.costo_delivery) }} (~{{ z.tiempo_estimado_min }} min)
+              </option>
+              {% endfor %}
+            </select>
+            <label class="form-label">Dirección exacta</label>
+            <input type="text" name="direccion_entrega" class="form-control" placeholder="Ej: Casa #42, Calle 5ta…">
+          </div>
+
+          <div id="retiro-fields">
+            <div style="background:var(--cream);border-radius:8px;padding:1rem;font-size:.85rem">
+              <strong style="color:var(--basil)">📍 CHINOS CAFÉ - David Centro</strong><br>
+              <span style="color:#666">Av. Obaldía frente al Parque Cervantes</span><br>
+              <span style="color:var(--tomato);font-weight:600">Sin costo de delivery ✓</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card mb-3">
+          <label class="form-label">Propina para repartidor</label>
+          <div class="d-flex gap-2 flex-wrap mb-2">
+            {% for value,label in [('0','0%'),('5','5%'),('10','10%'),('15','15%')] %}
+            <label class="ingredient-btn justify-content-center" style="cursor:pointer">
+              <input type="radio" name="propina_pct" value="{{ value }}" onchange="clearCustomTip();updateTotals()" style="display:none" {{ 'checked' if loop.first }}>
+              {{ label }}
+            </label>
+            {% endfor %}
+          </div>
+          <input type="number" name="propina_custom" id="propina-custom" min="0" step="0.25" class="form-control" placeholder="Monto manual max. 30% del subtotal o $20" oninput="setCustomTip()">
+          <div id="tip-limit-help" style="font-size:.75rem;color:#888;margin-top:.35rem">Limite: $0.00</div>
+        </div>
+
+        <div class="form-card mb-3">
+          <label class="form-label">Observaciones (opcional)</label>
+          <textarea name="observaciones" class="form-control" rows="2" placeholder="Ej: Sin cebolla, extra salsa…"></textarea>
+        </div>
+
+        <button type="submit" id="submit-btn" class="btn-primary-custom w-100 justify-content-center py-3" onclick="return prepareSubmit()">
+          <i class="bi bi-check-circle"></i> Confirmar Pedido
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let cart = [];
+
+// Cargar items del Pizza Builder si vienen en sessionStorage
+window.addEventListener('load', () => {
+  const saved = sessionStorage.getItem('cart_items');
+  if (saved) {
+    JSON.parse(saved).forEach(i => addItem(i.tipo, i.id_item, i.nombre, i.precio, i.ingredientes_extra || ''));
+    sessionStorage.removeItem('cart_items');
+  }
+});
+
+function addItem(tipo, id, nombre, precio, ingredientes_extra='') {
+  cart.push({tipo, id_item: id, nombre, precio: parseFloat(precio), cantidad: 1, ingredientes_extra});
+  renderCart();
+  updateTotals();
+}
+
+function removeItem(idx) {
+  cart.splice(idx, 1);
+  renderCart();
+  updateTotals();
+}
+
+function renderCart() {
+  const container = document.getElementById('cart-items');
+  const empty     = document.getElementById('cart-empty');
+  if (cart.length === 0) {
+    container.innerHTML = '<p id="cart-empty" style="color:#aaa;font-size:.85rem;text-align:center;padding:1rem 0">No hay items aún. Agrega productos 👆</p>';
+    return;
+  }
+  let html = '';
+  cart.forEach((item, i) => {
+    html += `
+    <div class="d-flex align-items-center gap-2 py-2 border-bottom" style="font-size:.85rem">
+      <span style="flex:1"><strong>${item.nombre}</strong>
+        ${item.ingredientes_extra ? '<br><span style="font-size:.72rem;color:#888">' + item.ingredientes_extra + '</span>' : ''}
+      </span>
+      <span style="color:var(--tomato);font-weight:700;white-space:nowrap">$${item.precio.toFixed(2)}</span>
+      <button type="button" onclick="removeItem(${i})" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:.9rem"><i class="bi bi-x-circle"></i></button>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function onZonaChange(sel) {
+  const opt = sel.options[sel.selectedIndex];
+  updateTotals(parseFloat(opt.dataset.costo || 0));
+}
+
+function toggleEntrega() {
+  const tipo = document.querySelector('[name=tipo_entrega]:checked')?.value;
+  document.querySelectorAll('[name=tipo_entrega]').forEach(r => r.closest('label').classList.toggle('selected', r.checked));
+  document.getElementById('delivery-fields').style.display = tipo === 'delivery' ? 'block' : 'none';
+  document.getElementById('retiro-fields').style.display   = tipo === 'retiro_local' ? 'block' : 'none';
+  updateTotals(tipo === 'delivery' ? getDelivery() : 0);
+}
+
+function getDelivery() {
+  const sel = document.getElementById('zona-select');
+  if (!sel) return 0;
+  return parseFloat(sel.options[sel.selectedIndex]?.dataset.costo || 0);
+}
+
+function updateTotals(delivery) {
+  if (delivery === undefined) delivery = getDelivery();
+  const subtotal = cart.reduce((s, i) => s + i.precio * i.cantidad, 0);
+  const tipo = document.querySelector('[name=tipo_entrega]:checked')?.value;
+  const del  = tipo === 'delivery' ? delivery : 0;
+  const maxTip = Math.min(subtotal * 0.30, 20);
+  const tipCustomRaw = parseFloat(document.getElementById('propina-custom')?.value || 0);
+  const tipPct = parseFloat(document.querySelector('[name=propina_pct]:checked')?.value || 0);
+  const tipFromPct = subtotal * (tipPct / 100);
+  const tip = Math.min(Math.max(tipCustomRaw > 0 ? tipCustomRaw : tipFromPct, 0), maxTip);
+  const tax  = (subtotal + del) * 0.07;
+  const total = subtotal + del + tax + tip;
+  document.getElementById('disp-subtotal').textContent = '$' + subtotal.toFixed(2);
+  document.getElementById('disp-delivery').textContent = '$' + del.toFixed(2);
+  document.getElementById('disp-tip').textContent      = '$' + tip.toFixed(2);
+  document.getElementById('disp-tax').textContent      = '$' + tax.toFixed(2);
+  document.getElementById('disp-total').textContent    = '$' + total.toFixed(2);
+  document.getElementById('tip-limit-help').textContent = 'Limite: $' + maxTip.toFixed(2);
+}
+
+function setCustomTip() {
+  if (parseFloat(document.getElementById('propina-custom').value || 0) > 0) {
+    document.querySelectorAll('[name=propina_pct]').forEach(r => r.checked = false);
+  }
+  updateTotals();
+}
+
+function clearCustomTip() {
+  document.getElementById('propina-custom').value = '';
+}
+
+function prepareSubmit() {
+  if (cart.length === 0) { showToast('Agrega al menos un producto.', 'warning'); return false; }
+  const tipo = document.querySelector('[name=tipo_entrega]:checked')?.value;
+  if (tipo === 'delivery' && !document.getElementById('zona-select').value) {
+    showToast('Selecciona tu zona de entrega.', 'warning'); return false;
+  }
+  const subtotal = cart.reduce((s, i) => s + i.precio * i.cantidad, 0);
+  const maxTip = Math.min(subtotal * 0.30, 20);
+  const customTip = document.getElementById('propina-custom');
+  if (parseFloat(customTip.value || 0) > maxTip) {
+    customTip.value = maxTip.toFixed(2);
+  }
+  document.getElementById('items_json').value = JSON.stringify(cart);
+  return true;
+}
+
+// Init
+document.querySelectorAll('[name=tipo_entrega]').forEach(r => r.addEventListener('change', toggleEntrega));
+toggleEntrega();
+</script>
+{% endblock %}

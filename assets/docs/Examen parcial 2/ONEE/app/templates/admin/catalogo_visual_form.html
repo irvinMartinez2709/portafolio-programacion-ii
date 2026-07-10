@@ -1,0 +1,28 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}{{ 'Editar' if item else 'Crear' }} {{ tipo }} - Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>{{ 'Editar' if item else 'Crear' }} {{ tipo }}</h1></div>
+</div>
+<div class="form-card" style="max-width:560px">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="row g-3">
+      <div class="col-12"><label class="form-label">Nombre *</label><input type="text" name="nombre" class="form-control" value="{{ item.nombre if item else '' }}" required></div>
+      <div class="col-md-6"><label class="form-label">Codigo *</label><input type="text" name="codigo" class="form-control" value="{{ item.codigo if item else '' }}" required></div>
+      <div class="col-md-6"><label class="form-label">Precio adicional</label><input type="number" name="precio_adicional" class="form-control" step="0.01" value="{{ item.precio_adicional if item else '0.00' }}"></div>
+      <div class="col-md-6"><label class="form-label">Estado</label>
+        <select name="estado" class="form-select">
+          <option value="activa" {{ 'selected' if item and item.estado == 'activa' }}>Activa</option>
+          <option value="inactiva" {{ 'selected' if item and item.estado == 'inactiva' }}>Inactiva</option>
+        </select>
+      </div>
+      <div class="col-md-6"><label class="form-label">Imagen</label><input type="file" name="imagen" class="form-control" accept=".png,.jpg,.jpeg,.webp"></div>
+      {% if item and item.imagen %}<div class="col-12"><small class="text-muted">Actual: {{ item.imagen }}</small></div>{% endif %}
+      <div class="col-12 d-flex gap-2 pt-2">
+        <button type="submit" class="btn-primary-custom"><i class="bi bi-check-lg"></i> Guardar</button>
+        <a href="{{ url_for(volver) }}" class="btn-outline-custom" style="color:var(--basil);border-color:var(--basil)">Cancelar</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

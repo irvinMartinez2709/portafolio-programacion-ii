@@ -1,0 +1,40 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Ingredientes - Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Ingredientes</h1><div class="breadcrumb-custom">CRUD de ingredientes del constructor</div></div>
+  <a href="{{ url_for('admin.crear_ingrediente') }}" class="btn-primary-custom"><i class="bi bi-plus-lg"></i> Nuevo Ingrediente</a>
+</div>
+<div class="table-custom">
+  <div class="table-responsive-admin"><table class="table mb-0">
+    <thead><tr>
+      <th style="background:var(--basil);color:var(--cream);padding:1rem">Nombre</th>
+      <th style="background:var(--basil);color:var(--cream)">Categoria</th>
+      <th style="background:var(--basil);color:var(--cream)">Precio Extra</th>
+      <th style="background:var(--basil);color:var(--cream)">Stock</th>
+      <th style="background:var(--basil);color:var(--cream)">Imagen</th>
+      <th style="background:var(--basil);color:var(--cream)">Estado</th>
+      <th style="background:var(--basil);color:var(--cream)">Acciones</th>
+    </tr></thead>
+    <tbody>
+      {% for i in ingredientes %}
+      <tr>
+        <td style="padding:1rem"><strong>{{ i.nombre }}</strong></td>
+        <td><span class="badge-masa">{{ i.categoria }}</span></td>
+        <td>{% if i.precio_extra > 0 %}<span style="color:var(--tomato);font-weight:700">+${{ "%.2f"|format(i.precio_extra) }}</span>{% else %}<span style="color:#888">Gratis</span>{% endif %}</td>
+        <td>{{ i.stock }}</td>
+        <td><img src="{{ img_url(i.imagen) }}" alt="{{ i.nombre }}" style="width:60px;height:46px;object-fit:cover;border-radius:8px"></td>
+        <td><span class="badge-estado badge-{{ i.estado }}">{{ i.estado.title() }}</span></td>
+        <td class="d-flex gap-2">
+          <a href="{{ url_for('admin.editar_ingrediente', iid=i.id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+          <form method="POST" action="{{ url_for('admin.toggle_ingrediente', iid=i.id) }}"><button type="submit" class="btn btn-sm btn-outline-secondary">Cambiar</button></form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center text-muted py-4">No hay ingredientes.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Pedido {{ pedido.numero }} — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>📦 {{ pedido.numero }}</h1><div class="breadcrumb-custom"><a href="{{ url_for('admin.pedidos') }}">Pedidos</a> › Detalle</div></div>
+  <span class="badge-estado badge-{{ pedido.estado_actual }}" style="font-size:.9rem;padding:.4rem 1rem">{{ pedido.estado_actual.replace('_',' ').title() }}</span>
+</div>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="form-card mb-3">
+      <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem">📋 Detalle del Pedido</h6>
+      {% for det in pedido.detalles %}
+      <div class="d-flex justify-content-between py-2 border-bottom" style="font-size:.88rem">
+        <div><strong>{{ det.cantidad }}× {{ det.nombre_item }}</strong>{% if det.ingredientes_extra %}<br><small class="text-muted">{{ det.ingredientes_extra }}</small>{% endif %}</div>
+        <span style="color:var(--tomato);font-weight:700">${{ "%.2f"|format(det.subtotal) }}</span>
+      </div>
+      {% endfor %}
+      <div class="order-summary mt-3">
+        <div class="order-row"><span>Subtotal</span><span>${{ "%.2f"|format(pedido.subtotal) }}</span></div>
+        <div class="order-row"><span>Delivery</span><span>${{ "%.2f"|format(pedido.monto_delivery) }}</span></div>
+        <div class="order-row"><span>Propina</span><span>${{ "%.2f"|format(pedido.propina or 0) }}</span></div>
+        <div class="order-row"><span>ITBMS</span><span>${{ "%.2f"|format(pedido.impuesto) }}</span></div>
+        <div class="order-row order-total"><span>TOTAL</span><span>${{ "%.2f"|format(pedido.total) }}</span></div>
+      </div>
+    </div>
+    <div class="form-card">
+      <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem">🕐 Historial de Estados</h6>
+      <ul class="timeline">
+        {% for h in historial %}
+        <li class="timeline-item">
+          <div class="timeline-dot done">✓</div>
+          <div class="timeline-content">
+            <div class="time-label">{{ h.estado.replace('_',' ').title() }}</div>
+            <div class="time-desc">{{ h.descripcion or '' }}</div>
+            <div class="time-date">{{ h.fecha_estado.strftime('%d/%m/%Y %H:%M') }}</div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="form-card mb-3">
+      <h6 style="color:var(--basil);font-weight:700;margin-bottom:.75rem">👤 Info del Cliente</h6>
+      <table style="font-size:.85rem;width:100%">
+        <tr><td style="color:#888;padding:.2rem 0">Nombre:</td><td><strong>{{ pedido.cliente.nombre }}</strong></td></tr>
+        <tr><td style="color:#888;padding:.2rem 0">Correo:</td><td>{{ pedido.cliente.correo or '—' }}</td></tr>
+        <tr><td style="color:#888;padding:.2rem 0">Tel.:</td><td>{{ pedido.cliente.telefono or '—' }}</td></tr>
+        <tr><td style="color:#888;padding:.2rem 0">Entrega:</td><td>{{ pedido.metodo_entrega.nombre.replace('_',' ').title() if pedido.metodo_entrega else '—' }}</td></tr>
+        {% if pedido.zona %}<tr><td style="color:#888;padding:.2rem 0">Zona:</td><td>{{ pedido.zona.nombre_zona }}</td></tr>{% endif %}
+        {% if pedido.retiro %}<tr><td style="color:#888;padding:.2rem 0">Código retiro:</td><td><strong style="color:var(--tomato)">{{ pedido.retiro.codigo_retiro }}</strong></td></tr>{% endif %}
+        {% if pedido.observaciones %}<tr><td style="color:#888;padding:.2rem 0">Notas:</td><td>{{ pedido.observaciones }}</td></tr>{% endif %}
+      </table>
+    </div>
+    {% set pago = pedido.pagos.filter_by(estado='pagado').first() %}
+    {% if pago %}
+    <div class="form-card mb-3" style="background:var(--cream)">
+      <h6 style="color:var(--basil);font-weight:700;margin-bottom:.5rem">💳 Pago</h6>
+      <table style="font-size:.85rem;width:100%">
+        <tr><td style="color:#888">Método:</td><td><strong>{{ pago.metodo.replace('_',' ').title() }}</strong></td></tr>
+        <tr><td style="color:#888">Monto:</td><td style="color:var(--tomato);font-weight:700">${{ "%.2f"|format(pago.monto) }}</td></tr>
+        {% if pago.referencia %}<tr><td style="color:#888">Ref:</td><td>{{ pago.referencia }}</td></tr>{% endif %}
+      </table>
+    </div>
+    {% endif %}
+    {% if pedido.asignacion %}
+    <div class="form-card" style="background:var(--cream)">
+      <h6 style="color:var(--basil);font-weight:700;margin-bottom:.5rem">🛵 Asignación Delivery</h6>
+      <table style="font-size:.85rem;width:100%">
+        <tr><td style="color:#888">Flete:</td><td>${{ "%.2f"|format(pedido.asignacion.monto_flete) }}</td></tr>
+        <tr><td style="color:#888">Comisión repartidor:</td><td style="color:var(--basil);font-weight:700">${{ "%.2f"|format(pedido.asignacion.comision_repartidor) }}</td></tr>
+        <tr><td style="color:#888">Estado:</td><td><span class="badge-estado badge-{{ pedido.asignacion.estado }}">{{ pedido.asignacion.estado.title() }}</span></td></tr>
+      </table>
+    </div>
+    {% endif %}
+    {% if pedido.estado_actual == 'listo' and not pedido.asignacion and pedido.metodo_entrega and pedido.metodo_entrega.nombre == 'delivery' %}
+    <div class="form-card mt-3">
+      <h6 style="color:var(--basil);font-weight:700;margin-bottom:.75rem">Asignar Repartidor</h6>
+      <form method="POST" action="{{ url_for('admin.asignar_repartidor', pid=pedido.id) }}">
+        <select name="driver_id" class="form-select mb-2" required>
+          {% for driver in drivers %}
+          <option value="{{ driver.id }}">{{ driver.empleado.usuario.nombre }} - {{ driver.placa or driver.tipo_vehiculo }}</option>
+          {% endfor %}
+        </select>
+        <button class="btn-basil w-100" type="submit">Asignar</button>
+      </form>
+    </div>
+    {% endif %}
+    {% if pedido.estado_actual not in ['cancelado', 'entregado', 'retirado'] %}
+    <div class="form-card mt-3">
+      <h6 style="color:var(--tomato);font-weight:700;margin-bottom:.75rem">Cancelar Pedido</h6>
+      <form method="POST" action="{{ url_for('admin.cancelar_pedido_admin', pid=pedido.id) }}">
+        <textarea name="motivo" class="form-control mb-2" rows="2" required placeholder="Motivo administrativo"></textarea>
+        <button class="btn-outline-custom w-100 justify-content-center" style="color:var(--tomato);border-color:var(--tomato)" type="submit">Cancelar</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

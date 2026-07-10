@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+{% block title %}CHINOS CAFE PIZZAFLOW - David, Chiriqui{% endblock %}
+
+{% block content %}
+<!-- HERO -->
+<section class="hero-section">
+  <div class="container position-relative" style="z-index:2">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-6">
+        <span class="hero-badge"><i class="bi bi-fire"></i> Delivery en David, Chiriqui</span>
+        <h1 class="hero-title mb-3">
+          La Pizza<br>
+          <span>Artesanal</span><br>
+          que Mereces
+        </h1>
+        <p class="hero-subtitle mb-4">
+          Ingredientes frescos, masa propia y el calor del horno de barro.<br>
+          Pide online y recibe en tu puerta o retira en local.
+        </p>
+
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{{ url_for('cliente.pizza_builder') }}" class="btn-primary-custom">
+            <i class="bi bi-plus-circle"></i> Crear mi Pizza
+          </a>
+          <a href="{{ url_for('public.menu') }}" class="btn-outline-custom">
+            <i class="bi bi-card-list"></i> Ver Menu Completo
+          </a>
+        </div>
+
+        <div class="d-flex gap-4 mt-4 hero-mini-info">
+          <span><i class="bi bi-lightning-charge-fill"></i> Entrega rapida</span>
+          <span><i class="bi bi-credit-card-fill"></i> Acepta Yappy</span>
+          <span><i class="bi bi-gift-fill"></i> Combos especiales</span>
+        </div>
+      </div>
+
+      <div class="col-lg-6 text-center">
+        {% if pizzas %}
+        <div class="pizza-visual" style="display:block">
+          <img
+            src="{{ img_url(pizzas[0].imagen) }}"
+            alt="{{ pizzas[0].nombre }}"
+            style="width:min(420px,100%);aspect-ratio:1/1;object-fit:cover;border-radius:50%;box-shadow:0 24px 60px rgba(0,0,0,.22)"
+          >
+        </div>
+        {% else %}
+        <div class="pizza-visual" style="display:block">
+          <img
+            src="{{ img_url(None) }}"
+            alt="CHINOS CAFE"
+            style="width:min(360px,100%);aspect-ratio:1/1;object-fit:cover;border-radius:50%;box-shadow:0 24px 60px rgba(0,0,0,.22)"
+          >
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PIZZAS DESTACADAS -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h2 class="section-title">Nuestras Pizzas</h2>
+      <div class="section-divider mx-auto"></div>
+      <p class="section-subtitle">Masa artesanal, ingredientes premium, sabor unico</p>
+    </div>
+
+    <div class="row g-4">
+      {% for pizza in pizzas %}
+      <div class="col-sm-6 col-lg-4">
+        <div class="card-pizza h-100">
+          <div class="pizza-img">
+            <img
+              src="{{ img_url(pizza.imagen) }}"
+              alt="{{ pizza.nombre }}"
+              style="width:100%;height:190px;object-fit:cover;border-radius:8px"
+            >
+          </div>
+
+          <div class="card-body">
+            <h5 class="pizza-name">{{ pizza.nombre }}</h5>
+            <p class="pizza-desc">{{ pizza.descripcion }}</p>
+
+            <div class="d-flex flex-wrap gap-1 mb-3">
+              {% if pizza.tipo_masa %}
+              <span class="badge-masa">{{ pizza.tipo_masa }}</span>
+              {% endif %}
+              {% if pizza.tipo_salsa %}
+              <span class="badge-masa">{{ pizza.tipo_salsa }}</span>
+              {% endif %}
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="pizza-price">${{ "%.2f"|format(pizza.precio_base) }}</span>
+              <a href="{{ url_for('auth.login') }}" class="btn-tomato btn-card-small">
+                Ordenar <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-12 text-center text-muted py-4">No hay pizzas disponibles aun.</div>
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="{{ url_for('public.menu') }}" class="btn-basil">
+        Ver todas las pizzas <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- COMBOS -->
+{% if combos %}
+<section class="py-5 combos-section">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h2 class="section-title">Combos Especiales</h2>
+      <div class="section-divider mx-auto"></div>
+      <p class="section-subtitle">Mas pizza, mas ahorro</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+      {% for combo in combos %}
+      <div class="col-sm-6 col-lg-3">
+        <div class="card-pizza h-100">
+          <div class="pizza-img combo-img-box">
+            <img
+              src="{{ img_url(combo.imagen) }}"
+              alt="{{ combo.nombre }}"
+              class="combo-img"
+              style="width:100%;height:170px;object-fit:cover;border-radius:8px"
+            >
+          </div>
+
+          <div class="card-body">
+            <h5 class="pizza-name">{{ combo.nombre }}</h5>
+            <p class="pizza-desc">{{ combo.descripcion }}</p>
+
+            <div class="d-flex align-items-center justify-content-between mt-3">
+              <span class="pizza-price">${{ "%.2f"|format(combo.precio) }}</span>
+              <a href="{{ url_for('auth.login') }}" class="btn-basil btn-card-small">
+                Pedir
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- COMO FUNCIONA -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Como Funciona</h2>
+      <div class="section-divider mx-auto"></div>
+    </div>
+
+    <div class="row g-4">
+      {% set steps = [
+        ('1','bi bi-ui-checks-grid','Elige tu pizza','Selecciona de nuestro menu o crea la tuya con el Pizza Builder interactivo.'),
+        ('2','bi bi-bag-plus','Arma tu pedido','Agrega refresco, adicionales y elige entre delivery o retiro en local.'),
+        ('3','bi bi-credit-card','Paga facil','Yappy Comercial, efectivo o tarjeta. Rapido y seguro.'),
+        ('4','bi bi-house-check','A disfrutar','Recibe en tu puerta o retira con tu codigo unico. Siempre caliente.')
+      ] %}
+
+      {% for num, icon_class, titulo, desc in steps %}
+      <div class="col-sm-6 col-lg-3">
+        <div class="step-card">
+          <div class="step-number">{{ num }}</div>
+          <div class="step-icon"><i class="{{ icon_class }}"></i></div>
+          <h5 class="step-title">{{ titulo }}</h5>
+          <p class="step-desc">{{ desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERY + YAPPY -->
+<section class="py-5 delivery-section">
+  <div class="container">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-6">
+        <span class="delivery-badge"><i class="bi bi-bicycle"></i> DELIVERY DISPONIBLE</span>
+        <h2 class="delivery-title">Llevamos hasta tu puerta en David, Chiriqui</h2>
+        <p class="delivery-text">
+          Cubrimos David Centro, San Mateo, Pedregal, Las Lomas, San Pablo, Chiriqui y mas.
+          Costo desde $2.00 segun tu zona.
+        </p>
+
+        <div class="d-flex gap-3 mt-3 delivery-info">
+          <span><i class="bi bi-clock"></i> 20-50 minutos</span>
+          <span><i class="bi bi-geo-alt-fill"></i> David y alrededores</span>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="yappy-card">
+          <div class="yappy-logo mb-1">Yappy</div>
+          <div class="yappy-small">Pago seguro y facil</div>
+          <div class="yappy-amount">{{ config.yappy_numero }}</div>
+          <div class="yappy-company">{{ config.nombre_empresa }}</div>
+          <div class="yappy-note">
+            <i class="bi bi-check-circle-fill"></i> Tambien aceptamos efectivo y tarjeta simulada
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="py-5 text-center">
+  <div class="container">
+    <span class="cta-icon"><i class="bi bi-bag-heart-fill"></i></span>
+    <h2 class="section-title mt-2">Listo para Ordenar</h2>
+    <p class="section-subtitle mb-4">Crea tu pizza personalizada o elige uno de nuestros combos</p>
+
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a href="{{ url_for('auth.login') }}" class="btn-primary-custom">
+        <i class="bi bi-person"></i> Ingresar / Crear Cuenta
+      </a>
+      <a href="{{ url_for('public.menu') }}" class="btn-outline-custom btn-menu-green">
+        <i class="bi bi-grid"></i> Ver Menu
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

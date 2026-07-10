@@ -1,0 +1,64 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}ChinoBot — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>🤖 ChinoBot — Respuestas</h1><div class="breadcrumb-custom">Gestión del chatbot offline</div></div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="form-card">
+      <h6 style="color:var(--basil);font-weight:700;margin-bottom:1rem">➕ Nueva Respuesta</h6>
+      <form method="POST" action="{{ url_for('admin.crear_respuesta_chatbot') }}">
+        <div class="mb-3">
+          <label class="form-label">Palabras Clave (separadas por coma) *</label>
+          <input type="text" name="pregunta_clave" class="form-control" placeholder="yappy,como pagar,pago" required>
+          <div style="font-size:.75rem;color:#888;margin-top:.25rem">Ej: "yappy,pagar,metodo pago"</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Respuesta *</label>
+          <textarea name="respuesta" class="form-control" rows="3" required placeholder="Texto que ChinoBot responderá..."></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Categoría</label>
+          <select name="categoria" class="form-select">
+            <option value="general">General</option>
+            <option value="productos">Productos</option>
+            <option value="delivery">Delivery</option>
+            <option value="pagos">Pagos</option>
+            <option value="pedidos">Pedidos</option>
+            <option value="empresa">Empresa</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary-custom"><i class="bi bi-plus-lg"></i> Agregar Respuesta</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="table-custom">
+      <div class="p-3 border-bottom"><h6 style="margin:0;color:var(--basil);font-weight:700">📋 Respuestas Configuradas ({{ respuestas|length }})</h6></div>
+      <table class="table mb-0">
+        <thead><tr>
+          <th style="background:var(--basil);color:var(--cream);padding:.75rem 1rem">Palabras Clave</th>
+          <th style="background:var(--basil);color:var(--cream)">Respuesta</th>
+          <th style="background:var(--basil);color:var(--cream)">Cat.</th>
+          <th style="background:var(--basil);color:var(--cream)">Activo</th>
+        </tr></thead>
+        <tbody>
+          {% for r in respuestas %}
+          <tr>
+            <td style="padding:.75rem 1rem"><code style="font-size:.75rem">{{ r.pregunta_clave[:40] }}{% if r.pregunta_clave|length > 40 %}…{% endif %}</code></td>
+            <td style="font-size:.82rem;max-width:220px">{{ r.respuesta[:80] }}{% if r.respuesta|length > 80 %}…{% endif %}</td>
+            <td><span class="badge-masa" style="font-size:.7rem">{{ r.categoria }}</span></td>
+            <td>{{ '✅' if r.activo else '❌' }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="text-center text-muted py-4">No hay respuestas configuradas.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

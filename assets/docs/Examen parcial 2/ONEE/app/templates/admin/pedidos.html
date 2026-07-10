@@ -1,0 +1,43 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Pedidos — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>📦 Pedidos</h1></div>
+  <div class="d-flex gap-2">
+    {% for est in ['','recibido','en_preparacion','en_horno','listo','entregado'] %}
+    <a href="{{ url_for('admin.pedidos', estado=est) }}" class="btn-basil" style="font-size:.78rem;padding:.35rem .8rem;{{ 'background:var(--cheese);color:var(--carbon)' if estado_filtro==est }}">{{ est.replace('_',' ').title() if est else 'Todos' }}</a>
+    {% endfor %}
+  </div>
+</div>
+<div class="table-custom">
+  <div class="table-responsive-admin"><table class="table mb-0">
+    <thead><tr>
+      <th style="background:var(--basil);color:var(--cream);padding:1rem">Pedido</th>
+      <th style="background:var(--basil);color:var(--cream)">Cliente</th>
+      <th style="background:var(--basil);color:var(--cream)">Entrega</th>
+      <th style="background:var(--basil);color:var(--cream)">Total</th>
+      <th style="background:var(--basil);color:var(--cream)">Estado</th>
+      <th style="background:var(--basil);color:var(--cream)">Pago</th>
+      <th style="background:var(--basil);color:var(--cream)">Fecha</th>
+      <th style="background:var(--basil);color:var(--cream)">Acción</th>
+    </tr></thead>
+    <tbody>
+      {% for p in pedidos %}
+      <tr>
+        <td style="padding:1rem"><strong>{{ p.numero }}</strong></td>
+        <td>{{ p.cliente.nombre }}</td>
+        <td>{% if p.metodo_entrega %}{{ '🛵' if p.metodo_entrega.nombre=='delivery' else '🏠' }} {{ p.metodo_entrega.nombre.replace('_',' ').title() }}{% endif %}</td>
+        <td style="font-weight:700;color:var(--tomato)">${{ "%.2f"|format(p.total) }}</td>
+        <td><span class="badge-estado badge-{{ p.estado_actual }}">{{ p.estado_actual.replace('_',' ').title() }}</span></td>
+        <td>{% set pg=p.pagos.filter_by(estado='pagado').first() %}{% if pg %}<span class="badge-estado badge-pagado">✅</span>{% else %}<span class="badge-estado badge-pendiente">⏳</span>{% endif %}</td>
+        <td style="font-size:.82rem">{{ p.fecha_pedido.strftime('%d/%m %H:%M') }}</td>
+        <td><a href="{{ url_for('admin.ver_pedido', pid=p.id) }}" class="btn-basil" style="font-size:.78rem;padding:.3rem .7rem"><i class="bi bi-eye"></i></a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="text-center text-muted py-4">No hay pedidos.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

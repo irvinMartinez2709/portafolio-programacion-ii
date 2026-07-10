@@ -1,0 +1,94 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Dashboard Admin — CHINOS CAFÉ{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>📊 Dashboard</h1>
+    <div class="breadcrumb-custom">Bienvenido, {{ current_user.nombre }}</div>
+  </div>
+  <div style="font-size:.82rem;color:#888">🟢 DB Principal: OK &nbsp;|&nbsp; 🟡 DB Réplica: Pendiente (producción)</div>
+</div>
+
+<!-- KPIs -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-icon">📦</div><div class="stat-value">{{ pedidos_hoy }}</div><div class="stat-label">Pedidos Hoy</div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card yellow"><div class="stat-icon">💳</div><div class="stat-value">{{ pagos_confirmados }}</div><div class="stat-label">Pagos Confirmados</div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-icon">💰</div><div class="stat-value" style="font-size:1.5rem">${{ "%.2f"|format(total_vendido) }}</div><div class="stat-label">Total Vendido</div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card red"><div class="stat-icon">🍕</div><div class="stat-value">{{ pizzas_activas }}</div><div class="stat-label">Pizzas Activas</div></div></div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-icon">📍</div><div class="stat-value">{{ zonas_activas }}</div><div class="stat-label">Zonas Activas</div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card yellow"><div class="stat-icon">📧</div><div class="stat-value">{{ correos_generados }}</div><div class="stat-label">Correos Simulados</div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-icon">📄</div><div class="stat-value">{{ json_generados }}</div><div class="stat-label">JSON Generados</div></div></div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card" style="background:var(--basil);color:var(--cream)">
+      <div class="stat-icon">🟢</div>
+      <div class="stat-value" style="color:var(--cheese);font-size:1.2rem">ONLINE</div>
+      <div class="stat-label" style="color:rgba(250,247,240,.7)">Sistema Activo</div>
+    </div>
+  </div>
+</div>
+
+<!-- Accesos rápidos -->
+<div class="row g-3 mb-4">
+  {% for url, ico, label, color in [
+    ('admin.pizzas','🍕','Gestionar Pizzas','btn-basil'),
+    ('admin.pedidos','📦','Ver Pedidos','btn-tomato'),
+    ('admin.zonas','📍','Zonas de Entrega','btn-basil'),
+    ('admin.outbox','📧','Outbox / Correos','btn-tomato'),
+    ('admin.configuracion','⚙️','Configuración','btn-basil'),
+    ('admin.usuarios','👥','Usuarios','btn-tomato')
+  ] %}
+  <div class="col-6 col-lg-2">
+    <a href="{{ url_for(url) }}" class="{{ color }} w-100 justify-content-center flex-column text-center" style="padding:1rem;border-radius:var(--radius);display:flex;gap:.3rem">
+      <span style="font-size:1.6rem">{{ ico }}</span>
+      <span style="font-size:.78rem">{{ label }}</span>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Pedidos recientes -->
+<div class="table-custom">
+  <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+    <h5 style="margin:0;color:var(--basil);font-weight:700"><i class="bi bi-receipt"></i> Pedidos Recientes</h5>
+    <a href="{{ url_for('admin.pedidos') }}" class="btn-basil" style="font-size:.82rem;padding:.35rem .9rem">Ver todos</a>
+  </div>
+  {% if pedidos_recientes %}
+  <div class="table-responsive-admin">
+  <table class="table mb-0">
+    <thead><tr>
+      <th>Pedido</th>
+      <th>Cliente</th>
+      <th>Entrega</th>
+      <th>Total</th>
+      <th>Estado</th>
+      <th>Fecha</th>
+      <th>Acción</th>
+    </tr></thead>
+    <tbody>
+      {% for p in pedidos_recientes %}
+      <tr>
+        <td><strong>#{{ p.numero }}</strong></td>
+        <td>{{ p.cliente.nombre }}</td>
+        <td>{% if p.metodo_entrega %}{{ '🛵' if p.metodo_entrega.nombre=='delivery' else '🏠' }} {{ p.metodo_entrega.nombre.replace('_',' ').title() }}{% endif %}</td>
+        <td style="color:var(--tomato);font-weight:700">${{ "%.2f"|format(p.total) }}</td>
+        <td><span class="badge-estado badge-{{ p.estado_actual }}">{{ p.estado_actual.replace('_',' ').title() }}</span></td>
+        <td style="font-size:.82rem;color:#888">{{ p.fecha_pedido.strftime('%d/%m %H:%M') }}</td>
+        <td>
+          <a href="{{ url_for('admin.ver_pedido', pid=p.id) }}" class="btn-basil" style="font-size:.78rem;padding:.3rem .7rem">
+            <i class="bi bi-eye"></i>
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <div class="text-center py-4 text-muted">No hay pedidos aún.</div>
+  {% endif %}
+</div>
+{% endblock %}

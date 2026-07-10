@@ -1,0 +1,38 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Combos - Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Combos</h1></div>
+  <a href="{{ url_for('admin.crear_combo') }}" class="btn-primary-custom"><i class="bi bi-plus-lg"></i> Nuevo Combo</a>
+</div>
+<div class="table-custom">
+  <div class="table-responsive-admin"><table class="table mb-0">
+    <thead><tr>
+      <th style="background:var(--basil);color:var(--cream);padding:1rem">Nombre</th>
+      <th style="background:var(--basil);color:var(--cream)">Imagen</th>
+      <th style="background:var(--basil);color:var(--cream)">Descripcion</th>
+      <th style="background:var(--basil);color:var(--cream)">Precio</th>
+      <th style="background:var(--basil);color:var(--cream)">Estado</th>
+      <th style="background:var(--basil);color:var(--cream)">Acciones</th>
+    </tr></thead>
+    <tbody>
+      {% for c in combos %}
+      <tr>
+        <td style="padding:1rem"><strong>{{ c.nombre }}</strong></td>
+        <td><img src="{{ img_url(c.imagen) }}" alt="{{ c.nombre }}" style="width:60px;height:46px;object-fit:cover;border-radius:8px"></td>
+        <td style="font-size:.85rem;color:#666">{{ c.descripcion or '-' }}</td>
+        <td style="font-weight:700;color:var(--tomato)">${{ "%.2f"|format(c.precio) }}</td>
+        <td><span class="badge-estado badge-{{ c.estado }}">{{ c.estado.title() }}</span></td>
+        <td class="d-flex gap-2">
+          <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.editar_combo', cid=c.id) }}">Editar</a>
+          <form method="POST" action="{{ url_for('admin.toggle_combo', cid=c.id) }}"><button class="btn btn-sm btn-outline-secondary" type="submit">Cambiar</button></form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="text-center text-muted py-4">No hay combos.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

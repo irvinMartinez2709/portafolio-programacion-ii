@@ -1,0 +1,761 @@
+{% extends "base.html" %}
+{% block title %}Constructor Visual - CHINOS CAFE{% endblock %}
+
+{% block extra_css %}
+<style>
+.builder-app {
+  width: min(1380px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 36px;
+}
+.builder-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.builder-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.builder-mark {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  color: #fff;
+  font-weight: 900;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #b83227, #711b18);
+  box-shadow: 0 10px 22px rgba(184, 50, 39, .22);
+}
+.builder-topbar h1 {
+  margin: 0;
+  color: var(--basil);
+  font-size: clamp(1.45rem, 2.6vw, 2.25rem);
+  letter-spacing: 0;
+}
+.builder-subtitle {
+  margin: 5px 0 0;
+  color: #756b61;
+  font-size: .98rem;
+}
+.builder-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  color: #5e201c;
+  font-weight: 800;
+  border: 1px solid #f0cac4;
+  border-radius: 999px;
+  background: #fff5f2;
+  box-shadow: var(--shadow);
+}
+.builder-status::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #2d7a4f;
+  box-shadow: 0 0 0 5px rgba(45, 122, 79, .12);
+}
+.builder-layout {
+  display: grid;
+  grid-template-columns: minmax(310px, 430px) minmax(420px, 1fr);
+  gap: 26px;
+  align-items: start;
+}
+.builder-controls {
+  display: grid;
+  gap: 18px;
+}
+.builder-section {
+  padding: 18px;
+  border: 1px solid #e8ddd0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .9);
+  box-shadow: var(--shadow);
+}
+.builder-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.builder-section-title h2 {
+  margin: 0;
+  color: var(--basil);
+  font-size: 1rem;
+}
+.builder-section-title span {
+  color: #756b61;
+  font-size: .76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.builder-field {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 12px;
+  color: #756b61;
+  font-size: .85rem;
+  font-weight: 800;
+}
+.builder-select {
+  width: 100%;
+  min-height: 43px;
+  padding: 0 12px;
+  color: #241f1a;
+  border: 1px solid #e8ddd0;
+  border-radius: 8px;
+  background: #fff;
+  outline: none;
+}
+.ingredient-list {
+  display: grid;
+  gap: 10px;
+  max-height: 530px;
+  padding-right: 4px;
+  overflow: auto;
+}
+.ingredient-row {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #e8ddd0;
+  border-radius: 8px;
+  background: #fff;
+  transition: border-color .18s ease, background .18s ease;
+}
+.ingredient-row.active {
+  border-color: rgba(184, 50, 39, .42);
+  background: #fffaf2;
+}
+.ingredient-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ingredient-main input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--tomato);
+}
+.ingredient-name {
+  min-width: 0;
+  flex: 1;
+  color: #241f1a;
+  font-size: .95rem;
+  font-weight: 850;
+}
+.ingredient-price {
+  color: var(--tomato);
+  font-size: .78rem;
+  font-weight: 850;
+}
+.ingredient-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.ingredient-options select {
+  min-height: 38px;
+  font-size: .86rem;
+}
+.preview-shell {
+  position: sticky;
+  top: 20px;
+  display: grid;
+  gap: 18px;
+  min-height: calc(100vh - 56px);
+  align-content: center;
+  padding: clamp(18px, 3vw, 34px);
+  border: 1px solid #e8ddd0;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,250,242,.9)),
+    repeating-linear-gradient(45deg, rgba(151,121,88,.04) 0 8px, transparent 8px 18px);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  z-index: 2;
+}
+.preview-header h2 {
+  margin: 0;
+  color: var(--basil);
+  font-size: clamp(1.2rem, 2vw, 1.65rem);
+}
+.preview-meta {
+  color: #756b61;
+  font-size: .92rem;
+  font-weight: 750;
+  text-align: right;
+}
+.pizza-stage {
+  position: relative;
+  display: grid;
+  min-height: min(68vw, 660px);
+  place-items: center;
+  isolation: isolate;
+}
+.pizza-shadow {
+  position: absolute;
+  width: min(76vw, 660px);
+  max-width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(84,46,22,.18), rgba(84,46,22,.08) 42%, transparent 68%);
+  filter: blur(12px);
+  transform: translateY(34px) scaleX(.94);
+  z-index: 0;
+}
+.pizza-preview {
+  position: relative;
+  width: min(72vw, 620px);
+  max-width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  filter: drop-shadow(0 24px 35px rgba(59,37,20,.28));
+  transition: transform .26s ease;
+  z-index: 1;
+}
+.pizza-preview:hover {
+  transform: scale(1.012);
+}
+.pizza-layer,
+.topping-piece {
+  position: absolute;
+  user-select: none;
+  pointer-events: none;
+}
+.pizza-layer {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.crust-layer {
+  z-index: 1;
+}
+.sauce-layer {
+  z-index: 2;
+  opacity: .92;
+  transform: scale(.88);
+}
+#toppingLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+.topping-piece {
+  left: var(--left);
+  top: var(--top);
+  width: var(--piece-size);
+  height: var(--piece-size);
+  object-fit: contain;
+  opacity: 0;
+  filter: drop-shadow(0 3px 3px rgba(45,26,14,.18));
+  transform: translate(-50%, -50%) rotate(var(--rotation)) scale(var(--scale));
+  animation: toppingIn .36s ease forwards;
+  animation-delay: var(--delay);
+}
+.pizza-divider {
+  position: absolute;
+  inset: 7%;
+  display: none;
+  width: 2px;
+  height: 86%;
+  margin: auto;
+  border-radius: 999px;
+  background: rgba(255,255,255,.58);
+  box-shadow: 0 0 0 1px rgba(89,52,23,.12);
+  z-index: 5;
+}
+.pizza-divider.visible {
+  display: block;
+}
+.builder-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  z-index: 2;
+}
+.builder-summary-item {
+  padding: 12px;
+  border: 1px solid #e8ddd0;
+  border-radius: 8px;
+  background: rgba(255,255,255,.74);
+}
+.builder-summary-label {
+  color: #756b61;
+  font-size: .72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+.builder-summary-value {
+  margin-top: 3px;
+  overflow: hidden;
+  color: #241f1a;
+  font-size: .96rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@keyframes toppingIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(calc(var(--rotation) - 18deg)) scale(calc(var(--scale) * .65));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--rotation)) scale(var(--scale));
+  }
+}
+@media (max-width: 1020px) {
+  .builder-layout { grid-template-columns: 1fr; }
+  .preview-shell { position: relative; top: auto; min-height: auto; }
+  .pizza-stage { min-height: min(92vw, 620px); }
+}
+@media (max-width: 640px) {
+  .builder-app { width: min(100% - 24px, 1380px); padding-top: 18px; }
+  .builder-topbar, .preview-header { align-items: flex-start; flex-direction: column; }
+  .builder-status { width: 100%; justify-content: center; }
+  .ingredient-options, .builder-summary { grid-template-columns: 1fr; }
+  .pizza-preview { width: min(88vw, 620px); }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="builder-app">
+  <header class="builder-topbar">
+    <div class="builder-brand">
+      <div class="builder-mark">PF</div>
+      <div>
+        <h1>Constructor Visual de Pizza</h1>
+        <p class="builder-subtitle">Capas reales, piezas transparentes y actualizacion en tiempo real.</p>
+      </div>
+    </div>
+    <div id="builderStatus" class="builder-status">Vista previa activa</div>
+  </header>
+
+  <section class="builder-layout">
+    <aside class="builder-controls" aria-label="Controles de pizza">
+      <section class="builder-section">
+        <div class="builder-section-title">
+          <h2>Producto y base</h2>
+          <span>Pedido</span>
+        </div>
+        <label class="builder-field" for="basePizzaSelect">
+          Pizza base para precio
+          <select id="basePizzaSelect" class="builder-select">
+            <option value="">Selecciona una pizza base</option>
+            {% for pizza in pizzas_base %}
+            <option value="{{ pizza.id }}" data-price="{{ pizza.precio_base }}" data-name="{{ pizza.nombre }}">{{ pizza.nombre }} - ${{ "%.2f"|format(pizza.precio_base) }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label class="builder-field" for="crustSelect">
+          Masa
+          <select id="crustSelect" class="builder-select"></select>
+        </label>
+        <label class="builder-field" for="sauceSelect">
+          Salsa
+          <select id="sauceSelect" class="builder-select"></select>
+        </label>
+      </section>
+
+      <section class="builder-section">
+        <div class="builder-section-title">
+          <h2>Ingredientes</h2>
+          <span>Piezas</span>
+        </div>
+        <div id="ingredientList" class="ingredient-list"></div>
+        <div class="mt-3" style="font-size:.82rem;color:#756b61">
+          Minimo <strong>{{ min_ing }}</strong> ingredientes. Maximo <strong>{{ max_ing }}</strong>.
+        </div>
+      </section>
+
+      <section class="builder-section">
+        <div class="builder-section-title">
+          <h2>Complementos</h2>
+          <span>Opcional</span>
+        </div>
+        <label class="builder-field" for="bebidaSelect">
+          Bebida
+          <select id="bebidaSelect" class="builder-select">
+            <option value="" data-price="0">Sin bebida</option>
+            {% for b in bebidas %}
+            <option value="{{ b.id }}" data-price="{{ b.precio }}" data-name="{{ b.nombre }}">{{ b.nombre }} ({{ b.tamano }}) - ${{ "%.2f"|format(b.precio) }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label class="builder-field" for="adicionalSelect">
+          Adicional
+          <select id="adicionalSelect" class="builder-select">
+            <option value="" data-price="0">Sin adicional</option>
+            {% for a in adicionales %}
+            <option value="{{ a.id }}" data-price="{{ a.precio }}" data-name="{{ a.nombre }}">{{ a.nombre }} - ${{ "%.2f"|format(a.precio) }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <button id="savePizzaBtn" class="btn-primary-custom w-100 justify-content-center mt-2" disabled type="button">
+          Agregar al pedido
+        </button>
+      </section>
+    </aside>
+
+    <section class="preview-shell" aria-label="Vista previa de pizza">
+      <div class="preview-header">
+        <div>
+          <h2>Pizza personalizada</h2>
+          <p class="builder-subtitle">Cada ingrediente se distribuye dentro del area seleccionada.</p>
+        </div>
+        <div id="previewMeta" class="preview-meta"></div>
+      </div>
+
+      <div class="pizza-stage">
+        <div class="pizza-shadow"></div>
+        <div id="pizzaPreview" class="pizza-preview">
+          <img id="crustLayer" class="pizza-layer crust-layer" alt="">
+          <img id="sauceLayer" class="pizza-layer sauce-layer" alt="">
+          <div id="toppingLayer"></div>
+          <div id="divider" class="pizza-divider"></div>
+        </div>
+      </div>
+
+      <div class="builder-summary">
+        <div class="builder-summary-item">
+          <div class="builder-summary-label">Masa</div>
+          <div id="summaryCrust" class="builder-summary-value"></div>
+        </div>
+        <div class="builder-summary-item">
+          <div class="builder-summary-label">Salsa</div>
+          <div id="summarySauce" class="builder-summary-value"></div>
+        </div>
+        <div class="builder-summary-item">
+          <div class="builder-summary-label">Piezas</div>
+          <div id="summaryPieces" class="builder-summary-value"></div>
+        </div>
+        <div class="builder-summary-item">
+          <div class="builder-summary-label">Subtotal</div>
+          <div id="summarySubtotal" class="builder-summary-value">$0.00</div>
+        </div>
+      </div>
+    </section>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const MIN_ING = {{ min_ing }};
+const MAX_ING = {{ max_ing }};
+const ASSET_BASE = "{{ url_for('static', filename='img/pizza/') }}";
+const crusts = {{ crusts|tojson }};
+const sauces = {{ sauces|tojson }};
+const ingredients = {{ visual_ingredients|tojson }};
+const amounts = {
+  low: { name: "Poco", pieces: 10, priceMultiplier: 1 },
+  normal: { name: "Normal", pieces: 25, priceMultiplier: 1 },
+  extra: { name: "Extra", pieces: 45, priceMultiplier: 1.5 }
+};
+const areas = {
+  left: "Mitad izquierda",
+  full: "Pizza completa",
+  right: "Mitad derecha"
+};
+const state = {
+  crust: crusts[0]?.id || "tradicional",
+  sauce: sauces[0]?.id || "tomate",
+  toppings: Object.fromEntries(ingredients.map((item) => [item.id, { enabled: false, amount: "normal", area: "full" }]))
+};
+const nodes = {
+  basePizzaSelect: document.querySelector("#basePizzaSelect"),
+  crustSelect: document.querySelector("#crustSelect"),
+  sauceSelect: document.querySelector("#sauceSelect"),
+  ingredientList: document.querySelector("#ingredientList"),
+  bebidaSelect: document.querySelector("#bebidaSelect"),
+  adicionalSelect: document.querySelector("#adicionalSelect"),
+  savePizzaBtn: document.querySelector("#savePizzaBtn"),
+  crustLayer: document.querySelector("#crustLayer"),
+  sauceLayer: document.querySelector("#sauceLayer"),
+  toppingLayer: document.querySelector("#toppingLayer"),
+  divider: document.querySelector("#divider"),
+  previewMeta: document.querySelector("#previewMeta"),
+  summaryCrust: document.querySelector("#summaryCrust"),
+  summarySauce: document.querySelector("#summarySauce"),
+  summaryPieces: document.querySelector("#summaryPieces"),
+  summarySubtotal: document.querySelector("#summarySubtotal")
+};
+
+function assetUrl(kind, file) {
+  if (!file) return "";
+  if (file.startsWith("/") || file.startsWith("http")) return file;
+  if (file.startsWith("img/")) return `{{ url_for('static', filename='') }}${file}`;
+  if (file.includes("/")) return `{{ url_for('static', filename='uploads/') }}${file}`;
+  return `${ASSET_BASE}${kind}/${encodeURIComponent(file)}`;
+}
+
+function createOption(value, label) {
+  const option = document.createElement("option");
+  option.value = value;
+  option.textContent = label;
+  return option;
+}
+
+function seededRandom(seed) {
+  let value = seed % 2147483647;
+  if (value <= 0) value += 2147483646;
+  return function random() {
+    value = value * 16807 % 2147483647;
+    return (value - 1) / 2147483646;
+  };
+}
+
+function hashSeed(text) {
+  let hash = 2166136261;
+  for (let index = 0; index < text.length; index++) {
+    hash ^= text.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return Math.abs(hash);
+}
+
+function polarPoint(random, area) {
+  const safeRadius = .405;
+  const radius = Math.sqrt(random()) * safeRadius;
+  let angle;
+  if (area === "left") {
+    angle = (90 + random() * 180) * Math.PI / 180;
+  } else if (area === "right") {
+    angle = (-90 + random() * 180) * Math.PI / 180;
+  } else {
+    angle = random() * Math.PI * 2;
+  }
+  return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius };
+}
+
+function buildSelectors() {
+  crusts.forEach((crust) => nodes.crustSelect.appendChild(createOption(crust.id, crust.name)));
+  sauces.forEach((sauce) => nodes.sauceSelect.appendChild(createOption(sauce.id, sauce.name)));
+  nodes.crustSelect.value = state.crust;
+  nodes.sauceSelect.value = state.sauce;
+  nodes.crustSelect.addEventListener("change", (event) => { state.crust = event.target.value; render(); });
+  nodes.sauceSelect.addEventListener("change", (event) => { state.sauce = event.target.value; render(); });
+  nodes.basePizzaSelect.addEventListener("change", render);
+  nodes.bebidaSelect.addEventListener("change", render);
+  nodes.adicionalSelect.addEventListener("change", render);
+  nodes.savePizzaBtn.addEventListener("click", addToCart);
+}
+
+function buildIngredients() {
+  const fragment = document.createDocumentFragment();
+  ingredients.forEach((ingredient) => {
+    const row = document.createElement("article");
+    row.className = "ingredient-row";
+    row.dataset.ingredient = ingredient.id;
+
+    const main = document.createElement("label");
+    main.className = "ingredient-main";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.addEventListener("change", () => {
+      const enabledCount = activeIngredients().length;
+      if (checkbox.checked && enabledCount >= MAX_ING) {
+        checkbox.checked = false;
+        showToast(`Maximo ${MAX_ING} ingredientes permitidos.`, "warning");
+        return;
+      }
+      state.toppings[ingredient.id].enabled = checkbox.checked;
+      row.classList.toggle("active", checkbox.checked);
+      render();
+    });
+
+    const name = document.createElement("span");
+    name.className = "ingredient-name";
+    name.textContent = ingredient.name;
+
+    const price = document.createElement("span");
+    price.className = "ingredient-price";
+    price.textContent = ingredient.price > 0 ? `+$${Number(ingredient.price).toFixed(2)}` : "sin extra";
+
+    main.append(checkbox, name, price);
+
+    const options = document.createElement("div");
+    options.className = "ingredient-options";
+
+    const amountSelect = document.createElement("select");
+    amountSelect.className = "builder-select";
+    Object.entries(amounts).forEach(([key, value]) => amountSelect.appendChild(createOption(key, value.name)));
+    amountSelect.value = state.toppings[ingredient.id].amount;
+    amountSelect.addEventListener("change", () => {
+      state.toppings[ingredient.id].amount = amountSelect.value;
+      render();
+    });
+
+    const areaSelect = document.createElement("select");
+    areaSelect.className = "builder-select";
+    Object.entries(areas).forEach(([key, value]) => areaSelect.appendChild(createOption(key, value)));
+    areaSelect.value = state.toppings[ingredient.id].area;
+    areaSelect.addEventListener("change", () => {
+      state.toppings[ingredient.id].area = areaSelect.value;
+      render();
+    });
+
+    options.append(amountSelect, areaSelect);
+    row.append(main, options);
+    fragment.appendChild(row);
+  });
+  nodes.ingredientList.appendChild(fragment);
+}
+
+function activeIngredients() {
+  return ingredients.filter((item) => state.toppings[item.id].enabled);
+}
+
+function selectedOption(select) {
+  return select.options[select.selectedIndex];
+}
+
+function createToppingPiece(ingredient, index, total, config) {
+  const random = seededRandom(hashSeed(`${ingredient.id}-${state.crust}-${state.sauce}-${config.amount}-${config.area}-${index}-${total}`));
+  const point = polarPoint(random, config.area);
+  const rotation = Math.round(random() * 360);
+  const scale = .82 + random() * .42;
+  const size = ingredient.size * (.9 + random() * .18);
+  const image = document.createElement("img");
+  image.className = "topping-piece";
+  image.src = assetUrl("ingredientes", ingredient.file);
+  image.alt = "";
+  image.style.setProperty("--left", `${(50 + point.x * 100).toFixed(3)}%`);
+  image.style.setProperty("--top", `${(50 + point.y * 100).toFixed(3)}%`);
+  image.style.setProperty("--rotation", `${rotation}deg`);
+  image.style.setProperty("--scale", scale.toFixed(3));
+  image.style.setProperty("--piece-size", `${size.toFixed(1)}px`);
+  image.style.setProperty("--delay", `${Math.min(index * 7, 170)}ms`);
+  return image;
+}
+
+function renderToppings() {
+  const fragment = document.createDocumentFragment();
+  let pieceTotal = 0;
+  const activeAreas = new Set();
+  activeIngredients().forEach((ingredient) => {
+    const config = state.toppings[ingredient.id];
+    const total = amounts[config.amount].pieces;
+    pieceTotal += total;
+    activeAreas.add(config.area);
+    for (let index = 0; index < total; index++) {
+      fragment.appendChild(createToppingPiece(ingredient, index, total, config));
+    }
+  });
+  nodes.toppingLayer.replaceChildren(fragment);
+  nodes.divider.classList.toggle("visible", activeAreas.has("left") || activeAreas.has("right"));
+  return pieceTotal;
+}
+
+function calcTotals() {
+  const baseOpt = selectedOption(nodes.basePizzaSelect);
+  const basePrice = parseFloat(baseOpt?.dataset.price || 0);
+  const crust = crusts.find((item) => item.id === state.crust);
+  const sauce = sauces.find((item) => item.id === state.sauce);
+  const crustPrice = Number(crust?.price || 0);
+  const saucePrice = Number(sauce?.price || 0);
+  const toppingsPrice = activeIngredients().reduce((sum, item) => {
+    const config = state.toppings[item.id];
+    return sum + Number(item.price || 0) * amounts[config.amount].priceMultiplier;
+  }, 0);
+  const bebidaPrice = parseFloat(selectedOption(nodes.bebidaSelect)?.dataset.price || 0);
+  const adicionalPrice = parseFloat(selectedOption(nodes.adicionalSelect)?.dataset.price || 0);
+  return {
+    basePrice,
+    crustPrice,
+    saucePrice,
+    toppingsPrice,
+    bebidaPrice,
+    adicionalPrice,
+    total: basePrice + crustPrice + saucePrice + toppingsPrice + bebidaPrice + adicionalPrice
+  };
+}
+
+function render() {
+  const crust = crusts.find((item) => item.id === state.crust);
+  const sauce = sauces.find((item) => item.id === state.sauce);
+  const pieceTotal = renderToppings();
+  const activeCount = activeIngredients().length;
+  const totals = calcTotals();
+
+  nodes.crustLayer.src = assetUrl("masas", crust.file);
+  nodes.sauceLayer.src = assetUrl("salsas", sauce.file);
+  nodes.summaryCrust.textContent = crust.name;
+  nodes.summarySauce.textContent = sauce.name;
+  nodes.summaryPieces.textContent = `${pieceTotal} piezas`;
+  nodes.summarySubtotal.textContent = `$${totals.total.toFixed(2)}`;
+  nodes.previewMeta.textContent = `${activeCount} ingredientes activos`;
+  nodes.savePizzaBtn.disabled = !nodes.basePizzaSelect.value || activeCount < MIN_ING;
+}
+
+function addToCart() {
+  const active = activeIngredients();
+  if (!nodes.basePizzaSelect.value) {
+    showToast("Selecciona una pizza base.", "warning");
+    return;
+  }
+  if (active.length < MIN_ING) {
+    showToast(`Selecciona al menos ${MIN_ING} ingredientes.`, "warning");
+    return;
+  }
+  if (active.length > MAX_ING) {
+    showToast(`Maximo ${MAX_ING} ingredientes permitidos.`, "warning");
+    return;
+  }
+  const baseOpt = selectedOption(nodes.basePizzaSelect);
+  const crust = crusts.find((item) => item.id === state.crust);
+  const sauce = sauces.find((item) => item.id === state.sauce);
+  const totals = calcTotals();
+  const items = [{
+    tipo: "pizza",
+    id_item: nodes.basePizzaSelect.value,
+    nombre: `${baseOpt.dataset.name} personalizada`,
+    precio: totals.basePrice + totals.crustPrice + totals.saucePrice + totals.toppingsPrice,
+    cantidad: 1,
+    ingredientes_extra: [
+      `Masa: ${crust.name}`,
+      `Salsa: ${sauce.name}`,
+      ...active.map((item) => {
+        const config = state.toppings[item.id];
+        return `${item.name} (${amounts[config.amount].name}, ${areas[config.area]})`;
+      })
+    ].join("; ")
+  }];
+
+  const bebidaOpt = selectedOption(nodes.bebidaSelect);
+  const adicionalOpt = selectedOption(nodes.adicionalSelect);
+  if (nodes.bebidaSelect.value) {
+    items.push({ tipo: "refresco", id_item: nodes.bebidaSelect.value, nombre: bebidaOpt.dataset.name || bebidaOpt.text, precio: parseFloat(bebidaOpt.dataset.price), cantidad: 1 });
+  }
+  if (nodes.adicionalSelect.value) {
+    items.push({ tipo: "adicional", id_item: nodes.adicionalSelect.value, nombre: adicionalOpt.dataset.name || adicionalOpt.text, precio: parseFloat(adicionalOpt.dataset.price), cantidad: 1 });
+  }
+  sessionStorage.setItem("cart_items", JSON.stringify(items));
+  showToast("Pizza agregada. Redirigiendo al pedido...", "success");
+  setTimeout(() => { window.location.href = '{{ url_for("cliente.nuevo_pedido") }}'; }, 900);
+}
+
+buildSelectors();
+buildIngredients();
+render();
+</script>
+{% endblock %}

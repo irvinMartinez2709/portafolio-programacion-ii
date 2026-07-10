@@ -1,0 +1,25 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Editar Ingrediente - Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Editar Ingrediente</h1></div>
+</div>
+<div class="form-card" style="max-width:560px">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="row g-3">
+      <div class="col-12"><label class="form-label">Nombre *</label><input type="text" name="nombre" class="form-control" value="{{ ingrediente.nombre }}" required></div>
+      <div class="col-md-6"><label class="form-label">Categoria</label><input type="text" name="categoria" class="form-control" value="{{ ingrediente.categoria }}"></div>
+      <div class="col-md-3"><label class="form-label">Precio Extra</label><input type="number" name="precio_extra" class="form-control" step="0.01" value="{{ ingrediente.precio_extra }}"></div>
+      <div class="col-md-3"><label class="form-label">Stock</label><input type="number" name="stock" class="form-control" value="{{ ingrediente.stock }}"></div>
+      <div class="col-md-6"><label class="form-label">Estado</label><select name="estado" class="form-select"><option value="activo" {{ 'selected' if ingrediente.estado=='activo' }}>Activo</option><option value="inactivo" {{ 'selected' if ingrediente.estado=='inactivo' }}>Inactivo</option></select></div>
+      <div class="col-md-6"><label class="form-label">Imagen de pieza</label><input type="file" name="imagen" class="form-control" accept=".png,.jpg,.jpeg,.webp"></div>
+      {% if ingrediente.imagen %}<div class="col-12"><small class="text-muted">Actual: {{ ingrediente.imagen }}</small></div>{% endif %}
+      <input type="hidden" name="icono" value="{{ ingrediente.icono or '' }}">
+      <div class="col-12 d-flex gap-2 pt-2">
+        <button type="submit" class="btn-primary-custom"><i class="bi bi-check-lg"></i> Actualizar</button>
+        <a href="{{ url_for('admin.ingredientes') }}" class="btn-outline-custom" style="color:var(--basil);border-color:var(--basil)">Cancelar</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

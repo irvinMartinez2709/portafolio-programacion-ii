@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Error del servidor{% endblock %}
+{% block content %}
+<section class="container py-5">
+  <div class="form-card mx-auto" style="max-width:560px">
+    <h1>Error del servidor</h1>
+    <p class="text-muted mb-4">Ocurrio un problema interno. Revisa la consola del servidor para el detalle tecnico.</p>
+    <a href="{{ url_for('public.index') }}" class="btn-primary-custom">Volver al inicio</a>
+  </div>
+</section>
+{% endblock %}

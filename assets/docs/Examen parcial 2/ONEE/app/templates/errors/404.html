@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Pagina no encontrada{% endblock %}
+{% block content %}
+<section class="container py-5">
+  <div class="form-card mx-auto" style="max-width:560px">
+    <h1>Pagina no encontrada</h1>
+    <p class="text-muted mb-4">La ruta solicitada no existe o fue movida.</p>
+    <a href="{{ url_for('public.index') }}" class="btn-primary-custom">Volver al inicio</a>
+  </div>
+</section>
+{% endblock %}

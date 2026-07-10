@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Cocina - CHINOS CAFE{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="page-header">
+    <div>
+      <h1>Tablero de Cocina</h1>
+      <div class="breadcrumb-custom">Flujo operativo de pedidos</div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    {% for estado, pedidos in columnas.items() %}
+    <div class="col-xl-3 col-md-6">
+      <div class="form-card h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 style="color:var(--basil);font-weight:800;margin:0">{{ estados_labels[estado] }}</h5>
+          <span class="badge-estado badge-{{ estado }}">{{ pedidos|length }}</span>
+        </div>
+
+        {% if pedidos %}
+          {% for pedido in pedidos %}
+          <div class="order-summary mb-3" style="border-left:4px solid var(--tomato)">
+            <div class="d-flex justify-content-between">
+              <strong>{{ pedido.numero }}</strong>
+              <span style="font-size:.78rem;color:#777">{{ pedido.fecha_pedido.strftime('%H:%M') }}</span>
+            </div>
+            <div style="font-size:.85rem;margin:.4rem 0">
+              <strong>Cliente:</strong> {{ pedido.cliente.nombre }}<br>
+              <strong>Entrega:</strong> {{ pedido.metodo_entrega.nombre.replace('_',' ').title() if pedido.metodo_entrega else '-' }}
+            </div>
+            {% for det in pedido.detalles %}
+            <div style="font-size:.82rem;border-top:1px solid rgba(31,61,43,.08);padding:.35rem 0">
+              {{ det.cantidad }} x <strong>{{ det.nombre_item }}</strong>
+              {% if det.ingredientes_extra %}<br><span style="color:#777">{{ det.ingredientes_extra }}</span>{% endif %}
+            </div>
+            {% endfor %}
+            {% if pedido.observaciones %}
+            <div style="font-size:.8rem;background:var(--cream);padding:.5rem;border-radius:6px;margin:.5rem 0">{{ pedido.observaciones }}</div>
+            {% endif %}
+            {% if estado != 'listo' %}
+            <form method="POST" action="{{ url_for('cocina.avanzar_estado', pedido_id=pedido.id) }}">
+              <button type="submit" class="btn-basil w-100">Avanzar</button>
+            </form>
+            {% else %}
+              {% if pedido.metodo_entrega and pedido.metodo_entrega.nombre == 'retiro_local' %}
+              <form method="POST" action="{{ url_for('cocina.confirmar_retiro', pedido_id=pedido.id) }}">
+                <button type="submit" class="btn-primary-custom w-100 justify-content-center">
+                  <i class="bi bi-bag-check"></i> Confirmar retiro en local
+                </button>
+              </form>
+              {% else %}
+              <div class="text-center" style="font-size:.82rem;color:var(--basil);font-weight:700">Esperando asignacion de repartidor</div>
+              {% endif %}
+            {% endif %}
+            <form method="POST" action="{{ url_for('cocina.cancelar_pedido', pedido_id=pedido.id) }}" class="mt-2">
+              <input name="motivo" class="form-control form-control-sm mb-2" placeholder="Motivo de cancelacion" required>
+              <button type="submit" class="btn-outline-custom w-100 justify-content-center" style="color:var(--tomato);border-color:var(--tomato)">Cancelar</button>
+            </form>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-4" style="color:#999;font-size:.9rem">Sin pedidos</div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="form-card mt-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+      <div>
+        <h5 style="color:var(--basil);font-weight:800;margin:0">Stock y disponibilidad</h5>
+        <div class="breadcrumb-custom">Cocina puede actualizar cantidades y disponibilidad sin borrar productos</div>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      {% for titulo, items in stock.items() %}
+      <div class="col-xl-4 col-md-6">
+        <div class="stock-panel h-100">
+          <h6 style="color:var(--basil);font-weight:800;margin-bottom:.75rem">{{ titulo }}</h6>
+          {% for item in items %}
+          {% set tipo = 'ingrediente' if titulo == 'Ingredientes' else 'masa' if titulo == 'Masas' else 'salsa' if titulo == 'Salsas' else 'refresco' if titulo == 'Refrescos' else 'adicional' %}
+          {% set activo = 'activa' if tipo in ['masa','salsa'] else 'activo' %}
+          {% set inactivo = 'inactiva' if tipo in ['masa','salsa'] else 'inactivo' %}
+          <form method="POST" action="{{ url_for('cocina.actualizar_stock') }}" class="stock-row">
+            <input type="hidden" name="tipo" value="{{ tipo }}">
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <div class="stock-name">
+              <strong>{{ item.nombre }}</strong>
+              <span class="badge-estado badge-{{ item.estado }}">{{ item.estado }}</span>
+            </div>
+            {% if item.stock is defined %}
+            <input type="number" name="stock" class="form-control form-control-sm stock-input" min="0" value="{{ item.stock or 0 }}">
+            {% endif %}
+            <select name="estado" class="form-select form-select-sm stock-state">
+              <option value="{{ activo }}" {{ 'selected' if item.estado == activo }}>Disponible</option>
+              <option value="{{ inactivo }}" {{ 'selected' if item.estado == inactivo }}>No disponible</option>
+            </select>
+            <button type="submit" class="btn-basil btn-sm">Guardar</button>
+          </form>
+          {% else %}
+          <div class="text-muted" style="font-size:.86rem">Sin items.</div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Solicitudes de zona - Admin{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Solicitudes de cambio de zona</h1></div></div>
+<div class="table-custom">
+  <table class="table mb-0">
+    <thead><tr>
+      <th style="background:var(--basil);color:var(--cream);padding:1rem">Repartidor</th>
+      <th style="background:var(--basil);color:var(--cream)">Zona actual</th>
+      <th style="background:var(--basil);color:var(--cream)">Zona solicitada</th>
+      <th style="background:var(--basil);color:var(--cream)">Motivo</th>
+      <th style="background:var(--basil);color:var(--cream)">Estado</th>
+      <th style="background:var(--basil);color:var(--cream)">Accion</th>
+    </tr></thead>
+    <tbody>
+      {% for s in solicitudes %}
+      <tr>
+        <td style="padding:1rem">{{ s.repartidor.empleado.usuario.nombre }}</td>
+        <td>{{ s.zona_anterior.nombre_zona if s.zona_anterior else '-' }}</td>
+        <td>{{ s.zona_nueva.nombre_zona }}</td>
+        <td style="font-size:.85rem">{{ s.motivo or '-' }}</td>
+        <td><span class="badge-estado badge-{{ s.estado }}">{{ s.estado.title() }}</span></td>
+        <td>
+          {% if s.estado == 'pendiente' %}
+          <form method="POST" class="d-flex gap-2 align-items-center">
+            <input type="hidden" name="solicitud_id" value="{{ s.id }}">
+            <input type="text" name="respuesta_admin" class="form-control form-control-sm" placeholder="Respuesta">
+            <button type="submit" name="accion" value="aprobar" class="btn btn-sm btn-success">Aprobar</button>
+            <button type="submit" name="accion" value="rechazar" class="btn btn-sm btn-outline-danger">Rechazar</button>
+          </form>
+          {% else %}
+            <small class="text-muted">{{ s.respuesta_admin or 'Procesada' }}</small>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="text-center text-muted py-4">No hay solicitudes.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
