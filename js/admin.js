@@ -186,9 +186,11 @@
   }
 
   function populateParticleCount() {
-    const el = document.getElementById('currentParticleCount')
-    if (el) el.textContent = data.skills.particleCount || 60
-    document.getElementById('particleCount').value = data.skills.particleCount || 60
+    const el = document.getElementById('currentLavaState')
+    const enabled = data.skills.lavaEnabled !== false
+    if (el) el.textContent = enabled ? 'Activo' : 'Desactivado'
+    document.getElementById('lavaEnabled').value = enabled ? 'true' : 'false'
+    document.getElementById('lavaSpeed').value = data.skills.lavaSpeed || 1
   }
 
   function saveAll() {
@@ -389,9 +391,8 @@
 
   document.getElementById('particleForm').addEventListener('submit', (e) => {
     e.preventDefault()
-    const val = parseInt(document.getElementById('particleCount').value)
-    if (val < 10 || val > 200 || isNaN(val)) { alert('Valor entre 10 y 200.'); return }
-    data.skills.particleCount = val
+    data.skills.lavaEnabled = document.getElementById('lavaEnabled').value === 'true'
+    data.skills.lavaSpeed = parseFloat(document.getElementById('lavaSpeed').value) || 1
     populateParticleCount()
     saveAll()
   })

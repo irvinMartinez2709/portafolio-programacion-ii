@@ -52,8 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
       `<span class="hh-line hl-glow">${p.heroTitleL2 || 'II'}</span>`;
     document.getElementById('heroSub').textContent = p.heroSub || 'Universidad Tecnológica de Panamá';
     document.getElementById('heroDesc').textContent = p.heroDesc || 'Portafolio Académico del semestre';
-    const photo = document.getElementById('heroPhoto');
-    if (p.heroPhoto) photo.src = p.heroPhoto;
   }
 
   function renderAbout() {
@@ -281,31 +279,67 @@ document.addEventListener('DOMContentLoaded', () => {
     el.addEventListener('mouseleave', () => { dot.classList.remove('hover'); ring.classList.remove('hover'); });
   });
 
-  /* ── LAVA LAMP CANVAS ── */
+  /* ── LAVA LAMP CANVAS (full page, mouse following) ── */
   const canvas = document.getElementById('lavaCanvas');
+  const overlay = document.getElementById('lavaOverlay');
   if (canvas) {
     const ctx = canvas.getContext('2d');
     let w, h, t = 0;
-    function resize() { w = canvas.width = canvas.parentElement.offsetWidth; h = canvas.height = canvas.parentElement.offsetHeight; }
+    let mx = 0.5, my = 0.5;
+    let targetMx = 0.5, targetMy = 0.5;
+    let lavaEnabled = true;
+    let lavaSpeed = 1;
+    let lavaColors = ['#6c39ff', '#00e5a0', '#ff3c8c'];
+
+    function initLavaSettings() {
+      const s = DATA.skills || {};
+      lavaEnabled = s.lavaEnabled !== false;
+      lavaSpeed = s.lavaSpeed || 1;
+      if (s.lavaColors) lavaColors = s.lavaColors;
+    }
+
+    function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
     resize();
     window.addEventListener('resize', resize);
+
+    document.addEventListener('mousemove', e => {
+      targetMx = e.clientX / w;
+      targetMy = e.clientY / h;
+    });
+    document.addEventListener('touchmove', e => {
+      const tch = e.touches[0];
+      if (tch) { targetMx = tch.clientX / w; targetMy = tch.clientY / h; }
+    }, { passive: true });
+
     function draw() {
-      t += 0.0025;
+      if (!lavaEnabled) { ctx.clearRect(0, 0, w, h); requestAnimationFrame(draw); return; }
+      t += 0.003 * lavaSpeed;
+      mx += (targetMx - mx) * 0.03;
+      my += (targetMy - my) * 0.03;
+
       ctx.clearRect(0, 0, w, h);
-      const grd = ctx.createRadialGradient(w*0.5+Math.sin(t)*80, h*0.5+Math.cos(t*0.7)*60, 10, w*0.5, h*0.5, 400);
       const alpha = html.dataset.theme === 'light' ? 0.04 : 0.06;
-      grd.addColorStop(0, `rgba(108,57,255,${alpha*2})`);
+
+      const cx1 = w * mx + Math.sin(t * 0.7) * 80;
+      const cy1 = h * my + Math.cos(t * 0.5) * 60;
+      const grd = ctx.createRadialGradient(cx1, cy1, 10, cx1, cy1, 400);
+      grd.addColorStop(0, `rgba(108,57,255,${alpha * 2})`);
       grd.addColorStop(0.4, `rgba(0,229,160,${alpha})`);
       grd.addColorStop(1, 'transparent');
       ctx.fillStyle = grd;
       ctx.fillRect(0, 0, w, h);
-      const grd2 = ctx.createRadialGradient(w*0.3+Math.cos(t*0.5)*100, h*0.7+Math.sin(t*0.8)*80, 10, w*0.3, h*0.7, 300);
+
+      const cx2 = w * (1 - mx) + Math.cos(t * 0.5) * 100;
+      const cy2 = h * (1 - my) + Math.sin(t * 0.8) * 80;
+      const grd2 = ctx.createRadialGradient(cx2, cy2, 10, cx2, cy2, 300);
       grd2.addColorStop(0, `rgba(255,60,140,${alpha})`);
       grd2.addColorStop(1, 'transparent');
       ctx.fillStyle = grd2;
       ctx.fillRect(0, 0, w, h);
+
       requestAnimationFrame(draw);
     }
+    initLavaSettings();
     draw();
   }
 
@@ -326,6 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ── BOOT ── */
   loadData().then(() => {
     renderAll();
+    if (typeof initLavaSettings === 'function') initLavaSettings();
   });
 
 });
