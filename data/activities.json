@@ -6,5 +6,13 @@
     "status": "devuelto",
     "cover": "assets/img/activities/Investigacion 1.webp",
     "url": "assets/docs/Investigación 1/Investigación 1 - Python.pdf"
+  },
+  {
+    "name": "Portafolio",
+    "date": "13 de julio",
+    "score": "--",
+    "status": "entregado",
+    "cover": "assets/img/activities/Portafolio.webp",
+    "url": "https://irvinmartinez2709.github.io/portafolio-programacion-ii/"
   }
 ]
