@@ -35,7 +35,5 @@
     "Trabajo en equipo",
     "Resolución de problemas"
   ],
-  "particleCount": 30,
-  "lavaEnabled": true,
-  "lavaSpeed": 1
+  "particleCount": 100
 }
