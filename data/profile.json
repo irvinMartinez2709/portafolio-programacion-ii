@@ -7,11 +7,13 @@
   "professor": "Napoleón Ibarra",
   "subject": "Programación II",
   "year": "2026",
+  "heroPhoto": "assets/img/profile/placeholder.jpg",
   "photo": "assets/img/profile/placeholder.jpg",
   "bio": "Soy Irvin Martínez, estudiante de la Universidad Tecnológica de Panamá en la carrera de Licenciatura en Ciberseguridad. Este portafolio reúne las actividades realizadas en Programación II, mostrando mi avance en análisis, desarrollo, organización de evidencias y aplicación práctica de los contenidos trabajados durante el semestre.",
-  "social": {
-    "linkedin": "www.linkedin.com/in/irvin-martínez-318b6435b",
-    "youtube": "",
-    "github": "https://github.com/irvinMartinez2709"
-  }
+  "heroTitleL1": "Programación",
+  "heroTitleL2": "II",
+  "heroSub": "Universidad Tecnológica de Panamá",
+  "heroDesc": "Portafolio Académico del semestre",
+  "linkedin": "https://www.linkedin.com/in/irvin-mart%C3%ADnez-318b6435b",
+  "github": "https://github.com/irvinMartinez2709"
 }

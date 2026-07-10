@@ -1,12 +1,12 @@
 [
   {
-    "title": "Seguridad de Terminales",
-    "description": "Certificado dado por Cisco Networking Academy",
+    "name": "Seguridad de Terminales",
+    "organization": "Cisco Networking Academy",
     "image": "assets/img/certificates/Seguridad de Terminales.png"
   },
   {
-    "title": "Introducción a la ciberseguridad",
-    "description": "Certificado dado por Cisco Networking Academy",
+    "name": "Introducción a la ciberseguridad",
+    "organization": "Cisco Networking Academy",
     "image": "assets/img/certificates/Introducción a la ciberseguridad.png"
   }
 ]

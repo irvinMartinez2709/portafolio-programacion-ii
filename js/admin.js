@@ -3,10 +3,11 @@
 
   let credentials = { username: 'Sarita', password: '_2709_' }
   let data = {
-    profile: {}, activities: [], certificates: [],
-    skills: { items: [], chips: [], particleCount: 60 }
+    profile: {},
+    activities: [],
+    certificates: [],
+    skills: { bars: [], chips: [], particleCount: 60 }
   }
-  let pendingChanges = {}
   let editingIndex = null
   let editingType = null
 
@@ -59,7 +60,6 @@
     return result
   }
 
-  /* LOGIN */
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault()
     const user = loginUser.value.trim()
@@ -81,7 +81,6 @@
     loginForm.reset()
   })
 
-  /* SIDEBAR */
   document.querySelectorAll('.admin-snav-item').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.admin-snav-item').forEach(b => b.classList.remove('active'))
@@ -92,7 +91,6 @@
     })
   })
 
-  /* POPULATE */
   function populateAll() {
     populateInicioForm()
     populateAboutForm()
@@ -111,8 +109,6 @@
     document.getElementById('heroTitleL2').value = p.heroTitleL2 || ''
     document.getElementById('heroSub').value = p.heroSub || ''
     document.getElementById('heroDesc').value = p.heroDesc || ''
-    const tags = p.heroTags
-    document.getElementById('heroTags').value = Array.isArray(tags) ? tags.join(', ') : (tags || '')
   }
 
   function populateAboutForm() {
@@ -121,7 +117,6 @@
 
   function populateProfileForm() {
     const p = data.profile
-    if (!p.name) return
     document.getElementById('profName').value = p.name || ''
     document.getElementById('profEmail').value = p.email || ''
     document.getElementById('profCareer').value = p.career || ''
@@ -130,14 +125,14 @@
     document.getElementById('profProfessor').value = p.professor || ''
     document.getElementById('profSubject').value = p.subject || ''
     document.getElementById('profYear').value = p.year || ''
-    document.getElementById('profPhoto').value = p.photo || ''
+    document.getElementById('profPhoto').value = p.heroPhoto || ''
   }
 
   function populateContactForm() {
     const p = data.profile
     document.getElementById('contEmail').value = p.email || ''
-    document.getElementById('contLinkedin').value = (p.social && p.social.linkedin) || ''
-    document.getElementById('contGithub').value = (p.social && p.social.github) || ''
+    document.getElementById('contLinkedin').value = p.linkedin || ''
+    document.getElementById('contGithub').value = p.github || ''
   }
 
   function cancelEdit(type) {
@@ -152,7 +147,7 @@
     const c = document.getElementById('activitiesList')
     if (!data.activities.length) { c.innerHTML = '<p style="color:var(--text2);font-size:13px;">No hay actividades.</p>'; return }
     c.innerHTML = data.activities.map((a, i) =>
-      `<div class="admin-list-item"><span>#${i+1} <strong>${a.title}</strong> (${a.status||'Pendiente'})</span>
+      `<div class="admin-list-item"><span>#${i+1} <strong>${a.name || a.title || 'Actividad'}</strong> (${a.status || 'pendiente'})</span>
         <button onclick="adminEditActivity(${i})">Editar</button>
         <button onclick="adminRemoveActivity(${i})">Eliminar</button></div>`
     ).join('')
@@ -162,7 +157,7 @@
     const c = document.getElementById('certificatesList')
     if (!data.certificates.length) { c.innerHTML = '<p style="color:var(--text2);font-size:13px;">No hay certificados.</p>'; return }
     c.innerHTML = data.certificates.map((cert, i) =>
-      `<div class="admin-list-item"><span>#${i+1} <strong>${cert.title}</strong></span>
+      `<div class="admin-list-item"><span>#${i+1} <strong>${cert.name || cert.title || 'Certificado'}</strong></span>
         <button onclick="adminEditCertificate(${i})">Editar</button>
         <button onclick="adminRemoveCertificate(${i})">Eliminar</button></div>`
     ).join('')
@@ -170,9 +165,10 @@
 
   function populateSkillsList() {
     const c = document.getElementById('skillsList')
-    if (!data.skills.items.length) { c.innerHTML = '<p style="color:var(--text2);font-size:13px;">No hay habilidades.</p>'; return }
-    c.innerHTML = data.skills.items.map((item, i) =>
-      `<div class="admin-list-item"><span><strong>${item.name}</strong> — ${item.percentage}%</span>
+    const items = data.skills.bars || []
+    if (!items.length) { c.innerHTML = '<p style="color:var(--text2);font-size:13px;">No hay habilidades.</p>'; return }
+    c.innerHTML = items.map((item, i) =>
+      `<div class="admin-list-item"><span><strong>${item.name}</strong> — ${item.level}%</span>
         <button onclick="adminEditSkill(${i})">Editar</button>
         <button onclick="adminRemoveSkill(${i})">Eliminar</button></div>`
     ).join('')
@@ -180,8 +176,9 @@
 
   function populateChipsList() {
     const c = document.getElementById('chipsList')
-    if (!data.skills.chips.length) { c.innerHTML = '<p style="color:var(--text2);font-size:13px;">No hay chips.</p>'; return }
-    c.innerHTML = data.skills.chips.map((chip, i) =>
+    const items = data.skills.chips || []
+    if (!items.length) { c.innerHTML = '<p style="color:var(--text2);font-size:13px;">No hay chips.</p>'; return }
+    c.innerHTML = items.map((chip, i) =>
       `<div class="admin-list-item"><span><strong>${chip}</strong></span>
         <button onclick="adminEditChip(${i})">Editar</button>
         <button onclick="adminRemoveChip(${i})">Eliminar</button></div>`
@@ -194,20 +191,20 @@
     document.getElementById('particleCount').value = data.skills.particleCount || 60
   }
 
-  /* HELPERS */
-  function addToPending(key, value) { pendingChanges[key] = value }
-
   function saveAll() {
     localStorage.setItem('admin_data', JSON.stringify(data))
-    localStorage.setItem('admin_pending', JSON.stringify(pendingChanges))
     localStorage.setItem('admin_credentials', JSON.stringify(credentials))
-    console.log('✅ Datos guardados en localStorage:', JSON.stringify(data.profile).slice(0, 200))
+    // Also save to portfolio_ prefixed keys so main.js picks up changes
+    localStorage.setItem('portfolio_profile', JSON.stringify(data.profile))
+    localStorage.setItem('portfolio_activities', JSON.stringify(data.activities))
+    localStorage.setItem('portfolio_certificates', JSON.stringify(data.certificates))
+    localStorage.setItem('portfolio_skills', JSON.stringify(data.skills))
   }
 
   async function commitToGitHub() {
     const token = localStorage.getItem('gh_token')
     if (!token) {
-      alert('⚠️ No hay token de GitHub.\n\nLos cambios están guardados LOCALMENTE.\n\nPara subirlos:\n1. Crea un token en GitHub > Settings > Developer Settings > Personal Access Tokens > Fine-grained tokens\n2. Permiso: "contents: write" para tu repo\n3. En consola del navegador (F12):\n   localStorage.setItem("gh_token", "TU_TOKEN")\n4. Vuelve a hacer clic en "Subir a GitHub"')
+      alert('\u26a0\ufe0f No hay token de GitHub.\n\nLos cambios est\u00e1n guardados LOCALMENTE.\n\nPara subirlos:\n1. Crea un token en GitHub > Settings > Developer Settings > Personal Access Tokens > Fine-grained tokens\n2. Permiso: "contents: write" para tu repo\n3. En consola del navegador (F12):\n   localStorage.setItem("gh_token", "TU_TOKEN")\n4. Vuelve a hacer clic en "Subir a GitHub"')
       return
     }
     const owner = 'irvinMartinez2709'
@@ -228,9 +225,7 @@
         'data/certificates.json': JSON.stringify(data.certificates, null, 2),
         'data/profile.json': JSON.stringify(data.profile, null, 2),
         'data/skills.json': JSON.stringify(data.skills, null, 2),
-      }
-      if (pendingChanges.credentials) {
-        files['data/credentials.json'] = JSON.stringify(credentials, null, 2)
+        'data/credentials.json': JSON.stringify(credentials, null, 2),
       }
 
       const treeItems = []
@@ -263,35 +258,29 @@
       })
       if (!updRes.ok) throw new Error('Error al actualizar rama')
 
-      alert('✅ Cambios subidos a GitHub. La página se actualizará en ~1-2 min.')
-      pendingChanges = {}
-      localStorage.setItem('admin_pending', '{}')
+      alert('\u2705 Cambios subidos a GitHub. La p\u00e1gina se actualizar\u00e1 en ~1-2 min.')
     } catch (e) {
-      alert('⚠️ Error: ' + e.message + '\n\nVerifica que el token tenga permisos "contents: write" para el repo.')
+      alert('\u26a0\ufe0f Error: ' + e.message + '\n\nVerifica que el token tenga permisos "contents: write" para el repo.')
     }
   }
 
-  /* ── FORM HANDLERS (siempre preservan datos existentes) ──── */
+  /* ── FORM HANDLERS ── */
 
   document.getElementById('inicioForm').addEventListener('submit', (e) => {
     e.preventDefault()
-    const raw = document.getElementById('heroTags').value
     data.profile.heroTitleL1 = document.getElementById('heroTitleL1').value
     data.profile.heroTitleL2 = document.getElementById('heroTitleL2').value
     data.profile.heroSub = document.getElementById('heroSub').value
     data.profile.heroDesc = document.getElementById('heroDesc').value
-    data.profile.heroTags = raw ? raw.split(',').map(t => t.trim()).filter(Boolean) : []
-    addToPending('profile', data.profile)
     saveAll()
-    alert('✅ Inicio guardado.')
+    alert('\u2705 Inicio guardado.')
   })
 
   document.getElementById('aboutForm').addEventListener('submit', (e) => {
     e.preventDefault()
     data.profile.bio = document.getElementById('aboutBio').value
-    addToPending('profile', data.profile)
     saveAll()
-    alert('✅ Sobre mí guardado.')
+    alert('\u2705 Sobre m\u00ed guardado.')
   })
 
   document.getElementById('profileForm').addEventListener('submit', (e) => {
@@ -304,32 +293,29 @@
     data.profile.professor = document.getElementById('profProfessor').value
     data.profile.subject = document.getElementById('profSubject').value
     data.profile.year = document.getElementById('profYear').value
-    data.profile.photo = document.getElementById('profPhoto').value
-    addToPending('profile', data.profile)
+    data.profile.heroPhoto = document.getElementById('profPhoto').value
     saveAll()
-    alert('✅ Perfil guardado.')
+    alert('\u2705 Perfil guardado.')
   })
 
   document.getElementById('contactForm').addEventListener('submit', (e) => {
     e.preventDefault()
-    if (!data.profile.social) data.profile.social = {}
     data.profile.email = document.getElementById('contEmail').value
-    data.profile.social.linkedin = document.getElementById('contLinkedin').value
-    data.profile.social.github = document.getElementById('contGithub').value
-    addToPending('profile', data.profile)
+    data.profile.linkedin = document.getElementById('contLinkedin').value
+    data.profile.github = document.getElementById('contGithub').value
     saveAll()
-    alert('✅ Contacto guardado.')
+    alert('\u2705 Contacto guardado.')
   })
 
   document.getElementById('activityForm').addEventListener('submit', (e) => {
     e.preventDefault()
     const act = {
-      title: document.getElementById('actTitle').value,
+      name: document.getElementById('actName').value,
       date: document.getElementById('actDate').value,
-      grade: document.getElementById('actGrade').value ? parseInt(document.getElementById('actGrade').value) : null,
+      score: document.getElementById('actScore').value,
       status: document.getElementById('actStatus').value,
       cover: document.getElementById('actCover').value,
-      pdf: document.getElementById('actPdf').value,
+      url: document.getElementById('actUrl').value,
     }
     if (editingIndex !== null && editingType === 'act') {
       data.activities[editingIndex] = act
@@ -339,7 +325,6 @@
     } else {
       data.activities.push(act)
     }
-    addToPending('activities', data.activities)
     populateActivitiesList()
     e.target.reset()
     saveAll()
@@ -348,8 +333,8 @@
   document.getElementById('certForm').addEventListener('submit', (e) => {
     e.preventDefault()
     const cert = {
-      title: document.getElementById('certTitle').value,
-      description: document.getElementById('certDesc').value,
+      name: document.getElementById('certName').value,
+      organization: document.getElementById('certOrg').value,
       image: document.getElementById('certImage').value,
     }
     if (editingIndex !== null && editingType === 'cert') {
@@ -360,7 +345,6 @@
     } else {
       data.certificates.push(cert)
     }
-    addToPending('certificates', data.certificates)
     populateCertificatesList()
     e.target.reset()
     saveAll()
@@ -370,17 +354,17 @@
     e.preventDefault()
     const skill = {
       name: document.getElementById('skillName').value,
-      percentage: parseInt(document.getElementById('skillPct').value),
+      level: parseInt(document.getElementById('skillLevel').value) || 0,
     }
+    if (!data.skills.bars) data.skills.bars = []
     if (editingIndex !== null && editingType === 'skill') {
-      data.skills.items[editingIndex] = skill
+      data.skills.bars[editingIndex] = skill
       editingIndex = null; editingType = null
       document.getElementById('skillSubmitBtn').textContent = 'Añadir Habilidad'
       document.getElementById('skillCancelBtn').style.display = 'none'
     } else {
-      data.skills.items.push(skill)
+      data.skills.bars.push(skill)
     }
-    addToPending('skills', data.skills)
     populateSkillsList()
     e.target.reset()
     saveAll()
@@ -389,6 +373,7 @@
   document.getElementById('chipForm').addEventListener('submit', (e) => {
     e.preventDefault()
     const chip = document.getElementById('chipName').value
+    if (!data.skills.chips) data.skills.chips = []
     if (editingIndex !== null && editingType === 'chip') {
       data.skills.chips[editingIndex] = chip
       editingIndex = null; editingType = null
@@ -397,7 +382,6 @@
     } else {
       data.skills.chips.push(chip)
     }
-    addToPending('skills', data.skills)
     populateChipsList()
     e.target.reset()
     saveAll()
@@ -408,7 +392,6 @@
     const val = parseInt(document.getElementById('particleCount').value)
     if (val < 10 || val > 200 || isNaN(val)) { alert('Valor entre 10 y 200.'); return }
     data.skills.particleCount = val
-    addToPending('skills', data.skills)
     populateParticleCount()
     saveAll()
   })
@@ -426,7 +409,6 @@
     }
     credentials = { username: newUser, password: newPass }
     dashUser.textContent = newUser
-    addToPending('credentials', credentials)
     document.getElementById('credSuccess').style.display = 'block'
     document.getElementById('newUser').value = ''
     document.getElementById('newPass').value = ''
@@ -434,16 +416,16 @@
     saveAll()
   })
 
-  /* ── EDITAR ─────────────────────────────────────────────── */
+  /* ── EDITAR ── */
   window.adminEditActivity = function(idx) {
     editingIndex = idx; editingType = 'act'
     const a = data.activities[idx]
-    document.getElementById('actTitle').value = a.title || ''
+    document.getElementById('actName').value = a.name || a.title || ''
     document.getElementById('actDate').value = a.date || ''
-    document.getElementById('actGrade').value = a.grade != null ? a.grade : ''
-    document.getElementById('actStatus').value = a.status || 'Pendiente'
-    document.getElementById('actCover').value = a.cover || ''
-    document.getElementById('actPdf').value = a.pdf || ''
+    document.getElementById('actScore').value = a.score || a.grade || ''
+    document.getElementById('actStatus').value = a.status || 'pendiente'
+    document.getElementById('actCover').value = a.cover || a.image || ''
+    document.getElementById('actUrl').value = a.url || a.link || a.pdf || ''
     document.getElementById('actSubmitBtn').textContent = 'Actualizar Actividad'
     document.getElementById('actCancelBtn').style.display = 'inline-block'
     document.querySelector('[data-section="activities"]').click()
@@ -451,25 +433,25 @@
   window.adminEditCertificate = function(idx) {
     editingIndex = idx; editingType = 'cert'
     const c = data.certificates[idx]
-    document.getElementById('certTitle').value = c.title || ''
-    document.getElementById('certDesc').value = c.description || ''
-    document.getElementById('certImage').value = c.image || ''
+    document.getElementById('certName').value = c.name || c.title || ''
+    document.getElementById('certOrg').value = c.organization || c.org || c.description || ''
+    document.getElementById('certImage').value = c.image || c.img || ''
     document.getElementById('certSubmitBtn').textContent = 'Actualizar Certificado'
     document.getElementById('certCancelBtn').style.display = 'inline-block'
     document.querySelector('[data-section="certificates"]').click()
   }
   window.adminEditSkill = function(idx) {
     editingIndex = idx; editingType = 'skill'
-    const s = data.skills.items[idx]
+    const s = (data.skills.bars || [])[idx]
     document.getElementById('skillName').value = s.name || ''
-    document.getElementById('skillPct').value = s.percentage || ''
+    document.getElementById('skillLevel').value = s.level || s.percentage || ''
     document.getElementById('skillSubmitBtn').textContent = 'Actualizar Habilidad'
     document.getElementById('skillCancelBtn').style.display = 'inline-block'
     document.querySelector('[data-section="skills"]').click()
   }
   window.adminEditChip = function(idx) {
     editingIndex = idx; editingType = 'chip'
-    document.getElementById('chipName').value = data.skills.chips[idx] || ''
+    document.getElementById('chipName').value = (data.skills.chips || [])[idx] || ''
     document.getElementById('chipSubmitBtn').textContent = 'Actualizar Chip'
     document.getElementById('chipCancelBtn').style.display = 'inline-block'
     document.querySelector('[data-section="skills"]').click()
@@ -480,37 +462,35 @@
   document.getElementById('skillCancelBtn').addEventListener('click', () => cancelEdit('skill'))
   document.getElementById('chipCancelBtn').addEventListener('click', () => cancelEdit('chip'))
 
-  /* ── ELIMINAR ───────────────────────────────────────────── */
+  /* ── ELIMINAR ── */
   window.adminRemoveActivity = function(idx) {
     if (!confirm('¿Eliminar esta actividad?')) return
     data.activities.splice(idx, 1)
-    addToPending('activities', data.activities)
     populateActivitiesList()
     saveAll()
   }
   window.adminRemoveCertificate = function(idx) {
     if (!confirm('¿Eliminar este certificado?')) return
     data.certificates.splice(idx, 1)
-    addToPending('certificates', data.certificates)
     populateCertificatesList()
     saveAll()
   }
   window.adminRemoveSkill = function(idx) {
     if (!confirm('¿Eliminar esta habilidad?')) return
-    data.skills.items.splice(idx, 1)
-    addToPending('skills', data.skills)
+    if (!data.skills.bars) data.skills.bars = []
+    data.skills.bars.splice(idx, 1)
     populateSkillsList()
     saveAll()
   }
   window.adminRemoveChip = function(idx) {
     if (!confirm('¿Eliminar este chip?')) return
+    if (!data.skills.chips) data.skills.chips = []
     data.skills.chips.splice(idx, 1)
-    addToPending('skills', data.skills)
     populateChipsList()
     saveAll()
   }
 
-  /* ── BOTÓN SUBIR A GITHUB ───────────────────────────────── */
+  /* ── BOTÓN SUBIR A GITHUB ── */
   function addCommitButton() {
     const sidebar = document.querySelector('.admin-sidenav')
     if (!sidebar) return
@@ -522,40 +502,45 @@
     sidebar.appendChild(btn)
   }
 
-  /* ── INIT ───────────────────────────────────────────────── */
+  /* ── INIT ── */
   async function init() {
     await loadCredentials()
 
-    /* 1. Cargar datos frescos desde JSON */
     const fresh = await loadAllData()
     if (fresh) {
       data.profile = fresh.profile || {}
       data.activities = fresh.activities || []
       data.certificates = fresh.certificates || []
-      data.skills = fresh.skills || { items: [], chips: [], particleCount: 60 }
+      data.skills = fresh.skills || { bars: [], chips: [], particleCount: 60 }
     }
 
-    /* 2. Si hay datos en localStorage, hacer merge (preservar todo) */
+    // Merge saved data from localStorage
     try {
       const saved = localStorage.getItem('admin_data')
       if (saved) {
         const parsed = JSON.parse(saved)
-        if (parsed.activities) {
-          data.activities = parsed.activities
-        }
-        if (parsed.certificates) {
-          data.certificates = parsed.certificates
-        }
-        if (parsed.skills) {
-          data.skills = deepMerge(data.skills, parsed.skills)
-        }
-        if (parsed.profile && parsed.profile.name) {
-          data.profile = deepMerge(data.profile, parsed.profile)
-        }
+        if (parsed.activities && parsed.activities.length) data.activities = parsed.activities
+        if (parsed.certificates && parsed.certificates.length) data.certificates = parsed.certificates
+        if (parsed.skills) data.skills = deepMerge(data.skills, parsed.skills)
+        if (parsed.profile) data.profile = deepMerge(data.profile, parsed.profile)
       }
     } catch(e) {
       console.warn('Error parsing localStorage:', e)
     }
+
+    // Ensure skills has bars array
+    if (!data.skills.bars) data.skills.bars = data.skills.items || []
+    if (!data.skills.chips) data.skills.chips = []
+    // Delete old items key to avoid confusion
+    delete data.skills.items
+
+    // Migrate social sub-object to flat fields for profile
+    if (data.profile.social) {
+      if (!data.profile.linkedin && data.profile.social.linkedin) data.profile.linkedin = data.profile.social.linkedin
+      if (!data.profile.github && data.profile.social.github) data.profile.github = data.profile.social.github
+    }
+    // Ensure heroPhoto from photo
+    if (!data.profile.heroPhoto && data.profile.photo) data.profile.heroPhoto = data.profile.photo
 
     addCommitButton()
   }

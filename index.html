@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,7 +12,6 @@
 </head>
 <body>
 
-  <!-- LIGHTBOX -->
   <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Imagen ampliada" aria-hidden="true">
     <div class="lb-bg" id="lbBg"></div>
     <div class="lb-box">
@@ -21,11 +20,9 @@
     </div>
   </div>
 
-  <!-- CUSTOM CURSOR -->
   <div class="cur-dot"  id="curDot"  aria-hidden="true"></div>
   <div class="cur-ring" id="curRing" aria-hidden="true"></div>
 
-  <!-- HEADER -->
   <header class="header" id="header">
     <div class="h-in">
       <a href="#inicio" class="logo">Programación <span>II</span></a>
@@ -37,13 +34,13 @@
         <a href="#habilidades"  class="nl">Habilidades</a>
         <a href="#contacto"     class="nl">Contacto</a>
       </nav>
+      <button class="theme-btn" id="themeBtn" aria-label="Cambiar tema">🌙</button>
       <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
   </header>
 
-  <!-- MOBILE NAV -->
   <div class="mnav" id="mnav" aria-hidden="true">
     <a href="#inicio"        class="mnl">Inicio</a>
     <a href="#sobre-mi"     class="mnl">Sobre mí</a>
@@ -51,29 +48,29 @@
     <a href="#certificados" class="mnl">Certificados</a>
     <a href="#habilidades"  class="mnl">Habilidades</a>
     <a href="#contacto"     class="mnl">Contacto</a>
+    <button class="theme-btn-mobile" id="themeBtnMobile">🌙 Modo oscuro</button>
   </div>
 
   <!-- HERO / INICIO -->
   <section class="hero" id="inicio">
     <canvas class="hero-canvas" id="lavaCanvas"></canvas>
     <div class="hero-overlay"></div>
-    <div class="hero-grid">
+    <div class="hero-grid glass">
       <div class="hero-main">
-        <div class="hero-tags" id="heroTags"></div>
         <h1 class="hero-headline" id="heroHeadline">
-          <span class="hh-line">PROGRAMACIÓN</span>
+          <span class="hh-line">Programación</span>
           <span class="hh-line hl-glow">II</span>
         </h1>
-        <p class="hero-sub" id="heroSub">Universidad Tecnológica de Panamá</p>
-        <p class="hero-desc" id="heroDesc">Portafolio académico del semestre</p>
+        <p class="hero-sub glass-pill" id="heroSub">Universidad Tecnológica de Panamá</p>
+        <p class="hero-desc" id="heroDesc">Portafolio Académico del semestre</p>
         <div class="hero-actions">
-          <a href="#actividades" class="btn-primary">Ver actividades</a>
-          <a href="#contacto" class="btn-secondary">Contacto</a>
+          <a href="#actividades" class="btn-primary glass-btn">Ver actividades</a>
+          <a href="#contacto" class="btn-secondary glass-btn">Contacto</a>
         </div>
       </div>
       <div class="hero-side">
         <div class="hero-photo-wrap">
-          <div class="hero-photo">
+          <div class="hero-photo glass">
             <img src="assets/img/profile/placeholder.jpg" alt="Foto de perfil" id="heroPhoto" />
           </div>
         </div>
@@ -96,41 +93,48 @@
   <!-- SOBRE MÍ -->
   <section class="about section" id="sobre-mi">
     <div class="container">
-      <div class="section-label">/ 01 · SOBRE MÍ</div>
+      <div class="section-label">01. Sobre mí</div>
       <div class="about-grid">
         <div class="about-cards reveal">
-          <div class="info-card">
-            <div class="info-card-icon">🎓</div>
-            <div class="info-card-body">
-              <span class="info-card-label">Universidad</span>
-              <span class="info-card-value" id="aboutUni">UTP Panamá</span>
-            </div>
+          <div class="info-card glass">
+            <span class="info-card-label">Nombre</span>
+            <span class="info-card-value" id="aboutName">Irvin Martínez</span>
           </div>
-          <div class="info-card">
-            <div class="info-card-icon">💻</div>
-            <div class="info-card-body">
-              <span class="info-card-label">Asignatura</span>
-              <span class="info-card-value" id="aboutSubject">Programación II</span>
-            </div>
+          <div class="info-card glass">
+            <span class="info-card-label">Email</span>
+            <span class="info-card-value" id="aboutEmail">irvin.martinez@utp.ac.pa</span>
           </div>
-          <div class="info-card">
-            <div class="info-card-icon">👨‍🏫</div>
-            <div class="info-card-body">
-              <span class="info-card-label">Profesor</span>
-              <span class="info-card-value" id="aboutProfessor">Napoleón Ibarra</span>
-            </div>
+          <div class="info-card glass">
+            <span class="info-card-label">Carrera</span>
+            <span class="info-card-value" id="aboutCareer">Ciberseguridad</span>
           </div>
-          <div class="info-card">
-            <div class="info-card-icon">🛡️</div>
-            <div class="info-card-body">
-              <span class="info-card-label">Carrera</span>
-              <span class="info-card-value" id="aboutCareer">Ciberseguridad</span>
-            </div>
+          <div class="info-card glass">
+            <span class="info-card-label">Facultad</span>
+            <span class="info-card-value" id="aboutFaculty">FISC</span>
+          </div>
+          <div class="info-card glass">
+            <span class="info-card-label">Universidad</span>
+            <span class="info-card-value" id="aboutUni">UTP Panamá</span>
+          </div>
+          <div class="info-card glass">
+            <span class="info-card-label">Profesor</span>
+            <span class="info-card-value" id="aboutProfessor">Napoleón Ibarra</span>
+          </div>
+          <div class="info-card glass">
+            <span class="info-card-label">Asignatura</span>
+            <span class="info-card-value" id="aboutSubject">Programación II</span>
+          </div>
+          <div class="info-card glass">
+            <span class="info-card-label">Año</span>
+            <span class="info-card-value" id="aboutYear">2026</span>
           </div>
         </div>
-        <div class="about-text-box">
-          <h2 class="section-title">MÁS QUE <em>CÓDIGO</em></h2>
+        <div class="about-text-box glass">
           <p class="about-bio reveal" id="aboutBio">Cargando...</p>
+          <div class="about-photo-wrap">
+            <img src="assets/img/profile/placeholder.jpg" alt="Foto" id="aboutPhoto" class="about-photo" />
+            <span class="about-photo-label">URL Foto</span>
+          </div>
         </div>
       </div>
     </div>
@@ -139,8 +143,7 @@
   <!-- ACTIVIDADES -->
   <section class="acts section" id="actividades">
     <div class="container">
-      <div class="section-label">/ 02 · ACTIVIDADES</div>
-      <h2 class="section-title">TRABAJOS DEL <em>SEMESTRE</em></h2>
+      <div class="section-label">02. Actividades</div>
       <div class="acts-grid"></div>
     </div>
   </section>
@@ -148,8 +151,7 @@
   <!-- CERTIFICADOS -->
   <section class="certs section" id="certificados">
     <div class="container">
-      <div class="section-label lite">/ 03 · CERTIFICADOS</div>
-      <h2 class="section-title lite">LOGROS &amp; <em class="lime">CURSOS</em></h2>
+      <div class="section-label lite">03. Certificados</div>
       <div class="certs-grid"></div>
     </div>
   </section>
@@ -157,10 +159,9 @@
   <!-- HABILIDADES -->
   <section class="skills section" id="habilidades">
     <div class="container">
-      <div class="section-label lite">/ 04 · HABILIDADES</div>
-      <h2 class="section-title lite"><em class="lime">CONOCIMIENTOS</em> &amp; TOOLS</h2>
-      <div class="sbars"></div>
+      <div class="section-label lite">04. Habilidades</div>
       <div class="schips"></div>
+      <div class="sbars"></div>
     </div>
   </section>
 
@@ -168,26 +169,26 @@
   <section class="contact section" id="contacto">
     <div class="container">
       <div class="contact-grid">
-        <div class="contact-left">
-          <div class="section-label inv">/ 05 · CONTACTO</div>
+        <div class="contact-left glass">
+          <div class="section-label inv">05. Contacto</div>
           <h2 class="contact-headline">ESCRÍBE<span>ME</span></h2>
           <p class="contact-intro" id="contactIntro">Irvin Martínez — UTP Panamá</p>
         </div>
         <div class="contact-right">
-          <a href="mailto:irvin.martinez@utp.ac.pa" class="contact-link" id="cEmail">
-            <span class="cl-icon">✉</span>
+          <a href="mailto:irvin.martinez@utp.ac.pa" class="contact-link glass" id="cEmail">
+            <span class="cl-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M21 4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-9 5.5L3 8V6l9 5.5L21 6v2z"/></svg>
+            </span>
             <span class="cl-text">irvin.martinez@utp.ac.pa</span>
           </a>
-          <a href="#" target="_blank" rel="noopener" class="contact-link" id="cLinkedin">
+          <a href="#" target="_blank" rel="noopener" class="contact-link glass" id="cLinkedin">
             <span class="cl-icon">in</span>
             <span class="cl-text">LinkedIn</span>
           </a>
-          <a href="#" target="_blank" rel="noopener" class="contact-link" id="cYoutube">
-            <span class="cl-icon">▶</span>
-            <span class="cl-text">YouTube</span>
-          </a>
-          <a href="https://github.com/irvinMartinez2709" target="_blank" rel="noopener" class="contact-link" id="cGithub">
-            <span class="cl-icon">⌂</span>
+          <a href="https://github.com/irvinMartinez2709" target="_blank" rel="noopener" class="contact-link glass" id="cGithub">
+            <span class="cl-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            </span>
             <span class="cl-text">GitHub</span>
           </a>
         </div>
@@ -195,7 +196,6 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
       <div class="footer-inner">
