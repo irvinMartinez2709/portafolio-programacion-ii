@@ -5,7 +5,7 @@
     "score": "98/100",
     "status": "devuelto",
     "cover": "assets/img/activities/Investigacion 1.webp",
-    "url": "assets/docs/Investigación 1/Investigación 1 - Python.pdf"
+    "url": "assets/docs/Investigación 1/index.html"
   },
   {
     "name": "Taller práctico 1",
@@ -21,7 +21,7 @@
     "score": "96/100",
     "status": "devuelto",
     "cover": "assets/img/activities/Ejercicio práctico 1.webp",
-    "url": "assets/docs/Ejercicio práctico 1/Factura IrvinMartinez.pdf"
+    "url": "assets/docs/Ejercicio práctico 1/index.html"
   },
   {
     "name": "Examen parcial 1",
@@ -29,7 +29,7 @@
     "score": "86/100",
     "status": "devuelto",
     "cover": "assets/img/activities/Parcial 1.webp",
-    "url": "assets/docs/Examen parcial 1/Parcial 1 - Irvin Martínez.pdf"
+    "url": "assets/docs/Examen parcial 1/index.html"
   },
   {
     "name": "Ejercicio práctico 2",
@@ -45,7 +45,7 @@
     "score": "-/-",
     "status": "entregado",
     "cover": "assets/img/activities/Parcial 2.webp",
-    "url": "assets/docs/Examen parcial 2/Parcial2_Programación.pdf"
+    "url": "assets/docs/Examen parcial 2/index.html"
   },
   {
     "name": "Examen Final",

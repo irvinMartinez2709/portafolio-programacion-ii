@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Examen parcial 2 — Programación II</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #6c39ff, #00e5a0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      color: #aaa;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    .file-list { list-style: none; }
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: background 0.2s;
+    }
+    .file-item:hover { background: rgba(255,255,255,0.1); }
+    .file-icon {
+      font-size: 1.2rem;
+      width: 28px;
+      text-align: center;
+    }
+    .file-name { flex: 1; font-weight: 500; }
+    .file-links { display: flex; gap: 0.5rem; }
+    .file-links a {
+      padding: 0.3rem 0.8rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    .file-links a:hover { opacity: 0.8; }
+    .btn-view {
+      background: #6c39ff;
+      color: #fff;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: #6c39ff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .back-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Examen parcial 2</h1>
+    <p class="subtitle">Examen parcial — proyecto ONEE (Flask), diagrama de red y documentación.</p>
+    <ul class="file-list">
+      <li class="file-item">
+        <span class="file-icon">📄</span>
+        <span class="file-name">Parcial2_Programación.pdf</span>
+        <span class="file-links">
+          <a class="btn-view" href="Parcial2_Programaci%C3%B3n.pdf" target="_blank">Ver PDF</a>
+        </span>
+      </li>
+      <li class="file-item">
+        <span class="file-icon">🌐</span>
+        <span class="file-name">PARCIAL 2 PROG.pkt</span>
+        <span class="file-links">
+          <a class="btn-view" href="PARCIAL%202%20PROG.pkt" target="_blank">Descargar</a>
+        </span>
+      </li>
+      <li class="file-item">
+        <span class="file-icon">📦</span>
+        <span class="file-name">Ataques Capturas.zip</span>
+        <span class="file-links">
+          <a class="btn-view" href="Ataques%20Capturas.zip" target="_blank">Descargar</a>
+        </span>
+      </li>
+      <li class="file-item">
+        <span class="file-icon">🐍</span>
+        <span class="file-name">ONEE/ — Proyecto Flask</span>
+        <span class="file-links">
+          <a class="btn-view" href="ONEE/README.md" target="_blank">Ver README</a>
+        </span>
+      </li>
+    </ul>
+    <a class="back-link" href="../../..">&larr; Volver al portafolio</a>
+  </div>
+</body>
+</html>
