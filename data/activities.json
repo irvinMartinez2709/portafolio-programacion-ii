@@ -8,14 +8,6 @@
     "url": "assets/docs/Investigación 1/Investigación 1 - Python.pdf"
   },
   {
-    "name": "Portafolio",
-    "date": "13 de julio",
-    "score": "-/-",
-    "status": "entregado",
-    "cover": "assets/img/activities/Portafolio.webp",
-    "url": "https://irvinmartinez2709.github.io/portafolio-programacion-ii/"
-  },
-  {
     "name": "Taller práctico 1",
     "date": "10 de abril",
     "score": "100/100",
@@ -62,5 +54,13 @@
     "status": "pendiente",
     "cover": "",
     "url": ""
+  },
+  {
+    "name": "Portafolio",
+    "date": "13 de julio",
+    "score": "-/-",
+    "status": "entregado",
+    "cover": "assets/img/activities/Portafolio.webp",
+    "url": "https://irvinmartinez2709.github.io/portafolio-programacion-ii/"
   }
 ]
