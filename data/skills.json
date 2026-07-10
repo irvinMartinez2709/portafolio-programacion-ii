@@ -1,16 +1,39 @@
 {
   "bars": [
-    { "name": "HTML5", "level": 85 },
-    { "name": "CSS3", "level": 80 },
-    { "name": "JavaScript", "level": 70 },
-    { "name": "Python", "level": 75 },
-    { "name": "GitHub Pages", "level": 80 },
-    { "name": "Ciberseguridad", "level": 65 }
+    {
+      "name": "HTML5",
+      "level": 85
+    },
+    {
+      "name": "CSS3",
+      "level": 80
+    },
+    {
+      "name": "JavaScript",
+      "level": 70
+    },
+    {
+      "name": "Python",
+      "level": 75
+    },
+    {
+      "name": "GitHub Pages",
+      "level": 80
+    },
+    {
+      "name": "Ciberseguridad",
+      "level": 65
+    }
   ],
   "chips": [
-    "HTML5", "CSS3", "JavaScript", "Python",
-    "GitHub Pages", "Ciberseguridad",
-    "Trabajo en equipo", "Resolución de problemas"
+    "HTML5",
+    "CSS3",
+    "JavaScript",
+    "Python",
+    "GitHub Pages",
+    "Ciberseguridad",
+    "Trabajo en equipo",
+    "Resolución de problemas"
   ],
-  "particleCount": 30
+  "particleCount": 10
 }

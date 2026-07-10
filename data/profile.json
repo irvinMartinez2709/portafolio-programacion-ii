@@ -15,5 +15,10 @@
   "heroSub": "Universidad Tecnológica de Panamá",
   "heroDesc": "Portafolio Académico del semestre",
   "linkedin": "https://www.linkedin.com/in/irvin-mart%C3%ADnez-318b6435b",
-  "github": "https://github.com/irvinMartinez2709"
+  "github": "https://github.com/irvinMartinez2709",
+  "social": {
+    "linkedin": "www.linkedin.com/in/irvin-martínez-318b6435b",
+    "youtube": "",
+    "github": "https://github.com/irvinMartinez2709"
+  }
 }

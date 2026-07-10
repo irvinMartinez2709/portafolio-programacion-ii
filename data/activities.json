@@ -1,26 +1,10 @@
 [
   {
-    "name": "Investigación 1: Conceptos básicos",
+    "title": "Investigación 1",
     "date": "27 de marzo",
-    "score": "90/100",
-    "status": "entregado",
+    "grade": 100,
+    "status": "Devuelto",
     "cover": "",
-    "url": "#"
-  },
-  {
-    "name": "Práctica de laboratorio: Variables",
-    "date": "10 de abril",
-    "score": "85/100",
-    "status": "entregado",
-    "cover": "",
-    "url": "#"
-  },
-  {
-    "name": "Proyecto parcial",
-    "date": "15 de mayo",
-    "score": "—",
-    "status": "pendiente",
-    "cover": "",
-    "url": "#"
+    "pdf": ""
   }
 ]
