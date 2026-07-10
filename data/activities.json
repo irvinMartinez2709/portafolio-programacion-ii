@@ -13,7 +13,7 @@
     "score": "100/100",
     "status": "devuelto",
     "cover": "assets/img/activities/Taller práctico 1.webp",
-    "url": "assets/docs/Taller práctico 1"
+    "url": "assets/docs/Taller práctico 1/index.html"
   },
   {
     "name": "Ejercicio práctico 1",
@@ -21,7 +21,7 @@
     "score": "96/100",
     "status": "devuelto",
     "cover": "assets/img/activities/Ejercicio práctico 1.webp",
-    "url": "assets/docs/Ejercicio práctico 1"
+    "url": "assets/docs/Ejercicio práctico 1/Factura IrvinMartinez.pdf"
   },
   {
     "name": "Examen parcial 1",
@@ -29,7 +29,7 @@
     "score": "86/100",
     "status": "devuelto",
     "cover": "assets/img/activities/Parcial 1.webp",
-    "url": "assets/docs/Examen parcial 1"
+    "url": "assets/docs/Examen parcial 1/Parcial 1 - Irvin Martínez.pdf"
   },
   {
     "name": "Ejercicio práctico 2",
@@ -37,7 +37,7 @@
     "score": "91/100",
     "status": "devuelto",
     "cover": "assets/img/activities/Ejercicio práctico 2.webp",
-    "url": "assets/docs/Ejercicio práctico 2"
+    "url": "assets/docs/Ejercicio práctico 2/index.html"
   },
   {
     "name": "Examen parcial 2",
@@ -45,7 +45,7 @@
     "score": "-/-",
     "status": "entregado",
     "cover": "assets/img/activities/Parcial 2.webp",
-    "url": "assets/docs/Examen parcial 2"
+    "url": "assets/docs/Examen parcial 2/Parcial2_Programación.pdf"
   },
   {
     "name": "Examen Final",
